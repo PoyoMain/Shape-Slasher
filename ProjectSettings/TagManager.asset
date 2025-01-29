@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Enemy
+  - Pickup
   layers:
   - Default
   - TransparentFX
@@ -15,13 +17,13 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - Player Attack
+  - Enemy
+  - Enemy Attack
+  - Pickup
+  - Room Border
+  - Camera Border
   - 
   - 
   - 
@@ -40,4 +42,25 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 3102596885
+    locked: 0
+  - name: Midground
+    uniqueID: 2282519659
+    locked: 0
+  - name: Pickups
+    uniqueID: 1091199683
+    locked: 0
+  - name: Enemies
+    uniqueID: 1191628647
+    locked: 0
+  - name: Player
+    uniqueID: 2958435255
+    locked: 0
+  - name: Attacks
+    uniqueID: 1980122569
+    locked: 0
+  - name: Foreground
+    uniqueID: 2633493689
     locked: 0
