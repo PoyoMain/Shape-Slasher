@@ -406,9 +406,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5ae805b40ebbae4a9d20a874b9d62e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfRooms: 50
-  numberOfNeighborsAllowed: 0
-  canReuseRooms: 0
+  numberOfRooms: 10
+  performOnAwake: 1
   startRooms:
   - {fileID: 2488011558619331394, guid: 28f16ab11fb4a7547aa3c2f2d6c0acdb, type: 3}
   - {fileID: 2488011558619331394, guid: 9995b64e87e1b4f40a4d176c2a0cb898, type: 3}
@@ -434,7 +433,6 @@ MonoBehaviour:
   - {fileID: 2488011558619331394, guid: b7b3454fa5153dd4b93377b614a67f7d, type: 3}
   - {fileID: 2488011558619331394, guid: d53c981589f8c1f4aa1440a555933ded, type: 3}
   - {fileID: 2488011558619331394, guid: 6bf7d799501e4ad47bd6d0e8b793f35d, type: 3}
-  roomPrefab: {fileID: 0}
 --- !u!4 &980743134
 Transform:
   m_ObjectHideFlags: 0
