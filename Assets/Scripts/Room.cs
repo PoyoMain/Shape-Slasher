@@ -63,18 +63,11 @@ public class Room : MonoBehaviour
     }
 
     // Private Variables
-    private GameObject player;
     private Vector2Int roomNumber;
     private Room northNeighborRoom;
     private Room eastNeighborRoom;
     private Room southNeighborRoom;
     private Room westNeighborRoom;
-
-    private void OnEnable()
-    {
-        player = GameObject.FindGameObjectWithTag("Player");
-        cam.Follow = player.transform;
-    }
 
     public void AssignPosition(Vector2Int pos)
     {
@@ -212,7 +205,19 @@ public class Room : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision == null) return;
+        if (collision.CompareTag("Player"))
+        {
+            cam.enabled = true;
+            cam.Follow = collision.transform;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            cam.enabled = false;
+        }
     }
 }
 
