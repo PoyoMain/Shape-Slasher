@@ -59,7 +59,6 @@ public class MapGenerator : MonoBehaviour
             startRoom = currentRoom = Instantiate(startRooms[UnityEngine.Random.Range(0, startRooms.Length)], transform.position, Quaternion.identity, transform);
             currentRoom.AssignPosition(new(0, 0));
             spawnedRooms.Add(currentRoom);
-            print(currentRoom.Bounds);
 
             // Spawn the appropriate number of rooms
             for (int i = 1; i < numberOfRooms; i++)
