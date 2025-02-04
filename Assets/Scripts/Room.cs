@@ -209,6 +209,11 @@ public class Room : MonoBehaviour
 
         return false;
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision == null) return;
+    }
 }
 
 public enum RoomType
