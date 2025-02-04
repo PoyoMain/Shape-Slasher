@@ -83,9 +83,10 @@ public class MapGenerator : MonoBehaviour
                     // If no room can be spawned, find a different room to spawn a room from
                     if (compatibleRooms.Count <= 0)
                     {
-                        if (currentRoom.DirectionsWithAnUnusedDoor.Count > 0)
+                        if (currentRoom.DirectionsWithAnUnusedDoor.Count > 0 && currentRoom != null)
                         {
                             Room replacementRoom = FindReplacementRoom(currentRoom);
+                            if (replacementRoom == null) break;
                             ReplaceRoom(currentRoom, replacementRoom, spawnedRooms);
                             currentRoom = replacementRoom;
                         }
@@ -96,6 +97,7 @@ public class MapGenerator : MonoBehaviour
                         if (roomsWithDoorsAvailable.Count <= 0) break;
 
                         currentRoom = roomsWithDoorsAvailable[^1];
+                        if (currentRoom == null) currentRoom = roomsWithDoorsAvailable[0];
                     }
                     else compatibleRoomsFound = true;
                 }
