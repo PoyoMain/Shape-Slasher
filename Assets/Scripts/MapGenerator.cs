@@ -23,9 +23,6 @@ public class MapGenerator : MonoBehaviour
     private Room startRoom;
     private Room currentRoom;
 
-    private const float ROOM_BOUNDS_X = 40;
-    private const float ROOM_BOUNDS_Y = 40;
-
     private Coroutine mapGenCoroutine;
 
     private void Awake()
@@ -62,6 +59,7 @@ public class MapGenerator : MonoBehaviour
             startRoom = currentRoom = Instantiate(startRooms[UnityEngine.Random.Range(0, startRooms.Length)], transform.position, Quaternion.identity, transform);
             currentRoom.AssignPosition(new(0, 0));
             spawnedRooms.Add(currentRoom);
+            print(currentRoom.Bounds);
 
             // Spawn the appropriate number of rooms
             for (int i = 1; i < numberOfRooms; i++)
@@ -118,7 +116,7 @@ public class MapGenerator : MonoBehaviour
                 newRoom.SetAdjacentRoom(currentRoom, direction, true);
                 
                 // Set new room position
-                newRoom.transform.localPosition = (Vector2)currentRoom.transform.localPosition + (DirectionToVectorDirection(direction) * new Vector2(ROOM_BOUNDS_X, ROOM_BOUNDS_Y));
+                newRoom.transform.localPosition = (Vector2)currentRoom.transform.localPosition + (DirectionToVectorDirection(direction) * currentRoom.Bounds);
 
                 // Set new room grid pos
                 newRoom.AssignPosition(currentRoom.RoomNumber + DirectionToVectorDirection(direction));

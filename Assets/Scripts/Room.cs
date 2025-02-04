@@ -16,6 +16,7 @@ public class Room : MonoBehaviour
 
     [Header("Components")]
     [SerializeField] private CinemachineVirtualCamera cam;
+    [SerializeField] private Collider2D boundsCollider;
 
     // Properties
     public RoomType RoomType => roomType;
@@ -44,6 +45,10 @@ public class Room : MonoBehaviour
             if (westNeighborRoom == null && DoorsOnWestSide) dList.Add(Direction.West);
             return dList;
         }
+    }
+    public Vector2 Bounds
+    {
+        get => boundsCollider.bounds.size;
     }
     private bool DoorsOnNorthSide
     {
