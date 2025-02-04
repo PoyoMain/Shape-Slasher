@@ -17,6 +17,9 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private Room[] bossRooms;
     [SerializeField] private List<Room> possibleRooms;
 
+    [Header("Broadcast Events")]
+    [SerializeField] private VoidEventSO mapGenerationFinishedSO;
+
     private Room startRoom;
     private Room currentRoom;
 
@@ -137,6 +140,9 @@ public class MapGenerator : MonoBehaviour
 
             yield return null;
         }
+
+        mapGenerationFinishedSO.RaiseEvent();
+        yield break;
     }
 
     private bool CloseUnusedDoors(List<Room> spawnedRooms)
