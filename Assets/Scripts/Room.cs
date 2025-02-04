@@ -19,20 +19,8 @@ public class Room : MonoBehaviour
 
     // Properties
     public RoomType RoomType => roomType;
-    public List<Door> Doors => doors;
-    public List<Door> OpenDoors => openDoors;
     public Vector2Int RoomNumber => roomNumber;
-
-    // Private Variables
-    private GameObject player;
-
-    private List<Door> openDoors;
-    private Vector2Int roomNumber;
-    private Room northNeighborRoom;
-    private Room eastNeighborRoom;
-    private Room southNeighborRoom;
-    private Room westNeighborRoom;
-
+    public List<Door> Doors => doors;
     public List<Room> Neighbors
     {
         get
@@ -45,20 +33,18 @@ public class Room : MonoBehaviour
             return n;
         }
     }
-
-    public bool HasSpotsOpen
+    public List<Direction> DirectionsWithAnUnusedDoor
     {
         get
         {
-            if (DoorsOnNorthSide && northNeighborRoom == null) return true;
-            else if (DoorsOnEastSide && eastNeighborRoom == null) return true;
-            else if (DoorsOnSouthSide && southNeighborRoom == null) return true;
-            else if (DoorsOnWestSide && westNeighborRoom == null) return true;
-            return false;
-
+            List<Direction> dList = new();
+            if (northNeighborRoom == null && DoorsOnNorthSide) dList.Add(Direction.North);
+            if (eastNeighborRoom == null && DoorsOnEastSide) dList.Add(Direction.East);
+            if (southNeighborRoom == null && DoorsOnSouthSide) dList.Add(Direction.South);
+            if (westNeighborRoom == null && DoorsOnWestSide) dList.Add(Direction.West);
+            return dList;
         }
     }
-
     private bool DoorsOnNorthSide
     {
         get => Doors.Any(door => door.Direction == Direction.North);
@@ -76,23 +62,13 @@ public class Room : MonoBehaviour
         get => Doors.Any(door => door.Direction == Direction.West);
     }
 
-    public List<Direction> DirectionsFacing
-    {
-        get
-        {
-            List<Direction> dList = new();
-            if (northNeighborRoom == null && DoorsOnNorthSide) dList.Add(Direction.North); 
-            if (eastNeighborRoom == null && DoorsOnEastSide) dList.Add(Direction.East); 
-            if (southNeighborRoom == null && DoorsOnSouthSide) dList.Add(Direction.South); 
-            if (westNeighborRoom == null && DoorsOnWestSide) dList.Add(Direction.West);
-            return dList;
-        }
-    }
-
-    private void Awake()
-    {
-        openDoors = doors.Where(x => !x.Linked).ToList();
-    }
+    // Private Variables
+    private GameObject player;
+    private Vector2Int roomNumber;
+    private Room northNeighborRoom;
+    private Room eastNeighborRoom;
+    private Room southNeighborRoom;
+    private Room westNeighborRoom;
 
     private void OnEnable()
     {
@@ -100,71 +76,9 @@ public class Room : MonoBehaviour
         cam.Follow = player.transform;
     }
 
-    public void SetUpRoom(Vector2Int roomNum)
-    {
-        openDoors = doors.Where(x => !x.Linked).ToList();
-        roomNumber = roomNum;
-    }
-
-    public void LinkDoor(Door d)
-    {
-        OpenDoors.Remove(d);
-    }
-
     public void AssignPosition(Vector2Int pos)
     {
         roomNumber = pos;
-    }
-
-    public Vector2Int LinkRoom(Room otherRoom)
-    {
-        foreach (Door oldDoor in OpenDoors)
-        {
-            foreach (Door newDoor in otherRoom.Doors)
-            {
-                if (oldDoor.IsOpposite(newDoor, out Direction dir))
-                {
-                    oldDoor.Link();
-                    LinkDoor(oldDoor);
-                    newDoor.Link();
-                    otherRoom.LinkDoor(newDoor);
-                    return dir switch
-                    {
-                        Direction.North => Vector2Int.up,
-                        Direction.East => Vector2Int.right,
-                        Direction.South => Vector2Int.down,
-                        Direction.West => Vector2Int.left,
-                        _ => throw new NotImplementedException(),
-                    };
-                }
-            }
-        }
-
-        return Vector2Int.zero;
-    }
-
-    public Door[] GetOpenDoors()
-    {
-        List<Door> dList = new();
-
-        if (northNeighborRoom == null)
-        {
-            dList.AddRange(Doors.Where(door => door.Direction == Direction.North).ToList());
-        }
-        if (eastNeighborRoom == null)
-        {
-            dList.AddRange(Doors.Where(door => door.Direction == Direction.East).ToList());
-        }
-        if (southNeighborRoom == null)
-        {
-            dList.AddRange(Doors.Where(door => door.Direction == Direction.South).ToList());
-        }
-        if (westNeighborRoom == null)
-        {
-            dList.AddRange(Doors.Where(door => door.Direction == Direction.West).ToList());
-        }
-
-        return dList.ToArray();
     }
 
     public void SetAdjacentRoom(Room adjacentRoom, Direction dir, bool opposite = false)
@@ -289,29 +203,13 @@ public class Room : MonoBehaviour
         return Direction.North;
     }
 
-    public Direction DirectionToNeighbor(Room otherRoom)
+    public bool HasAnUnusedDoorInThisDirection(Direction dir)
     {
-        Vector2Int dirVector = otherRoom.roomNumber - roomNumber;
-
-        return dirVector switch
-        {
-            var _ when dirVector == Vector2Int.up => Direction.North,
-            var _ when dirVector == Vector2Int.left => Direction.East,
-            var _ when dirVector == Vector2Int.down => Direction.South,
-            var _ when dirVector == Vector2Int.right => Direction.West,
-            _ => throw new System.NotImplementedException(),
-        };
-    }
-
-    public bool IsFacingDirection(Direction dir)
-    {
-        if (DirectionsFacing.Contains(dir)) return true;
+        if (DirectionsWithAnUnusedDoor.Contains(dir)) return true;
 
         return false;
     }
 }
-
-
 
 public enum RoomType
 {
@@ -340,10 +238,8 @@ public enum DoorType
 public class Door
 {
     [SerializeField] private DoorType type;
-    private bool linked;
 
     public DoorType Type => type;
-    public bool Linked => linked;
     public Direction Direction => type switch
     {
         DoorType.North1 => Direction.North,
@@ -360,44 +256,4 @@ public class Door
         DoorType.West3 => Direction.West,
         _ => throw new System.NotImplementedException(),
     };
-
-
-    public void Link() => linked = true;
-    public void Unlink() => linked = false;
-
-    public bool IsOpposite(Door otherDoor, out Direction directionGoing)
-    {
-        if (otherDoor.Type == DoorType.North1 && Type == DoorType.South1) { directionGoing = Direction.South; return true; }
-        else if (otherDoor.Type == DoorType.North2 && Type == DoorType.South2) { directionGoing = Direction.South; return true; }
-        else if (otherDoor.Type == DoorType.North3 && Type == DoorType.South3) { directionGoing = Direction.South; return true; }
-        else if (otherDoor.Type == DoorType.East1 && Type == DoorType.West1) { directionGoing = Direction.West; return true; }
-        else if (otherDoor.Type == DoorType.East2 && Type == DoorType.West2) { directionGoing = Direction.West; return true; }
-        else if (otherDoor.Type == DoorType.East3 && Type == DoorType.West3) { directionGoing = Direction.West; return true; }
-        else if (otherDoor.Type == DoorType.South1 && Type == DoorType.North1) { directionGoing = Direction.North; return true; }
-        else if (otherDoor.Type == DoorType.South2 && Type == DoorType.North2) { directionGoing = Direction.North; return true; }
-        else if (otherDoor.Type == DoorType.South3 && Type == DoorType.North3) { directionGoing = Direction.North; return true; }
-        else if (otherDoor.Type == DoorType.West1 && Type == DoorType.East1) { directionGoing = Direction.East; return true; }
-        else if (otherDoor.Type == DoorType.West2 && Type == DoorType.East2) { directionGoing = Direction.East; return true; }
-        else if (otherDoor.Type == DoorType.West3 && Type == DoorType.East3) { directionGoing = Direction.East; return true; }
-        else { directionGoing = Direction.North; return false; }
-    }
 }
-
-//public class Side
-//{
-//    private Door door1;
-//    private Door door2;
-//    private Door door3;
-
-//    public Side(Door d1, Door d2, Door d3)
-//    {
-//        door1 = d1;
-//        door2 = d2;
-//        door3 = d3;
-//    }
-
-//    public bool Equals(Side otherSide)
-//    {
-//        if (otherSide.door1 != null)
-//    }
-//}

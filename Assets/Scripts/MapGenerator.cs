@@ -18,18 +18,7 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private List<Room> possibleRooms;
 
     private Room startRoom;
-    private List<Room> rooms;
-
-
-    private Room[,] roomGrid = new Room[50,50];
-    private Vector2Int currentGridPos = new(25, 25);
     private Room currentRoom;
-
-    private Room RoomAtCurrentPos
-    {
-        get => roomGrid[currentGridPos.x, currentGridPos.y];
-        set => roomGrid[currentGridPos.x, currentGridPos.y] = value;
-    }
 
     private const float ROOM_BOUNDS_X = 40;
     private const float ROOM_BOUNDS_Y = 40;
@@ -38,9 +27,6 @@ public class MapGenerator : MonoBehaviour
 
     private void Awake()
     {
-        rooms = new();
-        roomGrid = new Room[50, 50];
-
         if (performOnAwake) GenMap();
     }
 
@@ -48,6 +34,8 @@ public class MapGenerator : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Return)) GenMap();
     }
+
+    #region Generation
 
     [ContextMenu("Generate Map")]
     private void GenMap()
@@ -85,7 +73,7 @@ public class MapGenerator : MonoBehaviour
                     {
                         if (currentRoom.IsCompatibleWith(stanRoom, out Direction dir))
                         {
-                            if (CheckIfRoomPlacingPositionIsEmpty(spawnedRooms, dir) && CheckIfPathsFromRoomAreEmpty(spawnedRooms, stanRoom, dir))
+                            if (CheckIfRoomPlacingPositionIsEmpty(spawnedRooms, dir)/* && CheckIfPathsFromRoomAreEmpty(spawnedRooms, stanRoom, dir)*/)
                             {
                                 compatibleRooms.Add(stanRoom);
                             }
@@ -95,14 +83,14 @@ public class MapGenerator : MonoBehaviour
                     // If no room can be spawned, find a different room to spawn a room from
                     if (compatibleRooms.Count <= 0)
                     {
-                        if (currentRoom.HasSpotsOpen)
+                        if (currentRoom.DirectionsWithAnUnusedDoor.Count > 0)
                         {
                             Room replacementRoom = FindReplacementRoom(currentRoom);
                             ReplaceRoom(currentRoom, replacementRoom, spawnedRooms);
                             currentRoom = replacementRoom;
                         }
 
-                        List<Room> roomsWithDoorsAvailable = spawnedRooms.Where(room => room.HasSpotsOpen).ToList();
+                        List<Room> roomsWithDoorsAvailable = spawnedRooms.Where(room => room.DirectionsWithAnUnusedDoor.Count > 0).ToList();
 
                         // If a room still cant be found, start over
                         if (roomsWithDoorsAvailable.Count <= 0) break;
@@ -147,14 +135,12 @@ public class MapGenerator : MonoBehaviour
 
             yield return null;
         }
-
-
     }
 
     private bool CloseUnusedDoors(List<Room> spawnedRooms)
     {
         // Find rooms with unused doors
-        List<Room> deadEndRooms = spawnedRooms.Where(room => room.DirectionsFacing.Count > 0).ToList();
+        List<Room> deadEndRooms = spawnedRooms.Where(room => room.DirectionsWithAnUnusedDoor.Count > 0).ToList();
 
         // Replace them with rooms with no unused doors
         foreach (Room deadEndRoom in deadEndRooms)
@@ -183,10 +169,10 @@ public class MapGenerator : MonoBehaviour
         {
             foreach (Room bossRoom in bossRooms)
             {
-                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.North) != null == bossRoom.IsFacingDirection(Direction.North))) continue;
-                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.East) != null == bossRoom.IsFacingDirection(Direction.East))) continue;
-                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.South) != null == bossRoom.IsFacingDirection(Direction.South))) continue;
-                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.West) != null == bossRoom.IsFacingDirection(Direction.West))) continue;
+                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.North) != null == bossRoom.HasAnUnusedDoorInThisDirection(Direction.North))) continue;
+                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.East) != null == bossRoom.HasAnUnusedDoorInThisDirection(Direction.East))) continue;
+                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.South) != null == bossRoom.HasAnUnusedDoorInThisDirection(Direction.South))) continue;
+                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.West) != null == bossRoom.HasAnUnusedDoorInThisDirection(Direction.West))) continue;
 
                 ReplaceRoom(deadEndRooms[i], bossRoom, spawnedRooms);
                 return true;
@@ -194,6 +180,19 @@ public class MapGenerator : MonoBehaviour
         }
 
         return false;
+    }
+
+    #endregion
+
+    #region Map Editing
+
+    [ContextMenu("Despawn Map")]
+    private void DespawnMap()
+    {
+        foreach (Transform t in transform)
+        {
+            Destroy(t.gameObject);
+        }
     }
 
     private void ReplaceRoom(Room ogRoom, Room newRoom, List<Room> spawnedRooms)
@@ -219,10 +218,10 @@ public class MapGenerator : MonoBehaviour
 
         foreach (Room r in possibleRooms)
         {
-            if (!(currentRoom.GetAdjacentRoom(Direction.North) != null == r.IsFacingDirection(Direction.North))) continue;
-            if (!(currentRoom.GetAdjacentRoom(Direction.East) != null == r.IsFacingDirection(Direction.East))) continue;
-            if (!(currentRoom.GetAdjacentRoom(Direction.South) != null == r.IsFacingDirection(Direction.South))) continue;
-            if (!(currentRoom.GetAdjacentRoom(Direction.West) != null == r.IsFacingDirection(Direction.West))) continue;
+            if (!(currentRoom.GetAdjacentRoom(Direction.North) != null == r.HasAnUnusedDoorInThisDirection(Direction.North))) continue;
+            if (!(currentRoom.GetAdjacentRoom(Direction.East) != null == r.HasAnUnusedDoorInThisDirection(Direction.East))) continue;
+            if (!(currentRoom.GetAdjacentRoom(Direction.South) != null == r.HasAnUnusedDoorInThisDirection(Direction.South))) continue;
+            if (!(currentRoom.GetAdjacentRoom(Direction.West) != null == r.HasAnUnusedDoorInThisDirection(Direction.West))) continue;
 
             return r;
         }
@@ -245,7 +244,7 @@ public class MapGenerator : MonoBehaviour
 
     private bool CheckIfPathsFromRoomAreEmpty(List<Room> spawnedRooms, Room stanRoom, Direction dir)
     {
-        foreach (Direction roomDirection in stanRoom.DirectionsFacing)
+        foreach (Direction roomDirection in stanRoom.DirectionsWithAnUnusedDoor)
         {
             if (-DirectionToVectorDirection(roomDirection) != DirectionToVectorDirection(dir))
             {
@@ -253,7 +252,6 @@ public class MapGenerator : MonoBehaviour
                 {
                     if (room.RoomNumber == (currentRoom.RoomNumber + DirectionToVectorDirection(dir)) + DirectionToVectorDirection(roomDirection))
                     {
-
                         return false;
                     }
                 }
@@ -263,49 +261,9 @@ public class MapGenerator : MonoBehaviour
         return true;
     }
 
-    [ContextMenu("Despawn Map")]
-    private void DespawnMap()
-    {
-        foreach (Transform t in transform)
-        {
-            Destroy(t.gameObject);
-        }
-    }
+    #endregion
 
-    private Vector2 GetRoomPosInGrid(Room roomToCheck)
-    {
-        for (int i = 0; i < roomGrid.GetLength(0); i++)
-        {
-            for (int j = 0;  j < roomGrid.GetLength(1); j++)
-            {
-                if (roomGrid[i,j] == roomToCheck)  return new(i,j);
-            }
-        }
-
-        return Vector2.negativeInfinity;
-    }
-
-    #region Utility Classes
-
-    private Direction VectorDirectionToDirection(Vector2Int directionVector)
-        => directionVector switch
-        {
-            var _ when directionVector == Vector2Int.up => Direction.North,
-            var _ when directionVector == Vector2Int.right => Direction.East,
-            var _ when directionVector == Vector2Int.down => Direction.South,
-            var _ when directionVector == Vector2Int.left => Direction.West,
-            _ => throw new System.NotImplementedException(),
-        };
-
-    private Direction VectorDirectionToDirection(Vector2 directionVector)
-        => directionVector switch
-        {
-            var _ when directionVector == Vector2Int.up => Direction.North,
-            var _ when directionVector == Vector2Int.right => Direction.East,
-            var _ when directionVector == Vector2Int.down => Direction.South,
-            var _ when directionVector == Vector2Int.left => Direction.West,
-            _ => throw new System.NotImplementedException(),
-        };
+    #region Utility Methods
 
     private Vector2Int DirectionToVectorDirection(Direction dir)
         => dir switch
