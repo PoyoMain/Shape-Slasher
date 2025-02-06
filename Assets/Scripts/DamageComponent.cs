@@ -5,6 +5,8 @@ using UnityEngine;
 public class DamageComponent : MonoBehaviour
 {
     [SerializeField] private int damage;
+    [SerializeField] private int knockback;
 
     public int Damage => damage;
+    public int Knockback => knockback;
 }

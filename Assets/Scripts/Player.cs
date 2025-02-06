@@ -25,6 +25,7 @@ public class Player : MonoBehaviour, IDamagable
     private Vector2 velocity;
     private bool jumpDown;
     private bool jumpHeld;
+    private bool knockbackRecieved;
     //private bool facingRight = true;
     private bool cachedQueryStartInColliders;
 
@@ -35,6 +36,7 @@ public class Player : MonoBehaviour, IDamagable
         TryGetComponent(out rb);
         TryGetComponent(out col);
 
+        health = stats.MaxHealth;
         cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
     }
 
@@ -42,6 +44,8 @@ public class Player : MonoBehaviour, IDamagable
     {
         time += Time.deltaTime;
         GetInput();
+
+        if (Input.GetKeyDown(KeyCode.X)) velocity.x = 10;
     }
 
     private void GetInput()
@@ -144,6 +148,11 @@ public class Player : MonoBehaviour, IDamagable
             else
             {
                 invincibilityTimer = stats.InvincibleTime;
+
+                Vector2 directionToHitbox = (collider.transform.position - transform.position).normalized;
+                Vector2 force = -directionToHitbox * dmgComponent.Knockback;
+                Knockback(force);
+
             }
         }
     }
@@ -197,6 +206,15 @@ public class Player : MonoBehaviour, IDamagable
         {
             velocity.x = Mathf.MoveTowards(velocity.x, moveInput.x * stats.MaxSpeed, stats.Acceleration * Time.fixedDeltaTime);
         }
+    }
+
+    #endregion
+
+    #region Knockback
+
+    private void Knockback(Vector2 force)
+    {
+        velocity = force;
     }
 
     #endregion
@@ -261,6 +279,7 @@ public struct Stats
     public float CoyoteTime;
     public float JumpBuffer;
 
-    [Header("Invincibility")]
+    [Header("Health")]
+    public int MaxHealth;
     public float InvincibleTime;
 }
