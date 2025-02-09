@@ -4,13 +4,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D))]
-public class Player : MonoBehaviour, IDamagable
+public class Player : MonoBehaviour
 {
-    [Header("Scriptable Objects")]
+    [Header("Inputs")]
     [SerializeField] private InputReaderSO inputReader;
 
     [Header("Stats")]
     [SerializeField] private Stats stats;
+
+    [Header("Broadcast Events")]
+    [SerializeField] private IntEventSO playerDamagedEventSO;
+    [SerializeField] private IntEventSO playerHealthUpdatedEventSO;
 
     public event Action<bool, float> GroundedChanged;
     public event Action Jumped;
@@ -141,7 +145,9 @@ public class Player : MonoBehaviour, IDamagable
         {
             if (IsInvincible) return;
 
-            if (Damage(dmgComponent.Damage) <= 0)
+            Damage(dmgComponent.Damage);
+
+            if (health <= 0)
             {
                 Destroy(gameObject);
             }
@@ -239,14 +245,15 @@ public class Player : MonoBehaviour, IDamagable
 
     private void ApplyMovement() => rb.velocity = velocity;
 
-    #region Damagable Interface
+    #region Health & Damage
 
-    public int Health => health;
-
-    public int Damage(int dmgAmount)
+    public void Damage(int dmgAmount)
     {
+        playerDamagedEventSO.RaiseEvent(dmgAmount);
+
+
         health -= dmgAmount;
-        return health;
+        playerHealthUpdatedEventSO.RaiseEvent(health);
     }
 
     #endregion
