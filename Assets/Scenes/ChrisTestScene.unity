@@ -409,30 +409,30 @@ MonoBehaviour:
   numberOfRooms: 10
   performOnAwake: 1
   startRooms:
-  - {fileID: 2488011558619331394, guid: 28f16ab11fb4a7547aa3c2f2d6c0acdb, type: 3}
-  - {fileID: 2488011558619331394, guid: 9995b64e87e1b4f40a4d176c2a0cb898, type: 3}
-  - {fileID: 2488011558619331394, guid: 4f99bc5c8adf6ec469cefed578c43498, type: 3}
-  - {fileID: 2488011558619331394, guid: 255d260a8e72dc749af425bbc5859c27, type: 3}
+  - {fileID: 11400000, guid: cb618a61ea2a8a14088c1f69879c23bb, type: 2}
+  - {fileID: 11400000, guid: 70b2ac64dd58f24499ca2fa556087873, type: 2}
+  - {fileID: 11400000, guid: 92ad1a3cd5cd4ae4db5bb4624f23b1d2, type: 2}
+  - {fileID: 11400000, guid: fc1917d6b6a18b248a5bc8a9a2f95194, type: 2}
   bossRooms:
-  - {fileID: 2488011558619331394, guid: 07954081e5e0e8043a82c7a2cb0404fc, type: 3}
-  - {fileID: 2488011558619331394, guid: f9a4c58be7587d144b4e725bc4d02833, type: 3}
-  - {fileID: 2488011558619331394, guid: bad53d3206917474da5be608f960d1dc, type: 3}
-  - {fileID: 2488011558619331394, guid: 93cd05785da4b1449907f1cef6182dfc, type: 3}
+  - {fileID: 11400000, guid: ed1e4891cba63f749bd7306dec7f2699, type: 2}
+  - {fileID: 11400000, guid: bea2c6761b6841943936264909dba8d0, type: 2}
+  - {fileID: 11400000, guid: 331f33229bcc82e4bb038b248543519f, type: 2}
+  - {fileID: 11400000, guid: 60c5cbeae37780f488406eaad72c9773, type: 2}
   possibleRooms:
-  - {fileID: 2488011558619331394, guid: fa0cfd16431ac4142a3ea6d618a4a1a5, type: 3}
-  - {fileID: 2488011558619331394, guid: c197019d4ac2bb54bb824e094ffdd653, type: 3}
-  - {fileID: 2488011558619331394, guid: 8b8d40641afeb914795d56d155a56069, type: 3}
-  - {fileID: 2488011558619331394, guid: 137d36d68f4a60d47b6a002d9606ff44, type: 3}
-  - {fileID: 2488011558619331394, guid: ebb14e8d6130b1949b28550994c2f918, type: 3}
-  - {fileID: 2488011558619331394, guid: 4d84afe8dd3e28045943be331efb5c0b, type: 3}
-  - {fileID: 2488011558619331394, guid: 5569a11482ec5e146945dc18d5a3a2a9, type: 3}
-  - {fileID: 2488011558619331394, guid: 46ae05cc6d899af49ab365b8ac7f9ea1, type: 3}
-  - {fileID: 2488011558619331394, guid: 38dfaf4fff861d54d9f6311a94edcf15, type: 3}
-  - {fileID: 2488011558619331394, guid: 67d47cdeea9870247a000728937c42c8, type: 3}
-  - {fileID: 2488011558619331394, guid: 3ed6d21cfa779b24e9259abf5123b33a, type: 3}
-  - {fileID: 2488011558619331394, guid: b7b3454fa5153dd4b93377b614a67f7d, type: 3}
-  - {fileID: 2488011558619331394, guid: d53c981589f8c1f4aa1440a555933ded, type: 3}
-  - {fileID: 2488011558619331394, guid: 6bf7d799501e4ad47bd6d0e8b793f35d, type: 3}
+  - {fileID: 11400000, guid: 7b7bb4fbbab213641a33fd76c283a7bc, type: 2}
+  - {fileID: 11400000, guid: 11844f63588fd3d4b8dd32cbc0c945fc, type: 2}
+  - {fileID: 11400000, guid: ba1436a2499b53641a538dc3ba3323db, type: 2}
+  - {fileID: 11400000, guid: 4c0f0e1f5f4ed4c4fb1d52ee9bf3652d, type: 2}
+  - {fileID: 11400000, guid: e4ed44bb4da119d4fa946ca275c8db6f, type: 2}
+  - {fileID: 11400000, guid: deb247801aea9aa40abdc4902604b3e1, type: 2}
+  - {fileID: 11400000, guid: d5fc8c92ad45201418d85179881e04c7, type: 2}
+  - {fileID: 11400000, guid: 60ee2551477fa1a44a0990d2402e2d84, type: 2}
+  - {fileID: 11400000, guid: b5e2fead7134a7d42bf2436410358dc5, type: 2}
+  - {fileID: 11400000, guid: 2686c6ae07b29f444894fc9c39031360, type: 2}
+  - {fileID: 11400000, guid: 606de3bf5eef5034fa91d2d12d35e2c2, type: 2}
+  - {fileID: 11400000, guid: 314466c32c79e8848a7f5cbabe1214cd, type: 2}
+  - {fileID: 11400000, guid: 8ea0ddcbf9af63941bf775c9b5dd2618, type: 2}
+  - {fileID: 11400000, guid: e82b4b19aad8ecf4eaf27eb429fb5294, type: 2}
   mapGenerationFinishedSO: {fileID: 11400000, guid: 3a802436c7e7b4f41b015a22b99b6011, type: 2}
 --- !u!4 &980743134
 Transform:
@@ -565,6 +565,10 @@ PrefabInstance:
     - target: {fileID: 4166714208754174496, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 4166714208754174496, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

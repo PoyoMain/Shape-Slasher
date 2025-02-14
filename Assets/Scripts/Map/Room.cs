@@ -6,22 +6,12 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Room : MonoBehaviour
+public class Room
 {
-    [Header("Type")]
-    [SerializeField] private RoomType roomType;
-
-    [Header("Doors")]
-    [SerializeField] private List<Door> doors;
-
-    [Header("Components")]
-    [SerializeField] private CinemachineVirtualCamera cam;
-    [SerializeField] private Collider2D boundsCollider;
+    public readonly RoomSO Data;
 
     // Properties
-    public RoomType RoomType => roomType;
     public Vector2Int RoomNumber => roomNumber;
-    public List<Door> Doors => doors;
     public List<Room> Neighbors
     {
         get
@@ -46,25 +36,22 @@ public class Room : MonoBehaviour
             return dList;
         }
     }
-    public Vector2 Bounds
-    {
-        get => boundsCollider.bounds.size;
-    }
+  
     private bool DoorsOnNorthSide
     {
-        get => Doors.Any(door => door.Direction == Direction.North);
+        get => Data.Doors.Any(door => door.Direction == Direction.North);
     }
     private bool DoorsOnEastSide
     {
-        get => Doors.Any(door => door.Direction == Direction.East);
+        get => Data.Doors.Any(door => door.Direction == Direction.East);
     }
     private bool DoorsOnSouthSide
     {
-        get => Doors.Any(door => door.Direction == Direction.South);
+        get => Data.Doors.Any(door => door.Direction == Direction.South);
     }
     private bool DoorsOnWestSide
     {
-        get => Doors.Any(door => door.Direction == Direction.West);
+        get => Data.Doors.Any(door => door.Direction == Direction.West);
     }
 
     // Private Variables
@@ -73,6 +60,11 @@ public class Room : MonoBehaviour
     private Room eastNeighborRoom;
     private Room southNeighborRoom;
     private Room westNeighborRoom;
+
+    public Room (RoomSO r)
+    {
+        Data = r;
+    }
 
     public void AssignPosition(Vector2Int pos)
     {
@@ -108,13 +100,58 @@ public class Room : MonoBehaviour
             _ => null
         };
 
-    public bool IsCompatibleWith(Room otherRoom, out Direction direction)
+    public Direction DirectionToUnlinkedRoom(Room otherRoom)
+    {
+        if (DoorsOnNorthSide && northNeighborRoom == null)
+        {
+            if ((Data.Doors.Any(door => door.Type == DoorType.North1) == otherRoom.Data.Doors.Any(door => door.Type == DoorType.South1))
+            && (Data.Doors.Any(door => door.Type == DoorType.North2) == otherRoom.Data.Doors.Any(door => door.Type == DoorType.South2))
+            && (Data.Doors.Any(door => door.Type == DoorType.North3) == otherRoom.Data.Doors.Any(door => door.Type == DoorType.South3)))
+            {
+                return Direction.North;
+            }
+        }
+        
+        if (DoorsOnEastSide && eastNeighborRoom == null)
+        {
+            if ((Data.Doors.Any(door => door.Type == DoorType.East1) == otherRoom.Data.Doors.Any(door => door.Type == DoorType.West1))
+            && (Data.Doors.Any(door => door.Type == DoorType.East2) == otherRoom.Data.Doors.Any(door => door.Type == DoorType.West2))
+            && (Data.Doors.Any(door => door.Type == DoorType.East3) == otherRoom.Data.Doors.Any(door => door.Type == DoorType.West3)))
+            {
+                return Direction.East;
+            }
+        }
+
+        if (DoorsOnSouthSide && southNeighborRoom == null)
+        {
+            if ((Data.Doors.Any(door => door.Type == DoorType.South1) == otherRoom.Data.Doors.Any(door => door.Type == DoorType.North1))
+            && (Data.Doors.Any(door => door.Type == DoorType.South2) == otherRoom.Data.Doors.Any(door => door.Type == DoorType.North2))
+            && (Data.Doors.Any(door => door.Type == DoorType.South3) == otherRoom.Data.Doors.Any(door => door.Type == DoorType.North3)))
+            {
+                return Direction.South;
+            }
+        }
+
+        if (DoorsOnWestSide && westNeighborRoom == null)
+        {
+            if ((Data.Doors.Any(door => door.Type == DoorType.West1) == otherRoom.Data.Doors.Any(door => door.Type == DoorType.East1))
+            && (Data.Doors.Any(door => door.Type == DoorType.West2) == otherRoom.Data.Doors.Any(door => door.Type == DoorType.East2))
+            && (Data.Doors.Any(door => door.Type == DoorType.West3) == otherRoom.Data.Doors.Any(door => door.Type == DoorType.East3)))
+            {
+                return Direction.West;
+            }
+        }
+
+        return Direction.North;
+    }
+
+    public bool IsCompatibleWith(RoomSO otherRoom, out Direction direction)
     {
         if (northNeighborRoom == null && DoorsOnNorthSide)
         {
-            if ((Doors.Any(door => door.Type == DoorType.North1) == otherRoom.Doors.Any(door => door.Type == DoorType.South1))
-            && (Doors.Any(door => door.Type == DoorType.North2) == otherRoom.Doors.Any(door => door.Type == DoorType.South2))
-            && (Doors.Any(door => door.Type == DoorType.North3) == otherRoom.Doors.Any(door => door.Type == DoorType.South3)))
+            if ((Data.Doors.Any(door => door.Type == DoorType.North1) == otherRoom.Doors.Any(door => door.Type == DoorType.South1))
+            && (Data.Doors.Any(door => door.Type == DoorType.North2) == otherRoom.Doors.Any(door => door.Type == DoorType.South2))
+            && (Data.Doors.Any(door => door.Type == DoorType.North3) == otherRoom.Doors.Any(door => door.Type == DoorType.South3)))
             {
                 direction = Direction.North;
                 return true;
@@ -122,9 +159,9 @@ public class Room : MonoBehaviour
         }
         if (eastNeighborRoom == null && DoorsOnEastSide)
         {
-            if ((Doors.Any(door => door.Type == DoorType.East1) == otherRoom.Doors.Any(door => door.Type == DoorType.West1))
-            && (Doors.Any(door => door.Type == DoorType.East2) == otherRoom.Doors.Any(door => door.Type == DoorType.West2))
-            && (Doors.Any(door => door.Type == DoorType.East3) == otherRoom.Doors.Any(door => door.Type == DoorType.West3)))
+            if ((Data.Doors.Any(door => door.Type == DoorType.East1) == otherRoom.Doors.Any(door => door.Type == DoorType.West1))
+            && (Data.Doors.Any(door => door.Type == DoorType.East2) == otherRoom.Doors.Any(door => door.Type == DoorType.West2))
+            && (Data.Doors.Any(door => door.Type == DoorType.East3) == otherRoom.Doors.Any(door => door.Type == DoorType.West3)))
             {
                 direction = Direction.East;
                 return true;
@@ -132,9 +169,9 @@ public class Room : MonoBehaviour
         }
         if (southNeighborRoom == null && DoorsOnSouthSide)
         {
-            if ((Doors.Any(door => door.Type == DoorType.South1) == otherRoom.Doors.Any(door => door.Type == DoorType.North1))
-                        && (Doors.Any(door => door.Type == DoorType.South2) == otherRoom.Doors.Any(door => door.Type == DoorType.North2))
-                        && (Doors.Any(door => door.Type == DoorType.South3) == otherRoom.Doors.Any(door => door.Type == DoorType.North3)))
+            if ((Data.Doors.Any(door => door.Type == DoorType.South1) == otherRoom.Doors.Any(door => door.Type == DoorType.North1))
+            && (Data.Doors.Any(door => door.Type == DoorType.South2) == otherRoom.Doors.Any(door => door.Type == DoorType.North2))
+            && (Data.Doors.Any(door => door.Type == DoorType.South3) == otherRoom.Doors.Any(door => door.Type == DoorType.North3)))
             {
                 direction = Direction.South;
                 return true;
@@ -142,9 +179,9 @@ public class Room : MonoBehaviour
         }
         if (westNeighborRoom == null && DoorsOnWestSide)
         {
-            if ((Doors.Any(door => door.Type == DoorType.West1) == otherRoom.Doors.Any(door => door.Type == DoorType.East1))
-            && (Doors.Any(door => door.Type == DoorType.West2) == otherRoom.Doors.Any(door => door.Type == DoorType.East2))
-            && (Doors.Any(door => door.Type == DoorType.West3) == otherRoom.Doors.Any(door => door.Type == DoorType.East3)))
+            if ((Data.Doors.Any(door => door.Type == DoorType.West1) == otherRoom.Doors.Any(door => door.Type == DoorType.East1))
+            && (Data.Doors.Any(door => door.Type == DoorType.West2) == otherRoom.Doors.Any(door => door.Type == DoorType.East2))
+            && (Data.Doors.Any(door => door.Type == DoorType.West3) == otherRoom.Doors.Any(door => door.Type == DoorType.East3)))
             {
                 direction = Direction.West;
                 return true;
@@ -154,75 +191,6 @@ public class Room : MonoBehaviour
 
         direction = Direction.North;
         return false;
-    }
-
-    public Direction DirectionToUnlinkedRoom(Room otherRoom)
-    {
-        if (DoorsOnNorthSide && northNeighborRoom == null)
-        {
-            if ((Doors.Any(door => door.Type == DoorType.North1) == otherRoom.Doors.Any(door => door.Type == DoorType.South1))
-            && (Doors.Any(door => door.Type == DoorType.North2) == otherRoom.Doors.Any(door => door.Type == DoorType.South2))
-            && (Doors.Any(door => door.Type == DoorType.North3) == otherRoom.Doors.Any(door => door.Type == DoorType.South3)))
-            {
-                return Direction.North;
-            }
-        }
-        
-        if (DoorsOnEastSide && eastNeighborRoom == null)
-        {
-            if ((Doors.Any(door => door.Type == DoorType.East1) == otherRoom.Doors.Any(door => door.Type == DoorType.West1))
-            && (Doors.Any(door => door.Type == DoorType.East2) == otherRoom.Doors.Any(door => door.Type == DoorType.West2))
-            && (Doors.Any(door => door.Type == DoorType.East3) == otherRoom.Doors.Any(door => door.Type == DoorType.West3)))
-            {
-                return Direction.East;
-            }
-        }
-
-        if (DoorsOnSouthSide && southNeighborRoom == null)
-        {
-            if ((Doors.Any(door => door.Type == DoorType.South1) == otherRoom.Doors.Any(door => door.Type == DoorType.North1))
-            && (Doors.Any(door => door.Type == DoorType.South2) == otherRoom.Doors.Any(door => door.Type == DoorType.North2))
-            && (Doors.Any(door => door.Type == DoorType.South3) == otherRoom.Doors.Any(door => door.Type == DoorType.North3)))
-            {
-                return Direction.South;
-            }
-        }
-
-        if (DoorsOnWestSide && westNeighborRoom == null)
-        {
-            if ((Doors.Any(door => door.Type == DoorType.West1) == otherRoom.Doors.Any(door => door.Type == DoorType.East1))
-            && (Doors.Any(door => door.Type == DoorType.West2) == otherRoom.Doors.Any(door => door.Type == DoorType.East2))
-            && (Doors.Any(door => door.Type == DoorType.West3) == otherRoom.Doors.Any(door => door.Type == DoorType.East3)))
-            {
-                return Direction.West;
-            }
-        }
-
-        return Direction.North;
-    }
-
-    public bool HasAnUnusedDoorInThisDirection(Direction dir)
-    {
-        if (DirectionsWithAnUnusedDoor.Contains(dir)) return true;
-
-        return false;
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            cam.enabled = true;
-            cam.Follow = collision.transform;
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            cam.enabled = false;
-        }
     }
 }
 
