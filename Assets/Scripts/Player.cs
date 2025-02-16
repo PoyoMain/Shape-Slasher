@@ -29,7 +29,6 @@ public class Player : MonoBehaviour
     private Vector2 velocity;
     private bool jumpDown;
     private bool jumpHeld;
-    private bool knockbackRecieved;
     //private bool facingRight = true;
     private bool cachedQueryStartInColliders;
 
@@ -48,8 +47,6 @@ public class Player : MonoBehaviour
     {
         time += Time.deltaTime;
         GetInput();
-
-        if (Input.GetKeyDown(KeyCode.X)) velocity.x = 10;
     }
 
     private void GetInput()
@@ -112,8 +109,8 @@ public class Player : MonoBehaviour
         Physics2D.queriesStartInColliders = false;
 
         // Ground and Ceiling
-        bool groundHit = Physics2D.CapsuleCast(col.bounds.center, col.size, col.direction, 0, Vector2.down, stats.GrounderDistance, ~stats.PlayerLayer);
-        bool ceilingHit = Physics2D.CapsuleCast(col.bounds.center, col.size, col.direction, 0, Vector2.up, stats.GrounderDistance, ~stats.PlayerLayer);
+        bool groundHit = Physics2D.CapsuleCast(col.bounds.center, col.size, col.direction, 0, Vector2.down, stats.GrounderDistance, stats.InteractLayers);
+        bool ceilingHit = Physics2D.CapsuleCast(col.bounds.center, col.size, col.direction, 0, Vector2.up, stats.GrounderDistance, stats.InteractLayers);
 
         // Hit a Ceiling
         if (ceilingHit) velocity.y = Mathf.Min(0, velocity.y);
@@ -210,7 +207,8 @@ public class Player : MonoBehaviour
         }
         else
         {
-            velocity.x = Mathf.MoveTowards(velocity.x, moveInput.x * stats.MaxSpeed, stats.Acceleration * Time.fixedDeltaTime);
+            var maxSpeed = grounded ? stats.MaxGroundSpeed : stats.MaxAirSpeed;
+            velocity.x = Mathf.MoveTowards(velocity.x, moveInput.x * maxSpeed, stats.Acceleration * Time.fixedDeltaTime);
         }
     }
 
@@ -262,8 +260,9 @@ public class Player : MonoBehaviour
 [Serializable]
 public struct Stats
 {
-    [Header("Layer")]
+    [Header("Layers")]
     public LayerMask PlayerLayer;
+    public LayerMask InteractLayers;
 
     [Header("Input")]
     public bool SnapInput;
@@ -271,7 +270,8 @@ public struct Stats
     public float HorizontalDeadZoneThreshold;
 
     [Header("Movement")]
-    public float MaxSpeed;
+    public float MaxGroundSpeed;
+    public float MaxAirSpeed;
     public float Acceleration;
     public float GroundDeceleration;
     public float AirDeceleration;
