@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8623238498077636705}
   - component: {fileID: 2638462722641621256}
   - component: {fileID: 5950580794899277605}
-  m_Layer: 15
+  m_Layer: 2
   m_Name: Room
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 8528440934213524315}
   - component: {fileID: 7214357405145410524}
   - component: {fileID: 2219698281496369938}
-  m_Layer: 16
+  m_Layer: 2
   m_Name: Camera Bounds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -213,7 +213,7 @@ PolygonCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -286,7 +286,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5655262926056663478}
   - component: {fileID: 8948107669022694483}
-  m_Layer: 15
+  m_Layer: 2
   m_Name: Room Bounds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
