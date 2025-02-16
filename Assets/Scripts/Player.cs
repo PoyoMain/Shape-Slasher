@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D))]
+[RequireComponent(typeof(Rigidbody2D))]
 public class Player : MonoBehaviour
 {
     [Header("Inputs")]
@@ -12,32 +12,34 @@ public class Player : MonoBehaviour
     [Header("Stats")]
     [SerializeField] private Stats stats;
 
+    [Header("Collision")]
+    [SerializeField] private CapsuleCollider2D hurtboxCollider;
+
     [Header("Broadcast Events")]
     [SerializeField] private IntEventSO playerDamagedEventSO;
     [SerializeField] private IntEventSO playerHealthUpdatedEventSO;
 
+    // Properties
+    private PlayerControls.GameplayControlsActions Controls => inputReader.Controls;
+
+    // Public variables
     public event Action<bool, float> GroundedChanged;
     public event Action Jumped;
 
-    private PlayerControls.GameplayControlsActions Controls => inputReader.Controls;
-
-    private Rigidbody2D rb;
-    private CapsuleCollider2D col;
-
+    // Private Variables
     private int health;
     private Vector2 moveInput;
     private Vector2 velocity;
     private bool jumpDown;
     private bool jumpHeld;
-    //private bool facingRight = true;
     private bool cachedQueryStartInColliders;
-
     private float time;
+    private Rigidbody2D rb;
+
 
     private void Awake()
     {
         TryGetComponent(out rb);
-        TryGetComponent(out col);
 
         health = stats.MaxHealth;
         cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
@@ -109,8 +111,8 @@ public class Player : MonoBehaviour
         Physics2D.queriesStartInColliders = false;
 
         // Ground and Ceiling
-        bool groundHit = Physics2D.CapsuleCast(col.bounds.center, col.size, col.direction, 0, Vector2.down, stats.GrounderDistance, stats.InteractLayers);
-        bool ceilingHit = Physics2D.CapsuleCast(col.bounds.center, col.size, col.direction, 0, Vector2.up, stats.GrounderDistance, stats.InteractLayers);
+        bool groundHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.down, stats.GrounderDistance, stats.GroundLayers);
+        bool ceilingHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.up, stats.GrounderDistance, stats.GroundLayers);
 
         // Hit a Ceiling
         if (ceilingHit) velocity.y = Mathf.Min(0, velocity.y);
@@ -138,6 +140,7 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
+        // Hit something that damages the player
         if (collider.TryGetComponent(out DamageComponent dmgComponent))
         {
             if (IsInvincible) return;
@@ -150,7 +153,7 @@ public class Player : MonoBehaviour
             }
             else
             {
-                invincibilityTimer = stats.InvincibleTime;
+                invincibilityTimer = stats.InvincibleTime; 
 
                 Vector2 directionToHitbox = (collider.transform.position - transform.position).normalized;
                 Vector2 force = -directionToHitbox * dmgComponent.Knockback;
@@ -175,7 +178,7 @@ public class Player : MonoBehaviour
 
     private void HandleJump()
     {
-        if (!endedJumpEarly && !grounded && !jumpHeld && rb.velocity.y > 0) endedJumpEarly = true;
+        if (!endedJumpEarly && !grounded && !jumpHeld && rb.velocity.y >= 0) endedJumpEarly = true;
 
         if (!jumpToConsume && !HasBufferedJump) return;
 
@@ -262,7 +265,7 @@ public struct Stats
 {
     [Header("Layers")]
     public LayerMask PlayerLayer;
-    public LayerMask InteractLayers;
+    public LayerMask GroundLayers;
 
     [Header("Input")]
     public bool SnapInput;
@@ -285,6 +288,10 @@ public struct Stats
     public float JumpEndEarlyGravityModifier;
     public float CoyoteTime;
     public float JumpBuffer;
+
+    [Header("Attacking")]
+    public float TimeBetweenAttacks;
+    public float SurfaceKnockback;
 
     [Header("Health")]
     public int MaxHealth;
