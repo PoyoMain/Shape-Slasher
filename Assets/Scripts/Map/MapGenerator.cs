@@ -30,10 +30,11 @@ public class MapGenerator : MonoBehaviour
         if (performOnAwake) GenMap();
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Return)) GenMap();
-    }
+    // Uncomment to allow generating the map with a button
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.Return)) GenMap();
+    //}
 
     #region Generation
 
