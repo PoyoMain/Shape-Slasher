@@ -10,7 +10,7 @@ public class RoomCameraActivator : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.transform.root.CompareTag("Player"))
         {
             cam.enabled = true;
             cam.Follow = collision.transform;
@@ -19,7 +19,7 @@ public class RoomCameraActivator : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.transform.root.CompareTag("Player"))
         {
             cam.enabled = false;
         }
