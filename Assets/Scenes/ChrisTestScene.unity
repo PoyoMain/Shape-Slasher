@@ -556,6 +556,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3133647179392771856, guid: 4a9afef52d08f914bb301fddaf77810e, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 300
+      objectReference: {fileID: 0}
     - target: {fileID: 6868990254702014433, guid: 4a9afef52d08f914bb301fddaf77810e, type: 3}
       propertyPath: m_Name
       value: Canvas - InGameUI
@@ -696,6 +700,26 @@ PrefabInstance:
     - target: {fileID: 4166714208754174496, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 4166714208754174496, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5303056119539884960, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.1777437
+      objectReference: {fileID: 0}
+    - target: {fileID: 5303056119539884960, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.0888718
+      objectReference: {fileID: 0}
+    - target: {fileID: 5303056119539884960, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2.1777437
+      objectReference: {fileID: 0}
+    - target: {fileID: 6120355519142509753, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6505127457543985821, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
       propertyPath: m_LocalPosition.x
