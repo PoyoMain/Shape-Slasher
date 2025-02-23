@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6619889674317754743}
   - component: {fileID: 8623238498077636705}
   - component: {fileID: 2638462722641621256}
-  - component: {fileID: 5950580794899277605}
+  - component: {fileID: 1358864939085781740}
   m_Layer: 2
   m_Name: Room
   m_TagString: Untagged
@@ -46,7 +46,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6239588643541357684}
-  m_BodyType: 2
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -63,7 +63,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!61 &2638462722641621256
 BoxCollider2D:
@@ -110,7 +110,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 40, y: 40}
   m_EdgeRadius: 0
---- !u!114 &5950580794899277605
+--- !u!114 &1358864939085781740
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -420,7 +420,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 3077356674550706689}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
   m_Name: 

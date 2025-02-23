@@ -161,6 +161,10 @@ public class Player : MonoBehaviour
 
             }
         }
+        else if (collider.TryGetComponent(out UpwardForceApplier upForceApplier))
+        {
+            if (velocity.y > 0) Knockback(Vector2.up * upForceApplier.ForceStrength);
+        }
     }
 
     #endregion
@@ -221,7 +225,7 @@ public class Player : MonoBehaviour
 
     private void Knockback(Vector2 force)
     {
-        velocity = force;
+        velocity += force;
     }
 
     #endregion
