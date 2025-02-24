@@ -22,6 +22,10 @@ public class Player : MonoBehaviour
     // Properties
     private PlayerControls.GameplayControlsActions Controls => inputReader.Controls;
 
+    // Constants
+    private const int ROTATION_FACING_RIGHT = 0;
+    private const int ROTATION_FACING_LEFT = 180;
+
     // Public variables
     public event Action<bool, float> GroundedChanged;
     public event Action Jumped;
@@ -74,6 +78,8 @@ public class Player : MonoBehaviour
     {
         HandleInvincibility();
         CheckCollisions();
+
+        HandleAttack();
 
         HandleJump();
         HandleDirection();
@@ -169,6 +175,15 @@ public class Player : MonoBehaviour
 
     #endregion
 
+    #region Attack
+
+    private void HandleAttack()
+    {
+
+    }
+
+    #endregion
+
     #region Jump
 
     private bool jumpToConsume;
@@ -216,6 +231,18 @@ public class Player : MonoBehaviour
         {
             var maxSpeed = grounded ? stats.MaxGroundSpeed : stats.MaxAirSpeed;
             velocity.x = Mathf.MoveTowards(velocity.x, moveInput.x * maxSpeed, stats.Acceleration * Time.fixedDeltaTime);
+
+            // Rotate GameObject based on movement input
+            if (velocity.x > 0 && transform.localEulerAngles.y != ROTATION_FACING_RIGHT)
+            {
+                Vector3 newRot = new(0, ROTATION_FACING_RIGHT, 0);
+                transform.localEulerAngles = newRot;
+            }
+            else if (velocity.x < 0 && transform.localEulerAngles.y != ROTATION_FACING_LEFT)
+            {
+                Vector3 newRot = new(0, ROTATION_FACING_LEFT, 0);
+                transform.localEulerAngles = newRot;
+            }
         }
     }
 
