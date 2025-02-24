@@ -3,13 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Rigidbody2D), typeof(Animator))]
 public class Player : MonoBehaviour
 {
     [Header("Inputs")]
     [SerializeField] private InputReaderSO inputReader;
 
-    [Header("Stats")]
+    [Space(20)]
     [SerializeField] private Stats stats;
 
     [Header("Collision")]
@@ -36,14 +36,17 @@ public class Player : MonoBehaviour
     private Vector2 velocity;
     private bool jumpDown;
     private bool jumpHeld;
+    private bool attackDown;
     private bool cachedQueryStartInColliders;
     private float time;
     private Rigidbody2D rb;
+    private Animator anim;
 
 
     private void Awake()
     {
         TryGetComponent(out rb);
+        TryGetComponent(out anim);
 
         health = stats.MaxHealth;
         cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
@@ -60,6 +63,10 @@ public class Player : MonoBehaviour
         jumpDown = Controls.Jump.WasPressedThisFrame();
         jumpHeld = Controls.Jump.IsPressed();
         moveInput = Controls.Move.ReadValue<Vector2>();
+        if (!attackDown)
+        {
+            attackDown = Controls.Attack.WasPressedThisFrame();
+        }
 
         if (stats.SnapInput)
         {
@@ -159,7 +166,7 @@ public class Player : MonoBehaviour
             }
             else
             {
-                invincibilityTimer = stats.InvincibleTime; 
+                invincibilityTimer = stats.InvincibleTime;
 
                 Vector2 directionToHitbox = (collider.transform.position - transform.position).normalized;
                 Vector2 force = -directionToHitbox * dmgComponent.Knockback;
@@ -177,9 +184,23 @@ public class Player : MonoBehaviour
 
     #region Attack
 
+    private float attackTimer;
+    private bool CanAttack => attackTimer <= 0;
     private void HandleAttack()
     {
+        if (!CanAttack) attackTimer -= Time.fixedDeltaTime;
 
+        if (!attackDown) return;
+
+        if (attackDown && CanAttack) ExecuteAttack();
+
+        attackDown = false;
+    }
+
+    private void ExecuteAttack()
+    {
+        anim.SetTrigger("Attack");
+        attackTimer = stats.TimeBetweenAttacks;
     }
 
     #endregion
@@ -233,12 +254,12 @@ public class Player : MonoBehaviour
             velocity.x = Mathf.MoveTowards(velocity.x, moveInput.x * maxSpeed, stats.Acceleration * Time.fixedDeltaTime);
 
             // Rotate GameObject based on movement input
-            if (velocity.x > 0 && transform.localEulerAngles.y != ROTATION_FACING_RIGHT)
+            if (moveInput.x > 0 && transform.localEulerAngles.y != ROTATION_FACING_RIGHT)
             {
                 Vector3 newRot = new(0, ROTATION_FACING_RIGHT, 0);
                 transform.localEulerAngles = newRot;
             }
-            else if (velocity.x < 0 && transform.localEulerAngles.y != ROTATION_FACING_LEFT)
+            else if (moveInput.x < 0 && transform.localEulerAngles.y != ROTATION_FACING_LEFT)
             {
                 Vector3 newRot = new(0, ROTATION_FACING_LEFT, 0);
                 transform.localEulerAngles = newRot;
@@ -250,10 +271,18 @@ public class Player : MonoBehaviour
 
     #region Knockback
 
-    private void Knockback(Vector2 force)
+    private void Knockback(Vector2 force) => velocity += force;
+
+    [ContextMenu("Ignore")]
+    private void WallKnockback(Vector2 collPos)
     {
-        velocity += force;
+        Vector2 forceDirection;
+        if (collPos.x > transform.position.x) forceDirection = Vector2.left;
+        else forceDirection = Vector2.right;
+        
+        velocity = new ((forceDirection * stats.SurfaceKnockback).x, velocity.y); 
     }
+
 
     #endregion
 

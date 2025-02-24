@@ -634,9 +634,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2755181245538217731, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
+      propertyPath: stats.SurfaceKnockback
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2755181245538217731, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
+      propertyPath: stats.TimeBetweenAttacks
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 4166714208754174496, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 4166714208754174496, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8006584843418345995, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
+      propertyPath: m_UseFullKinematicContacts
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8705124770676466388, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
