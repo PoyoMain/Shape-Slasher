@@ -16,7 +16,8 @@ public class Player : MonoBehaviour
     [SerializeField] private CapsuleCollider2D hurtboxCollider;
 
     [Header("Broadcast Events")]
-    [SerializeField] private IntEventSO playerDamagedEventSO;
+    [SerializeField] private VoidEventSO playerDamagedEventSO;
+    [SerializeField] private IntEventSO playerHealthLossEventSO;
     [SerializeField] private IntEventSO playerHealthUpdatedEventSO;
 
     // Properties
@@ -254,7 +255,8 @@ public class Player : MonoBehaviour
 
     public void Damage(int dmgAmount)
     {
-        playerDamagedEventSO.RaiseEvent(dmgAmount);
+        playerHealthLossEventSO.RaiseEvent(dmgAmount);
+        playerDamagedEventSO.RaiseEvent();
 
 
         health -= dmgAmount;
