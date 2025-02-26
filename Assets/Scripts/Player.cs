@@ -114,7 +114,7 @@ public class Player : MonoBehaviour
         // Ground, Bouncepad, and Ceiling Check
         bool groundHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.down, stats.GrounderDistance, stats.GroundLayers);
         RaycastHit2D bounceHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.down, stats.GrounderDistance, stats.BounceLayer);
-        bool ceilingHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.up, stats.GrounderDistance, stats.GroundLayers);
+        bool ceilingHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.up, stats.GrounderDistance, stats.CeilingLayers);
 
         // Hit a Ceiling
         if (ceilingHit) velocity.y = Mathf.Min(0, velocity.y);
@@ -283,6 +283,7 @@ public struct Stats
 {
     [Header("Layers")]
     public LayerMask PlayerLayer;
+    public LayerMask CeilingLayers;
     public LayerMask GroundLayers;
     public LayerMask BounceLayer;
 
