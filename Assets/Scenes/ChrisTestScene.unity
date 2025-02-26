@@ -160,7 +160,7 @@ MonoBehaviour:
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: 0000000015dfedb8b9ecf79cb72356b0c945067667cf06476b7c0c88c3620a418139a8c36982b159171990c1f5f05a4b25796fcce102a562
+  m_ApplyToSortingLayers: 0000000015dfedb8b9ecf79cb72356b0c945067667cf06476b7c0c88c3620a418139a8c36982b159171990c1f5f05a4b25796fcc
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -905,12 +905,32 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2755181245538217731, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
+      propertyPath: stats.SurfaceKnockback
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2755181245538217731, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
+      propertyPath: stats.TimeBetweenAttacks
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 4166714208754174496, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 4166714208754174496, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4829347791518249693, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8006584843418345995, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
+      propertyPath: m_UseFullKinematicContacts
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8705124770676466388, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
+      propertyPath: m_IsTrigger
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
