@@ -111,12 +111,19 @@ public class Player : MonoBehaviour
     {
         Physics2D.queriesStartInColliders = false;
 
-        // Ground and Ceiling
+        // Ground, Bouncepad, and Ceiling Check
         bool groundHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.down, stats.GrounderDistance, stats.GroundLayers);
+        RaycastHit2D bounceHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.down, stats.GrounderDistance, stats.BounceLayer);
         bool ceilingHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.up, stats.GrounderDistance, stats.GroundLayers);
 
         // Hit a Ceiling
         if (ceilingHit) velocity.y = Mathf.Min(0, velocity.y);
+
+        // Landed on a bounce pad
+        if (bounceHit && bounceHit.collider.TryGetComponent(out BouncePad bouncePad))
+        {
+            KnockbackOnlyVertical(Vector2.up * bouncePad.BounceAmount);
+        }
 
         // Landed on Ground
         if (!grounded && groundHit)
@@ -229,6 +236,11 @@ public class Player : MonoBehaviour
         velocity += force;
     }
 
+    private void KnockbackOnlyVertical(Vector2 force)
+    {
+        velocity.y = force.y;
+    }
+
     #endregion
 
     #region Gravity
@@ -272,6 +284,7 @@ public struct Stats
     [Header("Layers")]
     public LayerMask PlayerLayer;
     public LayerMask GroundLayers;
+    public LayerMask BounceLayer;
 
     [Header("Input")]
     public bool SnapInput;
