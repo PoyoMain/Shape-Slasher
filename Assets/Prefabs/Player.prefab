@@ -326,12 +326,24 @@ MonoBehaviour:
     PlayerLayer:
       serializedVersion: 2
       m_Bits: 1024
+    CeilingLayers:
+      serializedVersion: 2
+      m_Bits: 2097152
     GroundLayers:
+      serializedVersion: 2
+      m_Bits: 6291456
+    BounceLayer:
+      serializedVersion: 2
+      m_Bits: 268435456
+    OneWayPlatformLayer:
+      serializedVersion: 2
+      m_Bits: 4194304
+    SolidSurfaceLayer:
       serializedVersion: 2
       m_Bits: 2097152
     SnapInput: 1
-    VerticalDeadZoneThreshold: 0.3
-    HorizontalDeadZoneThreshold: 0.1
+    VerticalDeadZoneThreshold: 0.9
+    HorizontalDeadZoneThreshold: 0.4
     MaxGroundSpeed: 10
     MaxAirSpeed: 12
     Acceleration: 120
@@ -339,6 +351,7 @@ MonoBehaviour:
     AirDeceleration: 80
     GroundingForce: -1.5
     GrounderDistance: 0.1
+    PlatformDistance: 0.1
     JumpPower: 26
     MaxFallSpeed: 80
     FallAcceleration: 60
