@@ -9,7 +9,6 @@ public class RoomCameraActivator : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera cam;
 
     private bool isColliding;
-    private Coroutine resetCoroutine;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -19,8 +18,6 @@ public class RoomCameraActivator : MonoBehaviour
 
             isColliding = true;
             Invoke(nameof(ResetStuff), Time.deltaTime);
-            //if (resetCoroutine != null) return;
-            //else resetCoroutine = StartCoroutine(nameof(ResetStuff));
 
             cam.enabled = true;
             cam.Follow = collision.transform;
@@ -35,7 +32,6 @@ public class RoomCameraActivator : MonoBehaviour
 
             isColliding = true;
             Invoke(nameof(ResetStuff), Time.deltaTime);
-            //isColliding = false;
             cam.enabled = false;
         }
     }
