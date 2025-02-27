@@ -9,6 +9,7 @@ public class Golem : MonoBehaviour
     [Header("Health")]
     [SerializeField] private float health;
     [SerializeField] private float invincibilityTime;
+    [SerializeField] private float knockbackTime;
 
     [Header("Patrol")]
     [SerializeField] private float patrolSpeed;
@@ -180,6 +181,17 @@ public class Golem : MonoBehaviour
             if (IsInvincible) return;
 
             TakeDamage(damageComponent.Damage);
+
+            //Vector2 directionToHitbox = (collision.transform.position - transform.position).normalized;
+            //Vector2 force = -directionToHitbox * damageComponent.Knockback;
+            //Knockback(force);
+
+            Vector2 forceDirection;
+
+            if (collision.transform.position.x > transform.position.x) forceDirection = Vector2.left;
+            else forceDirection = Vector2.right;
+            Vector2 force = new((forceDirection * damageComponent.Knockback).x, rigid.velocity.y);
+            Knockback(force);
         }
     }
 
@@ -222,5 +234,25 @@ public class Golem : MonoBehaviour
 
     #endregion
 
-    private enum State { Patroling, Attacking, Turning }
+    #region Knockback
+
+    private State cachedStateBeforeKnockback;
+    private void Knockback(Vector2 force)
+    {
+        Vector2 velocity = rigid.velocity;
+        velocity.x = force.x;
+        rigid.velocity = velocity;
+        cachedStateBeforeKnockback = state;
+        state = State.Knockback;
+        Invoke(nameof(EndKnockback), knockbackTime);
+    }
+
+    private void EndKnockback()
+    {
+        state = cachedStateBeforeKnockback;
+    }
+
+    #endregion
+
+    private enum State { Patroling, Attacking, Turning, Knockback }
 }
