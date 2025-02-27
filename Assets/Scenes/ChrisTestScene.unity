@@ -234,7 +234,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5ae805b40ebbae4a9d20a874b9d62e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfRooms: 10
+  numberOfRooms: 100
   performOnAwake: 1
   startRooms:
   - {fileID: 11400000, guid: cb618a61ea2a8a14088c1f69879c23bb, type: 2}
@@ -671,7 +671,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: ada2e8c58254f6648b051cdfa649c16b, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -919,7 +919,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4166714208754174496, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4829347791518249693, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
       propertyPath: m_Enabled
