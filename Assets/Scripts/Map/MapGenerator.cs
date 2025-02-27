@@ -103,7 +103,7 @@ public class MapGenerator : MonoBehaviour
                     else compatibleRoomsFound = true;
                 }
 
-                // If a room was not found, start completely from scratch
+                // If a room was not found that was compatible with existing ones, start completely from scratch
                 if (!compatibleRoomsFound) break;
 
                 // Spawn Room and add it to list
@@ -121,7 +121,7 @@ public class MapGenerator : MonoBehaviour
                 // Assign new current room
                 currentRoom = newRoom;
 
-                // If the right number of rooms has been spawned, close unused doors, place boss room, and end loop
+                // If the right number of rooms has been spawned, close unused doors, place boss room, spawn all rooms in game, and end loop
                 if (i == numberOfRooms - 1)
                 {
                     if (!CloseUnusedDoors(spawnedRooms)) break;

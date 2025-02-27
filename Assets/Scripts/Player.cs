@@ -16,7 +16,8 @@ public class Player : MonoBehaviour
     [SerializeField] private CapsuleCollider2D hurtboxCollider;
 
     [Header("Broadcast Events")]
-    [SerializeField] private IntEventSO playerDamagedEventSO;
+    [SerializeField] private VoidEventSO playerDamagedEventSO;
+    [SerializeField] private IntEventSO playerHealthLossEventSO;
     [SerializeField] private IntEventSO playerHealthUpdatedEventSO;
 
     // Properties
@@ -105,17 +106,25 @@ public class Player : MonoBehaviour
 
     private float frameLeftGround = float.MinValue;
     private bool grounded;
+    private Collider2D colliderToTurnOnOnceGrounded;
 
     private void CheckCollisions()
     {
         Physics2D.queriesStartInColliders = false;
 
-        // Ground and Ceiling
+        // Ground, Bouncepad, and Ceiling Check
         bool groundHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.down, stats.GrounderDistance, stats.GroundLayers);
-        bool ceilingHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.up, stats.GrounderDistance, stats.GroundLayers);
+        RaycastHit2D bounceHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.down, stats.GrounderDistance, stats.BounceLayer);
+        bool ceilingHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.up, stats.GrounderDistance, stats.CeilingLayers);
 
         // Hit a Ceiling
         if (ceilingHit) velocity.y = Mathf.Min(0, velocity.y);
+
+        // Landed on a bounce pad
+        if (bounceHit && bounceHit.collider.TryGetComponent(out BouncePad bouncePad))
+        {
+            KnockbackOnlyVertical(Vector2.up * bouncePad.BounceAmount);
+        }
 
         // Landed on Ground
         if (!grounded && groundHit)
@@ -124,6 +133,11 @@ public class Player : MonoBehaviour
             coyoteUsable = true;
             bufferedJumpUsable = true;
             endedJumpEarly = false;
+            if (colliderToTurnOnOnceGrounded != null)
+            {
+                Physics2D.IgnoreCollision(hurtboxCollider, colliderToTurnOnOnceGrounded, false);
+                colliderToTurnOnOnceGrounded = null;
+            }
             GroundedChanged?.Invoke(true, Mathf.Abs(velocity.y));
         }
 
@@ -169,7 +183,7 @@ public class Player : MonoBehaviour
 
     #endregion
 
-    #region Jump
+    #region Jump & Crouch
 
     private bool jumpToConsume;
     private bool bufferedJumpUsable;
@@ -180,11 +194,15 @@ public class Player : MonoBehaviour
     private bool HasBufferedJump => bufferedJumpUsable && time < timeJumpWasPressed + stats.JumpBuffer;
     private bool CanUseCoyote => coyoteUsable && !grounded && time < frameLeftGround + stats.CoyoteTime;
 
+    private bool CrouchDown => moveInput.y < 0;
+
     private void HandleJump()
     {
         if (!endedJumpEarly && !grounded && !jumpHeld && rb.velocity.y >= 0) endedJumpEarly = true;
 
         if (!jumpToConsume && !HasBufferedJump) return;
+
+        if (CrouchDown && CheckCrouch()) return; 
 
         if (grounded || CanUseCoyote) ExecuteJump();
 
@@ -199,6 +217,20 @@ public class Player : MonoBehaviour
         coyoteUsable = false;
         velocity.y = stats.JumpPower;
         Jumped?.Invoke();
+    }
+
+    private bool CheckCrouch()
+    {
+        bool groundHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.down, stats.PlatformDistance, stats.SolidSurfaceLayer);
+        RaycastHit2D platformHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.down, stats.PlatformDistance, stats.OneWayPlatformLayer);
+
+        if (!groundHit && platformHit)
+        {
+            colliderToTurnOnOnceGrounded = platformHit.collider;
+            Physics2D.IgnoreCollision(hurtboxCollider, colliderToTurnOnOnceGrounded, true);
+            return true;
+        }
+        else return false;
     }
 
     #endregion
@@ -228,6 +260,11 @@ public class Player : MonoBehaviour
         velocity += force;
     }
 
+    private void KnockbackOnlyVertical(Vector2 force)
+    {
+        velocity.y = force.y;
+    }
+
     #endregion
 
     #region Gravity
@@ -254,7 +291,8 @@ public class Player : MonoBehaviour
 
     public void Damage(int dmgAmount)
     {
-        playerDamagedEventSO.RaiseEvent(dmgAmount);
+        playerHealthLossEventSO.RaiseEvent(dmgAmount);
+        playerDamagedEventSO.RaiseEvent();
 
 
         health -= dmgAmount;
@@ -269,7 +307,11 @@ public struct Stats
 {
     [Header("Layers")]
     public LayerMask PlayerLayer;
+    public LayerMask CeilingLayers;
     public LayerMask GroundLayers;
+    public LayerMask BounceLayer;
+    public LayerMask OneWayPlatformLayer;
+    public LayerMask SolidSurfaceLayer;
 
     [Header("Input")]
     public bool SnapInput;
@@ -284,6 +326,7 @@ public struct Stats
     public float AirDeceleration;
     public float GroundingForce;
     public float GrounderDistance;
+    public float PlatformDistance;
 
     [Header("Jump")]
     public float JumpPower;
