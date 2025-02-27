@@ -20,6 +20,10 @@ public class Player : MonoBehaviour
     [SerializeField] private IntEventSO playerHealthLossEventSO;
     [SerializeField] private IntEventSO playerHealthUpdatedEventSO;
 
+    [Header("Attack")]
+    [SerializeField] private GameObject hitbox;
+    [SerializeField] private Animator hitboxAnimator;
+
     // Properties
     private PlayerControls.GameplayControlsActions Controls => inputReader.Controls;
 
@@ -36,6 +40,7 @@ public class Player : MonoBehaviour
     private bool cachedQueryStartInColliders;
     private float time;
     private Rigidbody2D rb;
+    private bool facingRight = true;
 
 
     private void Awake()
@@ -68,6 +73,11 @@ public class Player : MonoBehaviour
         {
             jumpToConsume = true;
             timeJumpWasPressed = time;
+        }
+
+        if (Controls.Attack.WasPressedThisFrame())
+        {
+            Attack();
         }
     }
 
@@ -248,8 +258,22 @@ public class Player : MonoBehaviour
         {
             var maxSpeed = grounded ? stats.MaxGroundSpeed : stats.MaxAirSpeed;
             velocity.x = Mathf.MoveTowards(velocity.x, moveInput.x * maxSpeed, stats.Acceleration * Time.fixedDeltaTime);
+
+            if ((moveInput.x > 0 && !facingRight) || (moveInput.x < 0 && facingRight))
+            {
+                Flip();
+            }
         }
     }
+
+    private void Flip()
+    {
+        facingRight = !facingRight;
+        Vector3 scale = transform.localScale;
+        scale.x *= -1;
+        transform.localScale = scale;
+    }
+
 
     #endregion
 
@@ -297,6 +321,30 @@ public class Player : MonoBehaviour
 
         health -= dmgAmount;
         playerHealthUpdatedEventSO.RaiseEvent(health);
+    }
+
+    #endregion
+
+    #region Attacking
+
+    private void Attack()
+    {
+        if (hitbox == null || hitboxAnimator == null) return;
+
+        Vector3 scale = hitbox.transform.localScale;
+        scale.x = facingRight ? 1 : -1;
+        hitbox.transform.localScale = scale;
+
+        hitboxAnimator.SetTrigger("Attack");
+
+        hitbox.SetActive(true);
+        StartCoroutine(DisableHitboxAfterDelay(0.3f));
+    }
+
+    private IEnumerator DisableHitboxAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        hitbox.SetActive(false);
     }
 
     #endregion
