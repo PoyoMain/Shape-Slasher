@@ -14,7 +14,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &7154767595305904356
 Transform:
@@ -85,7 +85,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &5057442304050141024
 Transform:
@@ -160,7 +160,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2327244852245909150
 Transform:
@@ -261,7 +261,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &3201199331238594141
 Transform:
@@ -2759,7 +2759,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &256576270927203604
 Transform:
@@ -2802,7 +2802,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &6063978979292832565
 Transform:
@@ -2830,9 +2830,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2327244852245909150}
     m_Modifications:
+    - target: {fileID: 2388074047173374220, guid: 4e9034d9c0fa3eb4d9fce5be6ef31f9d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4118957480606953556, guid: 4e9034d9c0fa3eb4d9fce5be6ef31f9d, type: 3}
       propertyPath: m_Name
       value: OneWayPlatform (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4118957480606953556, guid: 4e9034d9c0fa3eb4d9fce5be6ef31f9d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6218960037447595424, guid: 4e9034d9c0fa3eb4d9fce5be6ef31f9d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7001339169843206341, guid: 4e9034d9c0fa3eb4d9fce5be6ef31f9d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8440944543015381739, guid: 4e9034d9c0fa3eb4d9fce5be6ef31f9d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2899,6 +2915,10 @@ PrefabInstance:
     - target: {fileID: 3126711767812144352, guid: 632e03a183b11084390f2a27326767ab, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3126711767812144352, guid: 632e03a183b11084390f2a27326767ab, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8513671654652205635, guid: 632e03a183b11084390f2a27326767ab, type: 3}
       propertyPath: m_LocalScale.x
@@ -3002,9 +3022,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1208958105218132635, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1724752861818754559, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 6798025488820329580, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 7456479327556922854, guid: 671e864bbf640ec4f814584fec890144, type: 3}
       propertyPath: m_Name
       value: Door W2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7456479327556922854, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3031,6 +3067,10 @@ PrefabInstance:
     - target: {fileID: 3126711767812144352, guid: 632e03a183b11084390f2a27326767ab, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3126711767812144352, guid: 632e03a183b11084390f2a27326767ab, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8513671654652205635, guid: 632e03a183b11084390f2a27326767ab, type: 3}
       propertyPath: m_LocalScale.x
@@ -3134,9 +3174,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1208958105218132635, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1724752861818754559, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 6798025488820329580, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 7456479327556922854, guid: 671e864bbf640ec4f814584fec890144, type: 3}
       propertyPath: m_Name
       value: Door E3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7456479327556922854, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3196,9 +3252,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 1208958105218132635, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1724752861818754559, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 6798025488820329580, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 7456479327556922854, guid: 671e864bbf640ec4f814584fec890144, type: 3}
       propertyPath: m_Name
       value: Door N1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7456479327556922854, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3258,9 +3330,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 1208958105218132635, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1724752861818754559, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 6798025488820329580, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 7456479327556922854, guid: 671e864bbf640ec4f814584fec890144, type: 3}
       propertyPath: m_Name
       value: Door N3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7456479327556922854, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3320,9 +3408,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1208958105218132635, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1724752861818754559, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 6798025488820329580, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 7456479327556922854, guid: 671e864bbf640ec4f814584fec890144, type: 3}
       propertyPath: m_Name
       value: Door W1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7456479327556922854, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3382,9 +3486,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 1208958105218132635, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1724752861818754559, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 6798025488820329580, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 7456479327556922854, guid: 671e864bbf640ec4f814584fec890144, type: 3}
       propertyPath: m_Name
       value: Door S3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7456479327556922854, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3444,9 +3564,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1208958105218132635, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1724752861818754559, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 6798025488820329580, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 7456479327556922854, guid: 671e864bbf640ec4f814584fec890144, type: 3}
       propertyPath: m_Name
       value: Door E2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7456479327556922854, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3506,9 +3642,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 1208958105218132635, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1724752861818754559, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 6798025488820329580, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 7456479327556922854, guid: 671e864bbf640ec4f814584fec890144, type: 3}
       propertyPath: m_Name
       value: Door N2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7456479327556922854, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3528,9 +3680,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2327244852245909150}
     m_Modifications:
+    - target: {fileID: 2388074047173374220, guid: 4e9034d9c0fa3eb4d9fce5be6ef31f9d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4118957480606953556, guid: 4e9034d9c0fa3eb4d9fce5be6ef31f9d, type: 3}
       propertyPath: m_Name
       value: OneWayPlatform (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4118957480606953556, guid: 4e9034d9c0fa3eb4d9fce5be6ef31f9d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6218960037447595424, guid: 4e9034d9c0fa3eb4d9fce5be6ef31f9d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7001339169843206341, guid: 4e9034d9c0fa3eb4d9fce5be6ef31f9d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8440944543015381739, guid: 4e9034d9c0fa3eb4d9fce5be6ef31f9d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3630,9 +3798,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1208958105218132635, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1724752861818754559, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 6798025488820329580, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 7456479327556922854, guid: 671e864bbf640ec4f814584fec890144, type: 3}
       propertyPath: m_Name
       value: Door E1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7456479327556922854, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3659,6 +3843,10 @@ PrefabInstance:
     - target: {fileID: 3126711767812144352, guid: 632e03a183b11084390f2a27326767ab, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3126711767812144352, guid: 632e03a183b11084390f2a27326767ab, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8513671654652205635, guid: 632e03a183b11084390f2a27326767ab, type: 3}
       propertyPath: m_LocalScale.x
@@ -3762,9 +3950,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 1208958105218132635, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1724752861818754559, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 6798025488820329580, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 7456479327556922854, guid: 671e864bbf640ec4f814584fec890144, type: 3}
       propertyPath: m_Name
       value: Door S2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7456479327556922854, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3784,9 +3988,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2327244852245909150}
     m_Modifications:
+    - target: {fileID: 2388074047173374220, guid: 4e9034d9c0fa3eb4d9fce5be6ef31f9d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4118957480606953556, guid: 4e9034d9c0fa3eb4d9fce5be6ef31f9d, type: 3}
       propertyPath: m_Name
       value: OneWayPlatform
+      objectReference: {fileID: 0}
+    - target: {fileID: 4118957480606953556, guid: 4e9034d9c0fa3eb4d9fce5be6ef31f9d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6218960037447595424, guid: 4e9034d9c0fa3eb4d9fce5be6ef31f9d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7001339169843206341, guid: 4e9034d9c0fa3eb4d9fce5be6ef31f9d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8440944543015381739, guid: 4e9034d9c0fa3eb4d9fce5be6ef31f9d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3886,9 +4106,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 1208958105218132635, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1724752861818754559, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 6798025488820329580, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 7456479327556922854, guid: 671e864bbf640ec4f814584fec890144, type: 3}
       propertyPath: m_Name
       value: Door S1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7456479327556922854, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3948,9 +4184,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1208958105218132635, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1724752861818754559, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 6798025488820329580, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 7456479327556922854, guid: 671e864bbf640ec4f814584fec890144, type: 3}
       propertyPath: m_Name
       value: Door W3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7456479327556922854, guid: 671e864bbf640ec4f814584fec890144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
