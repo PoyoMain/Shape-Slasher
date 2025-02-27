@@ -3,12 +3,19 @@ using System.Collections.Generic;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Rigidbody2D), typeof(Animator))]
 public class Golem : MonoBehaviour
 {
     [Header("Patrol")]
     [SerializeField] private float patrolSpeed;
+    [SerializeField] private float startPatrolTime;
     [SerializeField] private float turnTime;
+
+    [Header("Attacking")]
+    [SerializeField] private LayerMask playerLayer;
+    [SerializeField] private float attackDistance;
+    [SerializeField] private float playerBehindDistance;
+    [SerializeField] private float attackCooldownTime;
 
     [Header("Collisions")]
     [SerializeField] private CapsuleCollider2D bodyCollider;
@@ -19,17 +26,21 @@ public class Golem : MonoBehaviour
     [SerializeField] private float groundRaycastDistance;
     [SerializeField] private float wallRaycastDistance;
 
+    // Constants
     private const int ROTATION_FACINGRIGHT = 0;
     private const int ROTATION_FACINGLEFT = 180;
 
+    // Private Variables
     private State state = State.Patroling;
-    private enum State { Patroling, Attacking, Turning }
-
     private Rigidbody2D rigid;
+    private Animator anim;
 
     private void Awake()
     {
         TryGetComponent(out rigid);
+        TryGetComponent(out anim);
+
+        ChangeState(State.Patroling);
     }
 
     private void FixedUpdate()
@@ -40,7 +51,7 @@ public class Golem : MonoBehaviour
         }
         else if (state == State.Attacking)
         {
-
+            AttackState();
         }
         else if (state == State.Turning)
         {
@@ -48,12 +59,41 @@ public class Golem : MonoBehaviour
         }
     }
 
+    private void ChangeState(State newState)
+    {
+        state = newState;
+
+        switch (state)
+        {
+            case State.Patroling:
+                StopMoving();
+                startPatrollingTimer = startPatrolTime;
+                break;
+            case State.Attacking:
+                StopMoving();
+                break;
+            case State.Turning:
+                StopMoving();
+                turnTimer = turnTime;
+                break;
+        }
+    }
+
     #region Patrolling
 
+    private float startPatrollingTimer;
     private bool facingRight = true;
+
     private int MoveDirection => facingRight ? 1 : -1;
+
     private void PatrolState()
     {
+        if (CheckForPlayer()) return;
+        if (startPatrollingTimer > 0)
+        {
+            startPatrollingTimer -= Time.fixedDeltaTime;
+            return;
+        }
         if (CheckForTurn()) return;
         Move();
     }
@@ -66,9 +106,7 @@ public class Golem : MonoBehaviour
 
         if (!groundHit || wallHit)
         {
-            state = State.Turning;
-            turnTimer = turnTime;
-            StopMoving();
+            ChangeState(State.Turning);
         }
         return !groundHit || wallHit;
     }
@@ -89,6 +127,48 @@ public class Golem : MonoBehaviour
 
     #endregion
 
+    #region Attacking
+
+    private float attackCooldownTimer;
+
+    private bool AttackOnCooldown => attackCooldownTimer > 0;
+
+    private void AttackState()
+    {
+        if (AttackOnCooldown)
+        {
+            attackCooldownTimer -= Time.fixedDeltaTime;
+            return;
+        }
+        if (!CheckForPlayer()) return;
+
+        ExecuteAttack();
+    }
+
+    private void ExecuteAttack()
+    {
+        anim.SetTrigger("Attack");
+        attackCooldownTimer = attackCooldownTime;
+    }
+
+    #endregion
+
+    #region PlayerChecks
+
+    private bool CheckForPlayer()
+    {
+        bool playerHit = Physics2D.CapsuleCast(bodyCollider.bounds.center, bodyCollider.size, bodyCollider.direction, 0, MoveDirection * Vector2.right, attackDistance, playerLayer);
+        bool playerHitBehind = Physics2D.CapsuleCast(bodyCollider.bounds.center, bodyCollider.size, bodyCollider.direction, 0, -MoveDirection * Vector2.right, playerBehindDistance, playerLayer);
+
+        if (playerHit && state != State.Attacking) ChangeState(State.Attacking);
+        else if (!playerHit && state != State.Patroling) ChangeState(State.Patroling);
+        else if (playerHitBehind && state != State.Turning) TurnAround();
+
+        return playerHit;
+    }
+
+    #endregion
+
     #region Turning
 
     private float turnTimer;
@@ -98,7 +178,7 @@ public class Golem : MonoBehaviour
         else
         {
             TurnAround();
-            state = State.Patroling;
+            ChangeState(State.Patroling);
         }
     }
 
@@ -118,4 +198,6 @@ public class Golem : MonoBehaviour
     {
         Gizmos.DrawRay(raycastPoint.position, Vector2.down);
     }
+
+    private enum State { Patroling, Attacking, Turning }
 }
