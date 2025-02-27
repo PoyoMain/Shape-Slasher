@@ -6,6 +6,10 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D), typeof(Animator))]
 public class Golem : MonoBehaviour
 {
+    [Header("Health")]
+    [SerializeField] private float health;
+    [SerializeField] private float invincibilityTime;
+
     [Header("Patrol")]
     [SerializeField] private float patrolSpeed;
     [SerializeField] private float startPatrolTime;
@@ -98,19 +102,6 @@ public class Golem : MonoBehaviour
         Move();
     }
 
-    private bool CheckForTurn()
-    {
-        // Check for ground
-        bool groundHit = Physics2D.Raycast(raycastPoint.position, Vector2.down, bodyCollider.size.y / 2 + groundRaycastDistance, groundLayers);
-        bool wallHit = Physics2D.CapsuleCast(bodyCollider.bounds.center, bodyCollider.size, bodyCollider.direction, 0, MoveDirection * Vector2.right, wallRaycastDistance, groundLayers);
-
-        if (!groundHit || wallHit)
-        {
-            ChangeState(State.Turning);
-        }
-        return !groundHit || wallHit;
-    }
-
     private void Move()
     {
         Vector2 velocity = rigid.velocity;
@@ -153,7 +144,22 @@ public class Golem : MonoBehaviour
 
     #endregion
 
-    #region PlayerChecks
+    #region Collisions
+
+    private float invincibleTimer;
+    private bool IsInvincible => invincibleTimer > 0;
+    private bool CheckForTurn()
+    {
+        // Check for ground
+        bool groundHit = Physics2D.Raycast(raycastPoint.position, Vector2.down, bodyCollider.size.y / 2 + groundRaycastDistance, groundLayers);
+        bool wallHit = Physics2D.CapsuleCast(bodyCollider.bounds.center, bodyCollider.size, bodyCollider.direction, 0, MoveDirection * Vector2.right, wallRaycastDistance, groundLayers);
+
+        if (!groundHit || wallHit)
+        {
+            ChangeState(State.Turning);
+        }
+        return !groundHit || wallHit;
+    }
 
     private bool CheckForPlayer()
     {
@@ -165,6 +171,16 @@ public class Golem : MonoBehaviour
         else if (playerHitBehind && state != State.Turning) TurnAround();
 
         return playerHit;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.TryGetComponent(out DamageComponent damageComponent))
+        {
+            if (IsInvincible) return;
+
+            TakeDamage(damageComponent.Damage);
+        }
     }
 
     #endregion
@@ -194,10 +210,17 @@ public class Golem : MonoBehaviour
 
     #endregion
 
-    private void OnDrawGizmos()
+    #region Health & Damage
+
+    private void TakeDamage(int damage)
     {
-        Gizmos.DrawRay(raycastPoint.position, Vector2.down);
+        health -= damage;
+
+        if (health < 0) Destroy(gameObject);
+        else invincibleTimer = invincibilityTime;
     }
+
+    #endregion
 
     private enum State { Patroling, Attacking, Turning }
 }
