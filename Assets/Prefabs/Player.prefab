@@ -121,6 +121,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8597065724190542166}
   - component: {fileID: 1122753628286531032}
+  - component: {fileID: 4829347791518249693}
   m_Layer: 10
   m_Name: BodyCollider
   m_TagString: Player
@@ -178,6 +179,51 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1, y: 2}
   m_Direction: 0
+--- !u!61 &4829347791518249693
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2559929731661939074}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 6200000, guid: 53b2b3495a5b0084db0a147517ed7546, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -0.8}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.85, y: 0.3}
+  m_EdgeRadius: 0.05
 --- !u!1 &4166714208754174496
 GameObject:
   m_ObjectHideFlags: 0
@@ -188,6 +234,7 @@ GameObject:
   m_Component:
   - component: {fileID: 782208810798574963}
   - component: {fileID: 6300668003018025026}
+  - component: {fileID: 2363451033548986081}
   - component: {fileID: 2755181245538217731}
   m_Layer: 10
   m_Name: Player
@@ -241,6 +288,27 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!95 &2363451033548986081
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4166714208754174496}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 41c618de6b2e0b045bed32492ceb2dad, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &2755181245538217731
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -290,8 +358,8 @@ MonoBehaviour:
     JumpEndEarlyGravityModifier: 3
     CoyoteTime: 0.15
     JumpBuffer: 0.2
-    TimeBetweenAttacks: 0
-    SurfaceKnockback: 0
+    TimeBetweenAttacks: 0.5
+    SurfaceKnockback: 10
     MaxHealth: 35
     InvincibleTime: 1
   hurtboxCollider: {fileID: 1122753628286531032}
@@ -810,7 +878,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5459650534706883984, guid: b638b4d3b833afd49923cb50a6087b89, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5459650534706883984, guid: b638b4d3b833afd49923cb50a6087b89, type: 3}
       propertyPath: m_LocalPosition.y
