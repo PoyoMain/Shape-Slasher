@@ -50,6 +50,8 @@ public class Golem : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (invincibleTimer > 0) invincibleTimer -= Time.deltaTime;
+
         if (state == State.Patroling)
         {
             PatrolState();
@@ -228,7 +230,7 @@ public class Golem : MonoBehaviour
     {
         health -= damage;
 
-        if (health < 0) Destroy(gameObject);
+        if (health <= 0) Destroy(gameObject);
         else invincibleTimer = invincibilityTime;
     }
 

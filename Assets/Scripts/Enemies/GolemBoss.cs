@@ -35,7 +35,6 @@ public class GolemBoss : MonoBehaviour
     private Vector2 lastCheckedPlayerPosition;
     private bool facingRight;
 
-    private Coroutine jumpCoroutine;
 
     private void Awake()
     {
@@ -48,6 +47,8 @@ public class GolemBoss : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (invincibleTimer > 0) invincibleTimer -= Time.deltaTime;
+
         if (state == State.Jumping)
         {
             JumpState();
@@ -96,6 +97,9 @@ public class GolemBoss : MonoBehaviour
 
     #region Collisions
 
+    private float invincibleTimer;
+    private bool IsInvincible => invincibleTimer > 0;
+
     private bool IsCollidingWithWall()
     {
         bool wallHitLeft = Physics2D.Raycast(bodyCollider.bounds.center, Vector2.right, wallDistance, wallLayer);
@@ -104,13 +108,22 @@ public class GolemBoss : MonoBehaviour
         return wallHitLeft || wallHitRight;
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.TryGetComponent(out DamageComponent damageComponent))
+        {
+            if (IsInvincible) return;
+
+            TakeDamage(damageComponent.Damage);
+        }
+    }
+
     #endregion
 
     #region Jumping
 
     private float interpolationValue;
     private float percentage;
-    private bool isJumping;
     private Vector2 jumpStartPosition;
 
     private void JumpState()
@@ -135,11 +148,10 @@ public class GolemBoss : MonoBehaviour
         if (IsCollidingWithWall()) transform.position = new(transform.position.x, dest.y);
         else transform.position = dest;
 
-        print("Percentage: " + percentage * 100 + "%" + "\nPosition = " + transform.position);
+        //print("Percentage: " + percentage * 100 + "%" + "\nPosition = " + transform.position);
 
         if (percentage == 1f)
         {
-            isJumping = false;
             ChangeState(State.Waiting);
         }
     }
@@ -194,6 +206,18 @@ public class GolemBoss : MonoBehaviour
         transform.localEulerAngles = euler;
 
         facingRight = !facingRight;
+    }
+
+    #endregion
+
+    #region Health & Damage
+
+    private void TakeDamage(int damage)
+    {
+        health -= damage;
+
+        if (health <= 0) Destroy(gameObject);
+        else invincibleTimer = invincibilityTime;
     }
 
     #endregion
