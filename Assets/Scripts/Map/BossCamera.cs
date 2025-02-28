@@ -1,16 +1,22 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(CinemachineVirtualCamera))]
 public class BossCamera : MonoBehaviour
 {
     [SerializeField] private bool lockYPosition;
 
     private float yPosition;
+    private CinemachineVirtualCamera cam;
 
-    private void Awake()
+    private void OnEnable()
     {
         if (lockYPosition) yPosition = transform.position.y;
+
+        TryGetComponent(out cam);
+        cam.Follow = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     private void Update()

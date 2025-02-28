@@ -30,6 +30,9 @@ public class GolemBoss : MonoBehaviour
     [Header("Broadcast Events")]
     [SerializeField] private VoidEventSO bossDefeatedEventSO;
 
+    [Header("Listen Events")]
+    [SerializeField] private VoidEventSO bossFightStartEventSO;
+
     // Constants
     private const int ROTATION_FACINGRIGHT = 0;
     private const int ROTATION_FACINGLEFT = 180;
@@ -41,12 +44,23 @@ public class GolemBoss : MonoBehaviour
 
     private void Awake()
     {
-        ChangeState(State.Jumping);
+        ChangeState(State.Inactive);
     }
 
-    // Method to check for player pos
-    // Calculate a parabola with boss pos and player pos
-    // Function to get parabola position
+    private void OnEnable()
+    {
+        bossFightStartEventSO.OnEventRaised += Activate;
+    }
+
+    private void OnDisable()
+    {
+        bossFightStartEventSO.OnEventRaised -= Activate;
+    }
+
+    private void Activate()
+    {
+        ChangeState(State.Jumping);
+    }
 
     private void FixedUpdate()
     {
@@ -60,12 +74,6 @@ public class GolemBoss : MonoBehaviour
         {
             WaitState();
         }
-    }
-
-    [ContextMenu("Jump")]
-    private void BeginJumping()
-    {
-        ChangeState(State.Jumping);
     }
 
     private void ChangeState(State newState)

@@ -967,6 +967,63 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &8177526626897108593
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4980432067779593210}
+  - component: {fileID: 1283807270406854708}
+  m_Layer: 0
+  m_Name: Boss Cam Path
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4980432067779593210
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8177526626897108593}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -5, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5817954009039730672}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1283807270406854708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8177526626897108593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d37e5385efd7064cb1d54c94960acae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Resolution: 20
+  m_Appearance:
+    pathColor: {r: 0, g: 1, b: 0, a: 1}
+    inactivePathColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    width: 0.2
+  m_Looped: 0
+  m_Waypoints:
+  - position: {x: -3, y: 0, z: 0}
+    tangent: {x: 1, y: 0, z: 0}
+    roll: 0
+  - position: {x: 3, y: 0, z: 0}
+    tangent: {x: 1, y: 0, z: 0}
+    roll: 0
 --- !u!1 &8475711634624507231
 GameObject:
   m_ObjectHideFlags: 0
@@ -1169,6 +1226,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb9f086b295d7d046bea4b2a9154cdd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onlyDoEnterOnce: 0
   OnTriggerEnter:
     m_PersistentCalls:
       m_Calls:
@@ -1257,6 +1315,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6619889674317754743, guid: 1ccabfa37e45e74489cb35ab53ef3325, type: 3}
       insertIndex: 3
       addedObject: {fileID: 2389386630063219767}
+    - targetCorrespondingSourceObject: {fileID: 6619889674317754743, guid: 1ccabfa37e45e74489cb35ab53ef3325, type: 3}
+      insertIndex: 4
+      addedObject: {fileID: 4980432067779593210}
     - targetCorrespondingSourceObject: {fileID: 846604360185001313, guid: 1ccabfa37e45e74489cb35ab53ef3325, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6846195792327024907}
@@ -1293,6 +1354,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5817954009039730672}
     m_Modifications:
+    - target: {fileID: 504824139106124888, guid: bb1ae1a888009f04da78243647198fde, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 504824139106124888, guid: bb1ae1a888009f04da78243647198fde, type: 3}
+      propertyPath: m_Priority
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 2029352861286195792, guid: bb1ae1a888009f04da78243647198fde, type: 3}
       propertyPath: m_BoundingShape2D
       value: 
@@ -1341,13 +1410,125 @@ PrefabInstance:
       propertyPath: m_Name
       value: Boss Vcam
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1375301497155899305, guid: bb1ae1a888009f04da78243647198fde, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7460358167591311230, guid: bb1ae1a888009f04da78243647198fde, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8291652547594580601}
+    - targetCorrespondingSourceObject: {fileID: 7460358167591311230, guid: bb1ae1a888009f04da78243647198fde, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2028345262164379469}
+    - targetCorrespondingSourceObject: {fileID: 7536912909491069780, guid: bb1ae1a888009f04da78243647198fde, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3271246211917701916}
   m_SourcePrefab: {fileID: 100100000, guid: bb1ae1a888009f04da78243647198fde, type: 3}
+--- !u!1 &1233584235995014231 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7460358167591311230, guid: bb1ae1a888009f04da78243647198fde, type: 3}
+  m_PrefabInstance: {fileID: 8545041986019128105}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8291652547594580601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233584235995014231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e851f1eab04fd748a82358c330fa7c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _channel: {fileID: 11400000, guid: 8bf5b0fc60534444ebff35a572a3a0af, type: 2}
+  OnEventRaised:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2028345262164379469}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 8185125783677794161}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+--- !u!114 &2028345262164379469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233584235995014231}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b336dc7405f17b14ab10b822198ef0d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lockYPosition: 0
+--- !u!1 &2165783035947159677 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7536912909491069780, guid: bb1ae1a888009f04da78243647198fde, type: 3}
+  m_PrefabInstance: {fileID: 8545041986019128105}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3271246211917701916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2165783035947159677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 418e42c7d0405cc48a7b83f63ea53bb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Path: {fileID: 1283807270406854708}
+  m_PathPosition: 0
+  m_PositionUnits: 0
+  m_PathOffset: {x: 0, y: 0, z: 0}
+  m_XDamping: 0
+  m_YDamping: 0
+  m_ZDamping: 1
+  m_CameraUp: 0
+  m_PitchDamping: 0
+  m_YawDamping: 0
+  m_RollDamping: 0
+  m_AutoDolly:
+    m_Enabled: 1
+    m_PositionOffset: 0
+    m_SearchRadius: 2
+    m_SearchResolution: 5
 --- !u!4 &2389386630063219767 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6322728501456377630, guid: bb1ae1a888009f04da78243647198fde, type: 3}
   m_PrefabInstance: {fileID: 8545041986019128105}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8185125783677794161 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 504824139106124888, guid: bb1ae1a888009f04da78243647198fde, type: 3}
+  m_PrefabInstance: {fileID: 8545041986019128105}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233584235995014231}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
