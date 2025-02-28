@@ -1254,6 +1254,9 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 6619889674317754743, guid: 1ccabfa37e45e74489cb35ab53ef3325, type: 3}
+      insertIndex: 3
+      addedObject: {fileID: 2389386630063219767}
     - targetCorrespondingSourceObject: {fileID: 846604360185001313, guid: 1ccabfa37e45e74489cb35ab53ef3325, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6846195792327024907}
@@ -1271,4 +1274,80 @@ Transform:
 Transform:
   m_CorrespondingSourceObject: {fileID: 1828954549546593252, guid: 1ccabfa37e45e74489cb35ab53ef3325, type: 3}
   m_PrefabInstance: {fileID: 820522429517596295}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5817954009039730672 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6619889674317754743, guid: 1ccabfa37e45e74489cb35ab53ef3325, type: 3}
+  m_PrefabInstance: {fileID: 820522429517596295}
+  m_PrefabAsset: {fileID: 0}
+--- !u!60 &8033752250050784603 stripped
+PolygonCollider2D:
+  m_CorrespondingSourceObject: {fileID: 7214357405145410524, guid: 1ccabfa37e45e74489cb35ab53ef3325, type: 3}
+  m_PrefabInstance: {fileID: 820522429517596295}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &8545041986019128105
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5817954009039730672}
+    m_Modifications:
+    - target: {fileID: 2029352861286195792, guid: bb1ae1a888009f04da78243647198fde, type: 3}
+      propertyPath: m_BoundingShape2D
+      value: 
+      objectReference: {fileID: 8033752250050784603}
+    - target: {fileID: 6322728501456377630, guid: bb1ae1a888009f04da78243647198fde, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6322728501456377630, guid: bb1ae1a888009f04da78243647198fde, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6322728501456377630, guid: bb1ae1a888009f04da78243647198fde, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6322728501456377630, guid: bb1ae1a888009f04da78243647198fde, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6322728501456377630, guid: bb1ae1a888009f04da78243647198fde, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6322728501456377630, guid: bb1ae1a888009f04da78243647198fde, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6322728501456377630, guid: bb1ae1a888009f04da78243647198fde, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6322728501456377630, guid: bb1ae1a888009f04da78243647198fde, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6322728501456377630, guid: bb1ae1a888009f04da78243647198fde, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6322728501456377630, guid: bb1ae1a888009f04da78243647198fde, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7460358167591311230, guid: bb1ae1a888009f04da78243647198fde, type: 3}
+      propertyPath: m_Name
+      value: Boss Vcam
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: bb1ae1a888009f04da78243647198fde, type: 3}
+--- !u!4 &2389386630063219767 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6322728501456377630, guid: bb1ae1a888009f04da78243647198fde, type: 3}
+  m_PrefabInstance: {fileID: 8545041986019128105}
   m_PrefabAsset: {fileID: 0}
