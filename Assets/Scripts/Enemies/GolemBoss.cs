@@ -27,6 +27,9 @@ public class GolemBoss : MonoBehaviour
     [SerializeField] private float wallDistance;
     [SerializeField] private LayerMask wallLayer;
 
+    [Header("Broadcast Events")]
+    [SerializeField] private VoidEventSO bossDefeatedEventSO;
+
     // Constants
     private const int ROTATION_FACINGRIGHT = 0;
     private const int ROTATION_FACINGLEFT = 180;
@@ -216,7 +219,11 @@ public class GolemBoss : MonoBehaviour
     {
         health -= damage;
 
-        if (health <= 0) Destroy(gameObject);
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+            bossDefeatedEventSO.RaiseEvent();
+        }
         else invincibleTimer = invincibilityTime;
     }
 
