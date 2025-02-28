@@ -27,8 +27,13 @@ public class GolemBoss : MonoBehaviour
     [SerializeField] private float wallDistance;
     [SerializeField] private LayerMask wallLayer;
 
+    // Constants
+    private const int ROTATION_FACINGRIGHT = 0;
+    private const int ROTATION_FACINGLEFT = 180;
+
     private State state;
     private Vector2 lastCheckedPlayerPosition;
+    private bool facingRight;
 
     private Coroutine jumpCoroutine;
 
@@ -77,10 +82,11 @@ public class GolemBoss : MonoBehaviour
                 lastCheckedPlayerPosition = Vector2.zero;
                 jumpStartPosition = transform.position;
                 lastCheckedPlayerPosition = GetPlayerPosition();
+                FacePlayer(lastCheckedPlayerPosition);
 
                 if (lastCheckedPlayerPosition == Vector2.zero)
                 {
-                    ChangeState(State.Inactive);
+                    ChangeState(State.Waiting);
                     return;
                 }
 
@@ -134,7 +140,7 @@ public class GolemBoss : MonoBehaviour
         if (percentage == 1f)
         {
             isJumping = false;
-            ChangeState(State.Inactive);
+            ChangeState(State.Waiting);
         }
     }
 
@@ -166,6 +172,8 @@ public class GolemBoss : MonoBehaviour
 
     #endregion
 
+    #region Player
+
     private Vector2 GetPlayerPosition()
     {
         Collider2D[] playerResults = new Collider2D[1];
@@ -177,6 +185,18 @@ public class GolemBoss : MonoBehaviour
 
         return playerPos;
     }
+
+    private void FacePlayer(Vector2 playerPos)
+    {
+        Vector3 euler = transform.localEulerAngles;
+        if (euler.y == ROTATION_FACINGLEFT && playerPos.x > transform.position.x) euler.y = ROTATION_FACINGRIGHT;
+        else if (euler.y == ROTATION_FACINGRIGHT && playerPos.x < transform.position.x) euler.y = ROTATION_FACINGLEFT;
+        transform.localEulerAngles = euler;
+
+        facingRight = !facingRight;
+    }
+
+    #endregion
 
     private enum State { Inactive, Starting, Waiting, Jumping }
 }
