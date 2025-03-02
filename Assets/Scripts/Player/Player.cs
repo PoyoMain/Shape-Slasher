@@ -221,7 +221,6 @@ public class Player : MonoBehaviour
 
     #region Jump & Crouch
 
-    private bool jumping;
     private bool jumpToConsume;
     private bool bufferedJumpUsable;
     private bool endedJumpEarly;
@@ -239,10 +238,9 @@ public class Player : MonoBehaviour
         if (!endedJumpEarly && !grounded && !jumpHeld && rb.velocity.y >= 0)
         {
             endedJumpEarly = true;
-            jumping = false;
         }
 
-        if (rb.velocity.y >= 0 && (jumpHeld || endedJumpEarly)) HandleJumpMovement();
+        if ((jumpHeld || endedJumpEarly)) HandleJumpMovement();
 
         if (!jumpToConsume && !HasBufferedJump) return;
 
@@ -261,7 +259,7 @@ public class Player : MonoBehaviour
         coyoteUsable = false;
         //velocity.y = stats.JumpPower;
         jumpTimer = stats.JumpTime;
-        print("Velocty when Jump: " + velocity.y);
+        velocity.y = stats.GroundingForce;
         Jumped?.Invoke();
     }
 
@@ -274,7 +272,6 @@ public class Player : MonoBehaviour
 
         if (jumpTimer > 0)
         {
-            //print("Velocity: " + velocity.y + "\nJump Timer: " + jumpTimer);
             jumpTimer -= Time.fixedDeltaTime;
             velocity.y = Mathf.MoveTowards(velocity.y, stats.JumpPower, stats.JumpAcceleration * Time.fixedDeltaTime);
         }
@@ -359,7 +356,7 @@ public class Player : MonoBehaviour
         else
         {
             float inAirGravity = stats.FallAcceleration;
-            if (endedJumpEarly && velocity.y > 0)
+            if (endedJumpEarly && velocity.y > 0 && jumpTimer < stats.JumpTime - stats.MinJumpTime)
             {
                 inAirGravity *= stats.JumpEndEarlyGravityModifier;
             }

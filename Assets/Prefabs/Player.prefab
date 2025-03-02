@@ -242,7 +242,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &782208810798574963
 Transform:
   m_ObjectHideFlags: 0
@@ -344,23 +344,26 @@ MonoBehaviour:
     SnapInput: 1
     VerticalDeadZoneThreshold: 0.9
     HorizontalDeadZoneThreshold: 0.4
-    MaxGroundSpeed: 10
-    MaxAirSpeed: 12
-    Acceleration: 120
+    MaxGroundSpeed: 6
+    MaxAirSpeed: 8
+    HorizontalAcceleration: 120
     GroundDeceleration: 80
     AirDeceleration: 80
     GroundingForce: -1.5
-    GrounderDistance: 0.1
+    GrounderDistance: 0.02
     PlatformDistance: 0.1
-    JumpPower: 26
-    MaxFallSpeed: 80
-    FallAcceleration: 60
+    JumpPower: 22
+    JumpTime: 0.12
+    MinJumpTime: 0.08
+    MaxFallSpeed: 20
+    JumpAcceleration: 200
+    FallAcceleration: 40
     JumpEndEarlyGravityModifier: 3
-    CoyoteTime: 0.15
-    JumpBuffer: 0.2
+    CoyoteTime: 0.05
+    JumpBuffer: 0.1
     TimeBetweenAttacks: 0.3
     SurfaceKnockback: 20
-    MaxHealth: 35
+    MaxHealth: 1000
     InvincibleTime: 1
   hurtboxCollider: {fileID: 1122753628286531032}
   playerDamagedEventSO: {fileID: 11400000, guid: 85132c2903af7184b824f1c99dc19a83, type: 2}
