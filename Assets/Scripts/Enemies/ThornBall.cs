@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class thornball_script : MonoBehaviour
+public class ThornBall : MonoBehaviour
 {
     // Start is called before the first frame update
     public float speed = 5f;

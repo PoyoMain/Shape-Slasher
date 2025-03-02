@@ -59,16 +59,16 @@ public class GolemBoss : MonoBehaviour
 
     private void Activate()
     {
-        ChangeState(State.Jumping);
+        ChangeState(State.JumpingToPlayer);
     }
 
     private void FixedUpdate()
     {
         if (invincibleTimer > 0) invincibleTimer -= Time.deltaTime;
 
-        if (state == State.Jumping)
+        if (state == State.JumpingToPlayer)
         {
-            JumpState();
+            JumpToPlayerState();
         }
         else if (state == State.Waiting)
         {
@@ -89,7 +89,7 @@ public class GolemBoss : MonoBehaviour
             case State.Waiting:
                 waitTimer = waitTime;
                 break;
-            case State.Jumping:
+            case State.JumpingToPlayer:
                 interpolationValue = 0;
                 lastCheckedPlayerPosition = Vector2.zero;
                 jumpStartPosition = transform.position;
@@ -102,6 +102,8 @@ public class GolemBoss : MonoBehaviour
                     return;
                 }
 
+                break;
+            case State.JumpingToMiddleOfRoom:
                 break;
         }
     }
@@ -137,18 +139,7 @@ public class GolemBoss : MonoBehaviour
     private float percentage;
     private Vector2 jumpStartPosition;
 
-    private void JumpState()
-    {
-        //if (isJumping) return;
-        //isJumping = true;
-
-        //if (jumpCoroutine != null) StopCoroutine(jumpCoroutine);
-        //jumpCoroutine = StartCoroutine(JumpToPlayerCoroutine());
-
-        Jump();
-    }
-
-    private void Jump()
+    private void JumpToPlayerState()
     {
         interpolationValue += Time.deltaTime;
         percentage = Mathf.Clamp01(interpolationValue / jumpTime);
@@ -189,7 +180,7 @@ public class GolemBoss : MonoBehaviour
         {
             waitTimer -= Time.deltaTime;
 
-            if (waitTimer <= 0) ChangeState(State.Jumping);
+            if (waitTimer <= 0) ChangeState(State.JumpingToPlayer);
         }
     }
 
@@ -237,5 +228,5 @@ public class GolemBoss : MonoBehaviour
 
     #endregion
 
-    private enum State { Inactive, Starting, Waiting, Jumping }
+    private enum State { Inactive, Starting, Waiting, JumpingToPlayer, JumpingToMiddleOfRoom }
 }
