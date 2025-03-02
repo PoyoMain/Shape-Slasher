@@ -113,7 +113,7 @@ public class GolemBoss : MonoBehaviour
 
     private bool IsCollidingWithWall()
     {
-        bool wallHitLeft = Physics2D.Raycast(bodyCollider.bounds.center, Vector2.right, wallDistance, wallLayer);
+        bool wallHitLeft = Physics2D.Raycast(bodyCollider.bounds.center, Vector2.left, wallDistance, wallLayer);
         bool wallHitRight = Physics2D.Raycast(bodyCollider.bounds.center, Vector2.right, wallDistance, wallLayer);
 
         return wallHitLeft || wallHitRight;
