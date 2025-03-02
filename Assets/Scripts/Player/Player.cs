@@ -221,10 +221,12 @@ public class Player : MonoBehaviour
 
     #region Jump & Crouch
 
+    private bool jumping;
     private bool jumpToConsume;
     private bool bufferedJumpUsable;
     private bool endedJumpEarly;
     private bool coyoteUsable;
+    private float jumpTimer;
     private float timeJumpWasPressed;
 
     private bool HasBufferedJump => bufferedJumpUsable && time < timeJumpWasPressed + stats.JumpBuffer;
@@ -234,7 +236,13 @@ public class Player : MonoBehaviour
 
     private void HandleJump()
     {
-        if (!endedJumpEarly && !grounded && !jumpHeld && rb.velocity.y >= 0) endedJumpEarly = true;
+        if (!endedJumpEarly && !grounded && !jumpHeld && rb.velocity.y >= 0)
+        {
+            endedJumpEarly = true;
+            jumping = false;
+        }
+
+        if (rb.velocity.y >= 0 && (jumpHeld || endedJumpEarly)) HandleJumpMovement();
 
         if (!jumpToConsume && !HasBufferedJump) return;
 
@@ -251,8 +259,26 @@ public class Player : MonoBehaviour
         timeJumpWasPressed = 0;
         bufferedJumpUsable = false;
         coyoteUsable = false;
-        velocity.y = stats.JumpPower;
+        //velocity.y = stats.JumpPower;
+        jumpTimer = stats.JumpTime;
+        print("Velocty when Jump: " + velocity.y);
         Jumped?.Invoke();
+    }
+
+    private void HandleJumpMovement()
+    {
+        if (endedJumpEarly && jumpTimer < stats.JumpTime - stats.MinJumpTime)
+        {
+            return;
+        }
+
+        if (jumpTimer > 0)
+        {
+            //print("Velocity: " + velocity.y + "\nJump Timer: " + jumpTimer);
+            jumpTimer -= Time.fixedDeltaTime;
+            velocity.y = Mathf.MoveTowards(velocity.y, stats.JumpPower, stats.JumpAcceleration * Time.fixedDeltaTime);
+        }
+        
     }
 
     private bool CheckCrouch()
@@ -283,7 +309,7 @@ public class Player : MonoBehaviour
         else
         {
             var maxSpeed = grounded ? stats.MaxGroundSpeed : stats.MaxAirSpeed;
-            velocity.x = Mathf.MoveTowards(velocity.x, moveInput.x * maxSpeed, stats.Acceleration * Time.fixedDeltaTime);
+            velocity.x = Mathf.MoveTowards(velocity.x, moveInput.x * maxSpeed, stats.HorizontalAcceleration * Time.fixedDeltaTime);
 
             // Rotate GameObject based on movement input
             if (moveInput.x > 0 && transform.localEulerAngles.y != ROTATION_FACING_RIGHT)
@@ -333,7 +359,10 @@ public class Player : MonoBehaviour
         else
         {
             float inAirGravity = stats.FallAcceleration;
-            if (endedJumpEarly && velocity.y > 0) inAirGravity *= stats.JumpEndEarlyGravityModifier;
+            if (endedJumpEarly && velocity.y > 0)
+            {
+                inAirGravity *= stats.JumpEndEarlyGravityModifier;
+            }
             velocity.y = Mathf.MoveTowards(velocity.y, -stats.MaxFallSpeed, inAirGravity * Time.fixedDeltaTime);
         }
     }
@@ -376,7 +405,7 @@ public struct Stats
     [Header("Movement")]
     public float MaxGroundSpeed;
     public float MaxAirSpeed;
-    public float Acceleration;
+    public float HorizontalAcceleration;
     public float GroundDeceleration;
     public float AirDeceleration;
     public float GroundingForce;
@@ -385,7 +414,10 @@ public struct Stats
 
     [Header("Jump")]
     public float JumpPower;
+    public float JumpTime;
+    public float MinJumpTime;
     public float MaxFallSpeed;
+    public float JumpAcceleration;
     public float FallAcceleration;
     public float JumpEndEarlyGravityModifier;
     public float CoyoteTime;
