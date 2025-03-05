@@ -14,13 +14,25 @@ public class RoomCameraActivator : MonoBehaviour
     {
         if (collision.transform.CompareTag("Player"))
         {
+            Transform playerCamFocus = collision.transform;
+            for (int i = 0; i < collision.transform.childCount; i++)
+            {
+                if (collision.transform.GetChild(i).CompareTag("PlayerCamFocus"))
+                {
+                    playerCamFocus = collision.transform.GetChild(i);
+                    break;
+                }
+
+                if (i == collision.transform.childCount - 1) return;
+            }
+
             if (isColliding) return;
 
             isColliding = true;
             Invoke(nameof(ResetStuff), Time.deltaTime);
 
             cam.enabled = true;
-            cam.Follow = collision.transform;
+            cam.Follow = playerCamFocus;
         }
     }
 
@@ -28,6 +40,13 @@ public class RoomCameraActivator : MonoBehaviour
     {
         if (collision.transform.CompareTag("Player"))
         {
+            for (int i = 0; i < collision.transform.childCount; i++)
+            {
+                if (collision.transform.GetChild(i).CompareTag("PlayerCamFocus")) break;
+
+                if (i == collision.transform.childCount - 1) return;
+            }
+
             if (isColliding) return;
 
             isColliding = true;

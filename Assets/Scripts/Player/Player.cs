@@ -15,6 +15,9 @@ public class Player : MonoBehaviour
     [Header("Collision")]
     [SerializeField] private CapsuleCollider2D hurtboxCollider;
 
+    [Header("Camera")]
+    [SerializeField] private Transform camFocusTransform;
+
     [Header("Broadcast Events")]
     [SerializeField] private VoidEventSO playerDamagedEventSO;
     [SerializeField] private IntEventSO playerHealthLossEventSO;
@@ -64,6 +67,7 @@ public class Player : MonoBehaviour
         jumpDown = Controls.Jump.WasPressedThisFrame();
         jumpHeld = Controls.Jump.IsPressed();
         moveInput = Controls.Move.ReadValue<Vector2>();
+
         if (!attackDown)
         {
             attackDown = Controls.Attack.WasPressedThisFrame();
@@ -80,6 +84,13 @@ public class Player : MonoBehaviour
             jumpToConsume = true;
             timeJumpWasPressed = time;
         }
+
+        if (moveInput.y != previousVertDirectionValue)
+        {
+            lookTimer = stats.TimeToLook;
+        }
+
+        previousVertDirectionValue = moveInput.y;
     }
 
     private void FixedUpdate()
@@ -92,6 +103,8 @@ public class Player : MonoBehaviour
         HandleJump();
         HandleDirection();
         HandleGravity();
+
+        HandleLooking();
 
         ApplyMovement();
     }
@@ -366,6 +379,45 @@ public class Player : MonoBehaviour
 
     #endregion
 
+    #region Looking
+
+    private float lookTimer;
+    private float previousVertDirectionValue;
+
+    private void HandleLooking()
+    {
+        Vector2 lookPos = camFocusTransform.localPosition;
+
+        if (moveInput.x == 0 && moveInput.y != 0)
+        {
+            lookTimer -= Time.fixedDeltaTime;
+
+            if (lookTimer <= 0)
+            {
+                if (moveInput.y > 0)
+                {
+                    if (lookPos.y != stats.LookDistance) lookPos.y = stats.LookDistance;
+                }
+                else
+                {
+                    if (lookPos.y != -stats.LookDistance) lookPos.y = -stats.LookDistance;
+                }
+            }  
+        }
+        else
+        {
+            if (lookPos.y != 0)
+            {
+                lookPos.y = 0;
+                lookTimer = stats.TimeToLook;
+            }
+        }
+
+        camFocusTransform.localPosition = lookPos;
+    }
+
+    #endregion
+
     private void ApplyMovement() => rb.velocity = velocity;
 
     #region Health & Damage
@@ -423,6 +475,10 @@ public struct Stats
     [Header("Attacking")]
     public float TimeBetweenAttacks;
     public float SurfaceKnockback;
+
+    [Header("Looking")]
+    public float LookDistance;
+    public float TimeToLook;
 
     [Header("Health")]
     public int MaxHealth;
