@@ -13,7 +13,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Stats stats;
 
     [Header("Collision")]
-    [SerializeField] private CapsuleCollider2D hurtboxCollider;
+    [SerializeField] private BoxCollider2D hurtboxCollider;
 
     [Header("Camera")]
     [SerializeField] private Transform camFocusTransform;
@@ -139,15 +139,19 @@ public class Player : MonoBehaviour
         Physics2D.queriesStartInColliders = false;
 
         // Ground, Bouncepad, and Ceiling Check
-        bool groundHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.down, stats.GrounderDistance, stats.GroundLayers);
-        RaycastHit2D bounceHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.down, stats.GrounderDistance, stats.BounceLayer);
-        bool ceilingHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.up, stats.GrounderDistance, stats.CeilingLayers);
+        //bool groundHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.down, stats.GrounderDistance, stats.GroundLayers);
+        //RaycastHit2D bounceHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.down, stats.GrounderDistance, stats.BounceLayer);
+        //bool ceilingHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.up, stats.GrounderDistance, stats.CeilingLayers);
+
+        bool groundHit = Physics2D.BoxCast(hurtboxCollider.bounds.center, hurtboxCollider.size, 0, Vector2.down, stats.GrounderDistance, stats.GroundLayers);
+        RaycastHit2D bounceHit = Physics2D.BoxCast(hurtboxCollider.bounds.center, hurtboxCollider.size, 0, Vector2.down, stats.GrounderDistance, stats.BounceLayer);
+        bool ceilingHit = Physics2D.BoxCast(hurtboxCollider.bounds.center, hurtboxCollider.size, 0, Vector2.up, stats.GrounderDistance, stats.CeilingLayers);
 
         // Hit a Ceiling
         if (ceilingHit) velocity.y = Mathf.Min(0, velocity.y);
 
         // Landed on a bounce pad
-        if (bounceHit && bounceHit.collider.TryGetComponent(out BouncePad bouncePad))
+        if (bounceHit && velocity.y <= 0 && bounceHit.collider.TryGetComponent(out BouncePad bouncePad))
         {
             KnockbackOnlyVertical(Vector2.up * bouncePad.BounceAmount);
         }
@@ -272,7 +276,7 @@ public class Player : MonoBehaviour
         coyoteUsable = false;
         //velocity.y = stats.JumpPower;
         jumpTimer = stats.JumpTime;
-        velocity.y = stats.GroundingForce;
+        velocity.y = 0;
         Jumped?.Invoke();
     }
 
@@ -293,8 +297,8 @@ public class Player : MonoBehaviour
 
     private bool CheckCrouch()
     {
-        bool groundHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.down, stats.PlatformDistance, stats.SolidSurfaceLayer);
-        RaycastHit2D platformHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.down, stats.PlatformDistance, stats.OneWayPlatformLayer);
+        bool groundHit = Physics2D.BoxCast(hurtboxCollider.bounds.center, hurtboxCollider.size, 0, Vector2.down, stats.PlatformDistance, stats.SolidSurfaceLayer);
+        RaycastHit2D platformHit = Physics2D.BoxCast(hurtboxCollider.bounds.center, hurtboxCollider.size, 0, Vector2.down, stats.PlatformDistance, stats.OneWayPlatformLayer);
 
         if (!groundHit && platformHit)
         {
