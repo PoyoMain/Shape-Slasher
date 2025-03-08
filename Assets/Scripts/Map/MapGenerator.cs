@@ -17,7 +17,13 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private RoomSO[] bossRooms;
     [SerializeField] private List<RoomSO> possibleRooms;
 
+    [Header("Minimap Stuff")]
+    [SerializeField] private RectTransform roomIconPrefab;
+    [SerializeField] private RectTransform minimapTransform;
+    [SerializeField] private float spaceBetweenMinimapIcons;
+
     [Header("Broadcast Events")]
+    [SerializeField] private RoomListEventSO mapLayoutMadeSO;
     [SerializeField] private VoidEventSO mapGenerationFinishedSO;
 
     private Room startRoom;
@@ -127,6 +133,7 @@ public class MapGenerator : MonoBehaviour
                     if (!CloseUnusedDoors(spawnedRooms)) break;
                     if (!PlaceBossRoom(spawnedRooms)) break;
                     SpawnAllRooms(spawnedRooms);
+                    mapLayoutMadeSO.RaiseEvent(spawnedRooms);
                     mapGenerated = true;
                 }
 

@@ -2,13 +2,18 @@ using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class RoomCameraActivator : MonoBehaviour
+public class RoomEnterBehavior : MonoBehaviour
 {
-    [Header("Components")]
+    [Header("Camera")]
     [SerializeField] private CinemachineVirtualCamera cam;
 
+    [Header("Broadcast Events")]
+    [SerializeField] private Vector2EventSO playerEnterRoomSO;
+
     private bool isColliding;
+    private bool hasBeenEntered;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -33,6 +38,9 @@ public class RoomCameraActivator : MonoBehaviour
 
             cam.enabled = true;
             cam.Follow = playerCamFocus;
+
+            if (!hasBeenEntered) playerEnterRoomSO.RaiseEvent(GetRoomNumber());
+            hasBeenEntered = true;
         }
     }
 
@@ -59,6 +67,14 @@ public class RoomCameraActivator : MonoBehaviour
     { 
         isColliding = false;
         return;
+    }
+
+    private Vector2 GetRoomNumber()
+    {
+        if (!TryGetComponent(out BoxCollider2D coll)) return Vector2.negativeInfinity;
+
+        return transform.position / coll.size;
+
     }
 
 }
