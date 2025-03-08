@@ -10,17 +10,12 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private int numberOfRooms;
     //[SerializeField] private int numberOfNeighborsAllowed;
     //[SerializeField] private bool canReuseRooms;
-    [SerializeField] private bool performOnAwake;
+    [SerializeField] private bool performOnStart;
 
     [Header("References")]
     [SerializeField] private RoomSO[] startRooms;
     [SerializeField] private RoomSO[] bossRooms;
     [SerializeField] private List<RoomSO> possibleRooms;
-
-    [Header("Minimap Stuff")]
-    [SerializeField] private RectTransform roomIconPrefab;
-    [SerializeField] private RectTransform minimapTransform;
-    [SerializeField] private float spaceBetweenMinimapIcons;
 
     [Header("Broadcast Events")]
     [SerializeField] private RoomListEventSO mapLayoutMadeSO;
@@ -31,9 +26,9 @@ public class MapGenerator : MonoBehaviour
 
     private Coroutine mapGenCoroutine;
 
-    private void Awake()
+    private void Start()
     {
-        if (performOnAwake) GenMap();
+        if (performOnStart) GenMap();
     }
 
     // Uncomment to allow generating the map with a button
@@ -132,8 +127,8 @@ public class MapGenerator : MonoBehaviour
                 {
                     if (!CloseUnusedDoors(spawnedRooms)) break;
                     if (!PlaceBossRoom(spawnedRooms)) break;
-                    SpawnAllRooms(spawnedRooms);
                     mapLayoutMadeSO.RaiseEvent(spawnedRooms);
+                    SpawnAllRooms(spawnedRooms);
                     mapGenerated = true;
                 }
 

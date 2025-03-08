@@ -6,59 +6,74 @@ using UnityEngine.UI;
 
 public class MinimapHandler : MonoBehaviour
 {
-    [Header("Inspector Objects")]
-    [SerializeField] private Image roomIconPrefab;
+    [Header("Room Icon Stuff")]
+    [SerializeField] private MinimapIcon roomIconPrefab;
     [SerializeField] private RectTransform minimapParent;
+
+    [Header("Room Mini Icons")]
+    [SerializeField] private Sprite bossRoomMiniIcon;
 
     [Header("Listen Events")]
     [SerializeField] private RoomListEventSO mapLayoutMadeSO;
     [SerializeField] private Vector2EventSO playerEnteredRoomSO;
+    [SerializeField] private Vector2EventSO playerExitedRoomSO;
 
     private List<MinimapIcon> minimapIcons;
+    private Vector2 previousRoomNum;
 
     private void OnEnable()
     {
-        minimapIcons = new();
-
         mapLayoutMadeSO.OnEventRaised += GenerateMinimap;
         playerEnteredRoomSO.OnEventRaised += ActivateRoomIcon;
+        playerExitedRoomSO.OnEventRaised += DeactivateRoomIcon;
     }
 
     private void OnDisable()
     {
         mapLayoutMadeSO.OnEventRaised -= GenerateMinimap;
         playerEnteredRoomSO.OnEventRaised -= ActivateRoomIcon;
+        playerExitedRoomSO.OnEventRaised -= DeactivateRoomIcon;
+    }
+
+    private void Awake()
+    {
+        minimapIcons = new();
     }
 
     private void GenerateMinimap(List<Room> rooms)
     {
         for (int i = 0; i < rooms.Count; i++)
         {
-            Image roomIcon = Instantiate(roomIconPrefab, minimapParent);
-            roomIcon.rectTransform.localPosition = rooms[i].RoomNumber * (roomIconPrefab.rectTransform.sizeDelta /*+ new Vector2(spaceBetweenMinimapIcons, spaceBetweenMinimapIcons)*/);
-            roomIcon.sprite = rooms[i].Data.Icon;
+            MinimapIcon roomIcon = Instantiate(roomIconPrefab, minimapParent);
+            if (rooms[i].Data.RoomType == RoomType.Boss) roomIcon.Init(rooms[i], bossRoomMiniIcon);
+            else roomIcon.Init(rooms[i]);
 
-            MinimapIcon icon = new()
-            {
-                image = roomIcon,
-                associatedRoom = rooms[i]
-            };
-            minimapIcons.Add(icon);
+            minimapIcons.Add(roomIcon);
         }
     }
 
     private void ActivateRoomIcon(Vector2 numToCheck)
     {
-        MinimapIcon icon = minimapIcons.Find(x => x.RoomNum == numToCheck);
+        for(int i = 0; i < minimapIcons.Count; i++)
+        {
+            minimapIcons[i].Deactivate();
+        }
 
-        if (!icon.image.enabled) icon.image.enabled = true;
+        MinimapIcon iconToActivate = minimapIcons.Find(x => x.RoomNum == numToCheck);
+        iconToActivate.Activate();
+
+        minimapParent.localPosition = -(numToCheck * iconToActivate.Size);
     }
 
-    private struct MinimapIcon
+    private void DeactivateRoomIcon(Vector2 numToCheck)
     {
-        public readonly Vector2Int RoomNum => associatedRoom.RoomNumber;
+        MinimapIcon iconToDeactivate = minimapIcons.Find(x => x.RoomNum == numToCheck);
+        iconToDeactivate.Deactivate();
 
-        public Image image;
-        public Room associatedRoom;
+        MinimapIcon iconToActivate = minimapIcons.Find(x => x.RoomNum == previousRoomNum);
+        iconToActivate.Activate();
+
+        minimapParent.localPosition = -(numToCheck * iconToActivate.Size);
+        previousRoomNum = iconToActivate.RoomNum;
     }
 }

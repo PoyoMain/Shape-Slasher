@@ -346,7 +346,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numberOfRooms: 10
-  performOnAwake: 1
+  performOnStart: 1
   startRooms:
   - {fileID: 11400000, guid: cb618a61ea2a8a14088c1f69879c23bb, type: 2}
   - {fileID: 11400000, guid: 70b2ac64dd58f24499ca2fa556087873, type: 2}
@@ -371,9 +371,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 314466c32c79e8848a7f5cbabe1214cd, type: 2}
   - {fileID: 11400000, guid: 8ea0ddcbf9af63941bf775c9b5dd2618, type: 2}
   - {fileID: 11400000, guid: e82b4b19aad8ecf4eaf27eb429fb5294, type: 2}
-  roomIconPrefab: {fileID: 2086377406002170264, guid: 4c39214ee4b2cbc48996689a83e4416c, type: 3}
-  minimapTransform: {fileID: 439912650}
-  spaceBetweenMinimapIcons: 10
   mapLayoutMadeSO: {fileID: 11400000, guid: 368d3df80caeb854f8117aa81800d862, type: 2}
   mapGenerationFinishedSO: {fileID: 11400000, guid: 3a802436c7e7b4f41b015a22b99b6011, type: 2}
 --- !u!4 &980743134
@@ -847,7 +844,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.58431375}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -884,10 +881,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0aaabf3a2ffe1534ebdf477a9697f2d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomIconPrefab: {fileID: 4689853649338237304, guid: 4c39214ee4b2cbc48996689a83e4416c, type: 3}
+  roomIconPrefab: {fileID: 292861411112729618, guid: 4c39214ee4b2cbc48996689a83e4416c, type: 3}
   minimapParent: {fileID: 439912650}
+  bossRoomMiniIcon: {fileID: 21300000, guid: b9cf351916e49fc41a81b849290fa617, type: 3}
   mapLayoutMadeSO: {fileID: 11400000, guid: 368d3df80caeb854f8117aa81800d862, type: 2}
   playerEnteredRoomSO: {fileID: 11400000, guid: ea2b0ffb7bfbc0a4f9e28434a54211e9, type: 2}
+  playerExitedRoomSO: {fileID: 11400000, guid: 7e6e607d7bf61ee489cf2b9504f01967, type: 2}
 --- !u!1001 &5497942786483074966
 PrefabInstance:
   m_ObjectHideFlags: 0

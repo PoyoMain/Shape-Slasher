@@ -13,7 +13,6 @@ public class RoomEnterBehavior : MonoBehaviour
     [SerializeField] private Vector2EventSO playerEnterRoomSO;
 
     private bool isColliding;
-    private bool hasBeenEntered;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -38,9 +37,6 @@ public class RoomEnterBehavior : MonoBehaviour
 
             cam.enabled = true;
             cam.Follow = playerCamFocus;
-
-            if (!hasBeenEntered) playerEnterRoomSO.RaiseEvent(GetRoomNumber());
-            hasBeenEntered = true;
         }
     }
 
@@ -67,6 +63,11 @@ public class RoomEnterBehavior : MonoBehaviour
     { 
         isColliding = false;
         return;
+    }
+
+    public void ActivateRoom()
+    {
+        playerEnterRoomSO.RaiseEvent(GetRoomNumber());
     }
 
     private Vector2 GetRoomNumber()
