@@ -15,6 +15,7 @@ public class GolemBoss : MonoBehaviour
     [SerializeField] private float jumpHeight;
     [SerializeField] private float jumpTime;
     [SerializeField] private float timeBetweenJumps;
+    [SerializeField] private Transform middleOfRoomTransform;
 
     [Header("Waiting")]
     [SerializeField] private float waitTime;
@@ -59,7 +60,7 @@ public class GolemBoss : MonoBehaviour
 
     private void Activate()
     {
-        ChangeState(State.JumpingToPlayer);
+        ChangeState(State.Waiting);
     }
 
     private void FixedUpdate()
@@ -69,6 +70,10 @@ public class GolemBoss : MonoBehaviour
         if (state == State.JumpingToPlayer)
         {
             JumpToPlayerState();
+        }
+        else if (state == State.JumpingToMiddleOfRoom)
+        {
+            JumpToMiddleState();
         }
         else if (state == State.Waiting)
         {
@@ -90,20 +95,17 @@ public class GolemBoss : MonoBehaviour
                 waitTimer = waitTime;
                 break;
             case State.JumpingToPlayer:
-                interpolationValue = 0;
-                lastCheckedPlayerPosition = Vector2.zero;
-                jumpStartPosition = transform.position;
-                lastCheckedPlayerPosition = GetPlayerPosition();
-                FacePlayer(lastCheckedPlayerPosition);
-
-                if (lastCheckedPlayerPosition == Vector2.zero)
                 {
-                    ChangeState(State.Waiting);
-                    return;
+                    interpolationValue = 0;
+                    jumpStartPosition = transform.position;
                 }
-
                 break;
+
             case State.JumpingToMiddleOfRoom:
+                {
+                    interpolationValue = 0;
+                    jumpStartPosition = transform.position;
+                }
                 break;
         }
     }
@@ -113,12 +115,19 @@ public class GolemBoss : MonoBehaviour
     private float invincibleTimer;
     private bool IsInvincible => invincibleTimer > 0;
 
-    private bool IsCollidingWithWall()
+    private bool IsCollidingWithWall(Direction dir)
     {
-        bool wallHitLeft = Physics2D.Raycast(bodyCollider.bounds.center, Vector2.left, wallDistance, wallLayer);
-        bool wallHitRight = Physics2D.Raycast(bodyCollider.bounds.center, Vector2.right, wallDistance, wallLayer);
+        bool wallHit;
+        if (dir == Direction.Left)
+        {
+            wallHit = Physics2D.Raycast(bodyCollider.bounds.center, Vector2.left, wallDistance, wallLayer);
+        }
+        else
+        {
+            wallHit = Physics2D.Raycast(bodyCollider.bounds.center, Vector2.right, wallDistance, wallLayer);
+        }
 
-        return wallHitLeft || wallHitRight;
+        return wallHit;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -145,9 +154,34 @@ public class GolemBoss : MonoBehaviour
         percentage = Mathf.Clamp01(interpolationValue / jumpTime);
 
         Vector2 targetPositon = new(lastCheckedPlayerPosition.x, jumpStartPosition.y);
+        Direction targetDirection = Direction.Right;
+        if (jumpStartPosition.x > targetPositon.x) targetDirection = Direction.Left;
+        else if (jumpStartPosition.x < targetPositon.x) targetDirection = Direction.Right;
 
         Vector2 dest = GetPositionOnParabola(jumpStartPosition, targetPositon, jumpHeight, percentage);
-        if (IsCollidingWithWall()) transform.position = new(transform.position.x, dest.y);
+        if (IsCollidingWithWall(targetDirection)) transform.position = new(transform.position.x, dest.y);
+        else transform.position = dest;
+
+        //print("Percentage: " + percentage * 100 + "%" + "\nPosition = " + transform.position);
+
+        if (percentage == 1f)
+        {
+            ChangeState(State.Waiting);
+        }
+    }
+
+    private void JumpToMiddleState()
+    {
+        interpolationValue += Time.deltaTime;
+        percentage = Mathf.Clamp01(interpolationValue / jumpTime);
+
+        Vector2 targetPositon = new(middleOfRoomTransform.position.x, jumpStartPosition.y);
+        Direction targetDirection = Direction.Right;
+        if (jumpStartPosition.x > targetPositon.x) targetDirection = Direction.Left;
+        else if (jumpStartPosition.x < targetPositon.x) targetDirection = Direction.Right;
+
+        Vector2 dest = GetPositionOnParabola(jumpStartPosition, targetPositon, jumpHeight, percentage);
+        if (IsCollidingWithWall(targetDirection)) transform.position = new(transform.position.x, dest.y);
         else transform.position = dest;
 
         //print("Percentage: " + percentage * 100 + "%" + "\nPosition = " + transform.position);
@@ -180,7 +214,20 @@ public class GolemBoss : MonoBehaviour
         {
             waitTimer -= Time.deltaTime;
 
-            if (waitTimer <= 0) ChangeState(State.JumpingToPlayer);
+            if (waitTimer <= 0)
+            {
+                if (GetPlayerPosition(out Vector2 playerPos))
+                {
+                    lastCheckedPlayerPosition = playerPos;
+                    FacePlayer(lastCheckedPlayerPosition);
+                    ChangeState(State.JumpingToPlayer);
+                }
+                else
+                {
+                    if (middleOfRoomTransform != null) ChangeState(State.JumpingToMiddleOfRoom);
+                    else ChangeState(State.Waiting);
+                }
+            }
         }
     }
 
@@ -188,16 +235,18 @@ public class GolemBoss : MonoBehaviour
 
     #region Player
 
-    private Vector2 GetPlayerPosition()
+    private bool GetPlayerPosition(out Vector2 playerPos)
     {
         Collider2D[] playerResults = new Collider2D[1];
         Physics2D.OverlapBoxNonAlloc(playerDetectBox.bounds.center, playerDetectBox.size, 0, playerResults, playerLayer);
 
-        if (playerResults[0] == null) return Vector2.zero;
+        playerPos = Vector2.zero;
 
-        Vector2 playerPos = playerResults[0].transform.position;
+        if (playerResults[0] == null) return false;
 
-        return playerPos;
+        playerPos = playerResults[0].transform.position;
+
+        return true;
     }
 
     private void FacePlayer(Vector2 playerPos)
@@ -229,4 +278,5 @@ public class GolemBoss : MonoBehaviour
     #endregion
 
     private enum State { Inactive, Starting, Waiting, JumpingToPlayer, JumpingToMiddleOfRoom }
+    private enum Direction { Left, Right}
 }
