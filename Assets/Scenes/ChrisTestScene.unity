@@ -123,64 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &445786844 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6391528811050248057, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
-  m_PrefabInstance: {fileID: 7667563217070056705}
-  m_PrefabAsset: {fileID: 0}
---- !u!60 &445786851
-PolygonCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 445786844}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2.6367188, y: 1.6953125}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 1.3509932, y: 0.26410055}
-      - {x: 1.2213436, y: -0.28782916}
-      - {x: 0.47801661, y: -0.7860693}
-      - {x: -0.4336084, y: -0.8932795}
-      - {x: -1.2999395, y: -0.52950865}
-      - {x: -0.75914514, y: 0.6714238}
-      - {x: 0.12148404, y: 0.89232945}
-      - {x: 0.9952986, y: 0.70417047}
-  m_UseDelaunayMesh: 0
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -850,42 +792,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3689567749130901192, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 1.64
-      objectReference: {fileID: 0}
     - target: {fileID: 4166714208754174496, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 4166714208754174496, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6391528811050248057, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7434343628644727071, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: adbadf475e538ca499eb65d934dc2346, type: 3}
-    - target: {fileID: 8705124770676466388, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
-      propertyPath: m_SpriteTilingProperty.oldSize.x
-      value: 2.6367188
-      objectReference: {fileID: 0}
-    - target: {fileID: 8705124770676466388, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
-      propertyPath: m_SpriteTilingProperty.oldSize.y
-      value: 1.6953125
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 8705124770676466388, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6391528811050248057, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
-      insertIndex: 3
-      addedObject: {fileID: 445786851}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
