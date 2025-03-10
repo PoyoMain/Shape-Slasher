@@ -216,14 +216,14 @@ public class Player : MonoBehaviour
     #region Attack
 
     private float attackTimer;
-    private bool CanAttack => attackTimer <= 0;
+    private bool IsAttacking => attackTimer > 0;
     private void HandleAttack()
     {
-        if (!CanAttack) attackTimer -= Time.fixedDeltaTime;
+        if (IsAttacking) attackTimer -= Time.fixedDeltaTime;
 
         if (!attackDown) return;
 
-        if (attackDown && CanAttack) ExecuteAttack();
+        if (attackDown && !IsAttacking) ExecuteAttack();
 
         attackDown = false;
     }
@@ -324,6 +324,8 @@ public class Player : MonoBehaviour
         {
             var maxSpeed = grounded ? stats.MaxGroundSpeed : stats.MaxAirSpeed;
             velocity.x = Mathf.MoveTowards(velocity.x, moveInput.x * maxSpeed, stats.HorizontalAcceleration * Time.fixedDeltaTime);
+
+            if (IsAttacking) return;
 
             // Rotate GameObject based on movement input
             if (moveInput.x > 0 && transform.localEulerAngles.y != ROTATION_FACING_RIGHT)
