@@ -1,8 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Animator))]
 public class GolemBoss : MonoBehaviour
@@ -20,13 +17,18 @@ public class GolemBoss : MonoBehaviour
     [Header("Waiting")]
     [SerializeField] private float waitTime;
 
+    [Header("Shockwaves")]
+    [SerializeField] private ConstantProjectile shockwavePrefab;
+    [SerializeField] private Transform shockwaveSpawnTransformFront;
+    [SerializeField] private Transform shockwaveSpawnTransformBack;
+
     [Header("Collison")]
     [SerializeField] private LayerMask playerLayer;
-    [SerializeField] private float playerDistanceAllowedAway;
     [SerializeField] private BoxCollider2D playerDetectBox;
     [SerializeField] private BoxCollider2D bodyCollider;
     [SerializeField] private float wallDistance;
     [SerializeField] private LayerMask wallLayer;
+    [SerializeField] private float groundDistance;
 
     [Header("Broadcast Events")]
     [SerializeField] private VoidEventSO bossDefeatedEventSO;
@@ -40,11 +42,14 @@ public class GolemBoss : MonoBehaviour
 
     private State state;
     private Vector2 lastCheckedPlayerPosition;
-    private bool facingRight;
+    private bool facingRight = true;
 
+    private Animator anim;
 
     private void Awake()
     {
+        TryGetComponent(out anim);
+
         ChangeState(State.Inactive);
     }
 
@@ -93,19 +98,28 @@ public class GolemBoss : MonoBehaviour
                 break;
             case State.Waiting:
                 waitTimer = waitTime;
+                if (GetPlayerPosition(out Vector2 playerPos))
+                {
+                    FacePlayer(playerPos);
+                }
                 break;
             case State.JumpingToPlayer:
                 {
                     interpolationValue = 0;
                     jumpStartPosition = transform.position;
+                    timesJumpedInARow++;
                 }
                 break;
 
             case State.JumpingToMiddleOfRoom:
                 {
+                    timesJumpedInARow = 0;
                     interpolationValue = 0;
                     jumpStartPosition = transform.position;
                 }
+                break;
+            case State.Shockwave:
+                anim.SetTrigger("Shockwave");
                 break;
         }
     }
@@ -147,6 +161,7 @@ public class GolemBoss : MonoBehaviour
     private float interpolationValue;
     private float percentage;
     private Vector2 jumpStartPosition;
+    private int timesJumpedInARow = 0;
 
     private void JumpToPlayerState()
     {
@@ -188,7 +203,7 @@ public class GolemBoss : MonoBehaviour
 
         if (percentage == 1f)
         {
-            ChangeState(State.Waiting);
+            ChangeState(State.Shockwave);
         }
     }
 
@@ -216,19 +231,37 @@ public class GolemBoss : MonoBehaviour
 
             if (waitTimer <= 0)
             {
-                if (GetPlayerPosition(out Vector2 playerPos))
+                if (GetPlayerPosition(out Vector2 _) && timesJumpedInARow < 3)
                 {
-                    lastCheckedPlayerPosition = playerPos;
-                    FacePlayer(lastCheckedPlayerPosition);
                     ChangeState(State.JumpingToPlayer);
                 }
                 else
                 {
-                    if (middleOfRoomTransform != null) ChangeState(State.JumpingToMiddleOfRoom);
-                    else ChangeState(State.Waiting);
+                    if (transform.position.x == middleOfRoomTransform.position.x) ChangeState(State.Shockwave);
+                    else ChangeState(State.JumpingToMiddleOfRoom);
                 }
             }
         }
+    }
+
+    #endregion
+
+    #region Attacks
+
+    [ContextMenu("Ignore")]
+    private void SpawnDualShockwaves()
+    {
+        Instantiate(shockwavePrefab, shockwaveSpawnTransformFront.position, transform.rotation);
+        ConstantProjectile backWave = Instantiate(shockwavePrefab, shockwaveSpawnTransformBack.position, transform.localRotation);
+
+        Vector3 reverseEuler = transform.localEulerAngles;
+        reverseEuler.y = facingRight ? ROTATION_FACINGLEFT : ROTATION_FACINGRIGHT;
+        backWave.transform.eulerAngles = reverseEuler;
+    }
+
+    public void EndAttack()
+    {
+        ChangeState(State.Waiting);
     }
 
     #endregion
@@ -245,6 +278,7 @@ public class GolemBoss : MonoBehaviour
         if (playerResults[0] == null) return false;
 
         playerPos = playerResults[0].transform.position;
+        lastCheckedPlayerPosition = playerPos;
 
         return true;
     }
@@ -252,11 +286,17 @@ public class GolemBoss : MonoBehaviour
     private void FacePlayer(Vector2 playerPos)
     {
         Vector3 euler = transform.localEulerAngles;
-        if (euler.y == ROTATION_FACINGLEFT && playerPos.x > transform.position.x) euler.y = ROTATION_FACINGRIGHT;
-        else if (euler.y == ROTATION_FACINGRIGHT && playerPos.x < transform.position.x) euler.y = ROTATION_FACINGLEFT;
+        if (euler.y == ROTATION_FACINGLEFT && playerPos.x > transform.position.x)
+        {
+            euler.y = ROTATION_FACINGRIGHT;
+            facingRight = true;
+        }
+        else if (euler.y == ROTATION_FACINGRIGHT && playerPos.x < transform.position.x)
+        {
+            euler.y = ROTATION_FACINGLEFT;
+            facingRight = false;
+        }
         transform.localEulerAngles = euler;
-
-        facingRight = !facingRight;
     }
 
     #endregion
@@ -277,6 +317,6 @@ public class GolemBoss : MonoBehaviour
 
     #endregion
 
-    private enum State { Inactive, Starting, Waiting, JumpingToPlayer, JumpingToMiddleOfRoom }
-    private enum Direction { Left, Right}
+    private enum State { Inactive, Starting, Waiting, JumpingToPlayer, JumpingToMiddleOfRoom, Shockwave }
+    private enum Direction { Left, Right }
 }
