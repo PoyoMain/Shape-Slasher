@@ -30,6 +30,11 @@ public class GolemBoss : MonoBehaviour
     [SerializeField] private LayerMask wallLayer;
     [SerializeField] private float groundDistance;
 
+    [Header("Audio")]
+    [SerializeField] private SFXPlayer jumpSFXPlayer;
+    [SerializeField] private SFXPlayer fallSFXPlayer;
+    [SerializeField] private SFXPlayer slamSFXPlayer;
+
     [Header("Broadcast Events")]
     [SerializeField] private VoidEventSO bossDefeatedEventSO;
 
@@ -108,6 +113,7 @@ public class GolemBoss : MonoBehaviour
                     interpolationValue = 0;
                     jumpStartPosition = transform.position;
                     timesJumpedInARow++;
+                    jumpSFXPlayer.Play();
                 }
                 break;
 
@@ -181,6 +187,7 @@ public class GolemBoss : MonoBehaviour
 
         if (percentage == 1f)
         {
+            fallSFXPlayer.Play();
             ChangeState(State.Waiting);
         }
     }
@@ -248,7 +255,7 @@ public class GolemBoss : MonoBehaviour
 
     #region Attacks
 
-    [ContextMenu("Ignore")]
+#pragma warning disable IDE0051
     private void SpawnDualShockwaves()
     {
         Instantiate(shockwavePrefab, shockwaveSpawnTransformFront.position, transform.rotation);
@@ -257,7 +264,10 @@ public class GolemBoss : MonoBehaviour
         Vector3 reverseEuler = transform.localEulerAngles;
         reverseEuler.y = facingRight ? ROTATION_FACINGLEFT : ROTATION_FACINGRIGHT;
         backWave.transform.eulerAngles = reverseEuler;
+
+        slamSFXPlayer.Play();
     }
+#pragma warning restore IDE0051
 
     public void EndAttack()
     {
