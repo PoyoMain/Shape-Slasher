@@ -31,6 +31,9 @@ public class Golem : MonoBehaviour
     [SerializeField] private float groundRaycastDistance;
     [SerializeField] private float wallRaycastDistance;
 
+    [Header("Audio")]
+    [SerializeField] private SFXPlayer damageSFXPlayer;
+
     // Constants
     private const int ROTATION_FACINGRIGHT = 0;
     private const int ROTATION_FACINGLEFT = 180;
@@ -229,6 +232,8 @@ public class Golem : MonoBehaviour
     private void TakeDamage(int damage)
     {
         health -= damage;
+
+        damageSFXPlayer.Play();
 
         if (health <= 0) Destroy(gameObject);
         else invincibleTimer = invincibilityTime;
