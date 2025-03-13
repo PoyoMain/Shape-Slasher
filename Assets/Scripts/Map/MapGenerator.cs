@@ -10,7 +10,7 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private int numberOfRooms;
     //[SerializeField] private int numberOfNeighborsAllowed;
     //[SerializeField] private bool canReuseRooms;
-    [SerializeField] private bool performOnAwake;
+    [SerializeField] private bool performOnStart;
 
     [Header("References")]
     [SerializeField] private RoomSO[] startRooms;
@@ -18,6 +18,7 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private List<RoomSO> possibleRooms;
 
     [Header("Broadcast Events")]
+    [SerializeField] private RoomListEventSO mapLayoutMadeSO;
     [SerializeField] private VoidEventSO mapGenerationFinishedSO;
 
     private Room startRoom;
@@ -25,15 +26,16 @@ public class MapGenerator : MonoBehaviour
 
     private Coroutine mapGenCoroutine;
 
-    private void Awake()
+    private void Start()
     {
-        if (performOnAwake) GenMap();
+        if (performOnStart) GenMap();
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Return)) GenMap();
-    }
+    // Uncomment to allow generating the map with a button
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.Return)) GenMap();
+    //}
 
     #region Generation
 
@@ -102,7 +104,7 @@ public class MapGenerator : MonoBehaviour
                     else compatibleRoomsFound = true;
                 }
 
-                // If a room was not found, start completely from scratch
+                // If a room was not found that was compatible with existing ones, start completely from scratch
                 if (!compatibleRoomsFound) break;
 
                 // Spawn Room and add it to list
@@ -120,11 +122,12 @@ public class MapGenerator : MonoBehaviour
                 // Assign new current room
                 currentRoom = newRoom;
 
-                // If the right number of rooms has been spawned, close unused doors, place boss room, and end loop
+                // If the right number of rooms has been spawned, close unused doors, place boss room, spawn all rooms in game, and end loop
                 if (i == numberOfRooms - 1)
                 {
                     if (!CloseUnusedDoors(spawnedRooms)) break;
                     if (!PlaceBossRoom(spawnedRooms)) break;
+                    mapLayoutMadeSO.RaiseEvent(spawnedRooms);
                     SpawnAllRooms(spawnedRooms);
                     mapGenerated = true;
                 }
