@@ -12,11 +12,12 @@ public class Player : MonoBehaviour
     [Space(20)]
     [SerializeField] private Stats stats;
 
-    [Header("Collision")]
+    [Header("Components")]
     [SerializeField] private BoxCollider2D hurtboxCollider;
-
-    [Header("Camera")]
     [SerializeField] private Transform camFocusTransform;
+
+    [Header("Audio")]
+    [SerializeField] private SFXPlayer jumpSFXPlayer;
 
     [Header("Broadcast Events")]
     [SerializeField] private VoidEventSO playerDamagedEventSO;
@@ -274,9 +275,9 @@ public class Player : MonoBehaviour
         timeJumpWasPressed = 0;
         bufferedJumpUsable = false;
         coyoteUsable = false;
-        //velocity.y = stats.JumpPower;
         jumpTimer = stats.JumpTime;
         velocity.y = 0;
+        jumpSFXPlayer.Play();
         Jumped?.Invoke();
     }
 
@@ -347,7 +348,7 @@ public class Player : MonoBehaviour
 
     private void Knockback(Vector2 force) => velocity += force;
 
-    [ContextMenu("Ignore")]
+#pragma warning disable IDE0051
     private void WallKnockback(Vector2 collPos)
     {
         Vector2 forceDirection;
@@ -356,6 +357,7 @@ public class Player : MonoBehaviour
         
         velocity = new ((forceDirection * stats.SurfaceKnockback).x, velocity.y); 
     }
+#pragma warning restore IDE0051
 
     private void KnockbackOnlyVertical(Vector2 force)
     {
