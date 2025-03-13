@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Enemy
   - Pickup
+  - Room Trigger
+  - PlayerCamFocus
   layers:
   - Default
   - TransparentFX
@@ -26,16 +28,16 @@ TagManager:
   - Enemy Hitbox
   - 
   - Pickup
-  - 
+  - Room Trigger
   - 
   - Solid Surface
+  - One Way Platform
   - 
   - 
+  - Room Bounds
+  - Camera Bounds
   - 
-  - Camera Border
-  - 
-  - 
-  - 
+  - BouncePad
   - 
   - 
   - 
@@ -52,6 +54,9 @@ TagManager:
   - name: Background 3
     uniqueID: 3429857573
     locked: 0
+  - name: Midground
+    uniqueID: 2282519659
+    locked: 0
   - name: Pickups
     uniqueID: 1091199683
     locked: 0
@@ -67,8 +72,11 @@ TagManager:
   - name: Attacks
     uniqueID: 1980122569
     locked: 0
-  - name: Midground
-    uniqueID: 2282519659
+  - name: Midground 2
+    uniqueID: 3287727291
+    locked: 0
+  - name: Midground 3
+    uniqueID: 1654981345
     locked: 0
   - name: Foreground
     uniqueID: 2633493689
