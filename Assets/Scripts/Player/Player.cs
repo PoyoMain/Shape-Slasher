@@ -18,6 +18,8 @@ public class Player : MonoBehaviour
 
     [Header("Audio")]
     [SerializeField] private SFXPlayer jumpSFXPlayer;
+    [SerializeField] private SFXPlayer damageSFXPlayer;
+    [SerializeField] private SFXPlayer deathSFXPlayer;
 
     [Header("Broadcast Events")]
     [SerializeField] private VoidEventSO playerDamagedEventSO;
@@ -192,11 +194,7 @@ public class Player : MonoBehaviour
 
             Damage(dmgComponent.Damage);
 
-            if (health <= 0)
-            {
-                Destroy(gameObject);
-            }
-            else
+            if (health > 0)
             {
                 invincibilityTimer = stats.InvincibleTime;
 
@@ -438,6 +436,16 @@ public class Player : MonoBehaviour
 
         health -= dmgAmount;
         playerHealthUpdatedEventSO.RaiseEvent(health);
+
+        if (health <= 0)
+        {
+            deathSFXPlayer.Play();
+            Destroy(gameObject);
+        }
+        else
+        {
+            damageSFXPlayer.Play();
+        }
     }
 
     #endregion
