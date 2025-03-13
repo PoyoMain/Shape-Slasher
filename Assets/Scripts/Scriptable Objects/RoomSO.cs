@@ -8,6 +8,7 @@ public class RoomSO : ScriptableObject
 {
     [Header("Type")]
     [SerializeField] private RoomType roomType;
+    [SerializeField] private Sprite icon;
 
     [Header("Doors")]
     [SerializeField] private List<Door> doors;
@@ -17,6 +18,7 @@ public class RoomSO : ScriptableObject
     [SerializeField] private Collider2D boundsCollider;
 
     public RoomType RoomType => roomType;
+    public Sprite Icon => icon;
     public List<Door> Doors => doors;
     public GameObject[] Prefabs => prefabs;
     public Vector2 Bounds

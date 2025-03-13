@@ -6,8 +6,10 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Collider2D))]
 public class InteractionTrigger : MonoBehaviour
 {
+    [SerializeField] private bool onlyDoEnterOnce;
     public UnityEvent OnTriggerEnter;
     public UnityEvent OnTriggerExit;
+    private bool enteredOnce;
 
     private Collider2D coll;
 
@@ -21,7 +23,10 @@ public class InteractionTrigger : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
+            if (onlyDoEnterOnce && enteredOnce) return;
+            
             OnTriggerEnter?.Invoke();
+            if (onlyDoEnterOnce) enteredOnce = true;
         }
     }
 
