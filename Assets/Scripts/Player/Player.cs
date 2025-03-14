@@ -105,6 +105,7 @@ public class Player : MonoBehaviour
 
         HandleJump();
         HandleDirection();
+        HandleKnockback();
         HandleGravity();
 
         HandleLooking();
@@ -260,7 +261,9 @@ public class Player : MonoBehaviour
 
         if (!jumpToConsume && !HasBufferedJump) return;
 
-        if (CrouchDown && CheckCrouch()) return; 
+        if (CrouchDown && CheckCrouch()) return;
+
+        if (IsInKnockback) return;
 
         if (grounded || CanUseCoyote) ExecuteJump();
 
@@ -314,6 +317,8 @@ public class Player : MonoBehaviour
 
     private void HandleDirection()
     {
+        if (IsInKnockback) return;
+
         if (moveInput.x == 0)
         {
             var deceleration = grounded ? stats.GroundDeceleration : stats.AirDeceleration;
@@ -344,16 +349,26 @@ public class Player : MonoBehaviour
 
     #region Knockback
 
-    private void Knockback(Vector2 force) => velocity += force;
+    private float knockbackTimer;
+    private bool IsInKnockback => knockbackTimer > 0;
+
+    private void HandleKnockback()
+    {
+        if (IsInKnockback) knockbackTimer -= Time.fixedDeltaTime;
+    }
+
+    private void Knockback(Vector2 force)
+    {
+        velocity += force;
+        knockbackTimer = stats.KnockbackAppliedTime;
+        
+    } 
 
 #pragma warning disable IDE0051
-    private void WallKnockback(Vector2 collPos)
-    {
-        Vector2 forceDirection;
-        if (collPos.x > transform.position.x) forceDirection = Vector2.left;
-        else forceDirection = Vector2.right;
-        
-        velocity = new ((forceDirection * stats.SurfaceKnockback).x, velocity.y); 
+    private void HitboxKnockback(Vector2 hitColliderDirection)
+    {        
+        velocity = new ((hitColliderDirection * stats.SurfaceKnockback).x, velocity.y);
+        knockbackTimer = stats.KnockbackAppliedTime;
     }
 #pragma warning restore IDE0051
 
@@ -491,6 +506,7 @@ public struct Stats
     [Header("Attacking")]
     public float TimeBetweenAttacks;
     public float SurfaceKnockback;
+    public float KnockbackAppliedTime;
 
     [Header("Looking")]
     public float LookDistance;
