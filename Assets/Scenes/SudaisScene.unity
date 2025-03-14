@@ -549,7 +549,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -596,7 +596,7 @@ MonoBehaviour:
   fireRate: 1.5
   shootAngle: 30
   detectionRange: 5
-  projectileSpeed: 5
+  projectileSpeed: 20
   playerLayer:
     serializedVersion: 2
     m_Bits: 0
@@ -675,6 +675,10 @@ PrefabInstance:
     - target: {fileID: 338634854979380600, guid: 400d98edff1964f42bd251b41749110f, type: 3}
       propertyPath: m_Name
       value: Thornball
+      objectReference: {fileID: 0}
+    - target: {fileID: 4139963768525662998, guid: 400d98edff1964f42bd251b41749110f, type: 3}
+      propertyPath: m_GravityScale
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4328302993012413126, guid: 400d98edff1964f42bd251b41749110f, type: 3}
       propertyPath: m_LocalPosition.x
