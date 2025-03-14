@@ -72,8 +72,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -2012447637
-  m_SortingLayer: 4
+  m_SortingLayerID: -1007240005
+  m_SortingLayer: 10
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
@@ -230,8 +230,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -2012447637
-  m_SortingLayer: 4
+  m_SortingLayerID: -1007240005
+  m_SortingLayer: 10
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
@@ -388,8 +388,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -2012447637
-  m_SortingLayer: 4
+  m_SortingLayerID: -1007240005
+  m_SortingLayer: 10
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
@@ -546,8 +546,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -2012447637
-  m_SortingLayer: 4
+  m_SortingLayerID: -1007240005
+  m_SortingLayer: 10
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
@@ -704,8 +704,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -2012447637
-  m_SortingLayer: 4
+  m_SortingLayerID: -1007240005
+  m_SortingLayer: 10
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
@@ -1024,6 +1024,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8442584423857472750}
     m_Modifications:
+    - target: {fileID: 1209421234912526612, guid: ac87187bb9ed0cb4aaf5bd7034709402, type: 3}
+      propertyPath: middleOfRoomTransform
+      value: 
+      objectReference: {fileID: 8373577686062366015}
     - target: {fileID: 4525287600727683931, guid: ac87187bb9ed0cb4aaf5bd7034709402, type: 3}
       propertyPath: m_Name
       value: GolemBoss
@@ -2894,7 +2898,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6770155013390668531, guid: 6682238eb54a55b4e8d13b951a9a5ca9, type: 3}
       propertyPath: m_Name
-      value: Room_Boss_E 1
+      value: Room_Boss_E2 1
       objectReference: {fileID: 0}
     - target: {fileID: 7202590371369174746, guid: 6682238eb54a55b4e8d13b951a9a5ca9, type: 3}
       propertyPath: m_IsActive
@@ -3038,6 +3042,11 @@ Transform:
 --- !u!4 &5539750912464151385 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2697541059510822578, guid: 6682238eb54a55b4e8d13b951a9a5ca9, type: 3}
+  m_PrefabInstance: {fileID: 7606211810223326699}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8373577686062366015 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2142127780267849940, guid: 6682238eb54a55b4e8d13b951a9a5ca9, type: 3}
   m_PrefabInstance: {fileID: 7606211810223326699}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &8442584423857472750 stripped
