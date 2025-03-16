@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Stats stats;
 
     [Header("Components")]
+    [SerializeField] private BoxCollider2D bodyCollider;
     [SerializeField] private BoxCollider2D hurtboxCollider;
     [SerializeField] private Transform camFocusTransform;
 
@@ -125,7 +126,7 @@ public class Player : MonoBehaviour
 
             if (invincibilityTimer <= 0)
             {
-
+                hurtboxCollider.enabled = true;
             }
         }
     }
@@ -142,14 +143,9 @@ public class Player : MonoBehaviour
     {
         Physics2D.queriesStartInColliders = false;
 
-        // Ground, Bouncepad, and Ceiling Check
-        //bool groundHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.down, stats.GrounderDistance, stats.GroundLayers);
-        //RaycastHit2D bounceHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.down, stats.GrounderDistance, stats.BounceLayer);
-        //bool ceilingHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.up, stats.GrounderDistance, stats.CeilingLayers);
-
-        bool groundHit = Physics2D.BoxCast(hurtboxCollider.bounds.center, hurtboxCollider.size, 0, Vector2.down, stats.GrounderDistance, stats.GroundLayers);
-        RaycastHit2D bounceHit = Physics2D.BoxCast(hurtboxCollider.bounds.center, hurtboxCollider.size, 0, Vector2.down, stats.GrounderDistance, stats.BounceLayer);
-        bool ceilingHit = Physics2D.BoxCast(hurtboxCollider.bounds.center, hurtboxCollider.size, 0, Vector2.up, stats.GrounderDistance, stats.CeilingLayers);
+        bool groundHit = Physics2D.BoxCast(bodyCollider.bounds.center, bodyCollider.size, 0, Vector2.down, stats.GrounderDistance, stats.GroundLayers);
+        RaycastHit2D bounceHit = Physics2D.BoxCast(bodyCollider.bounds.center, bodyCollider.size, 0, Vector2.down, stats.GrounderDistance, stats.BounceLayer);
+        bool ceilingHit = Physics2D.BoxCast(bodyCollider.bounds.center, bodyCollider.size, 0, Vector2.up, stats.GrounderDistance, stats.CeilingLayers);
 
         // Hit a Ceiling
         if (ceilingHit) velocity.y = Mathf.Min(0, velocity.y);
@@ -169,7 +165,7 @@ public class Player : MonoBehaviour
             endedJumpEarly = false;
             if (colliderToTurnOnOnceGrounded != null)
             {
-                Physics2D.IgnoreCollision(hurtboxCollider, colliderToTurnOnOnceGrounded, false);
+                Physics2D.IgnoreCollision(bodyCollider, colliderToTurnOnOnceGrounded, false);
                 colliderToTurnOnOnceGrounded = null;
             }
             GroundedChanged?.Invoke(true, Mathf.Abs(velocity.y));
@@ -198,6 +194,7 @@ public class Player : MonoBehaviour
             if (health > 0)
             {
                 invincibilityTimer = stats.InvincibleTime;
+                hurtboxCollider.enabled = false;
 
                 Vector2 directionToHitbox = (collider.transform.position - transform.position).normalized;
                 Vector2 force = -directionToHitbox * dmgComponent.Knockback;
@@ -299,13 +296,13 @@ public class Player : MonoBehaviour
 
     private bool CheckCrouch()
     {
-        bool groundHit = Physics2D.BoxCast(hurtboxCollider.bounds.center, hurtboxCollider.size, 0, Vector2.down, stats.PlatformDistance, stats.SolidSurfaceLayer);
-        RaycastHit2D platformHit = Physics2D.BoxCast(hurtboxCollider.bounds.center, hurtboxCollider.size, 0, Vector2.down, stats.PlatformDistance, stats.OneWayPlatformLayer);
+        bool groundHit = Physics2D.BoxCast(bodyCollider.bounds.center, bodyCollider.size, 0, Vector2.down, stats.PlatformDistance, stats.SolidSurfaceLayer);
+        RaycastHit2D platformHit = Physics2D.BoxCast(bodyCollider.bounds.center, bodyCollider.size, 0, Vector2.down, stats.PlatformDistance, stats.OneWayPlatformLayer);
 
         if (!groundHit && platformHit)
         {
             colliderToTurnOnOnceGrounded = platformHit.collider;
-            Physics2D.IgnoreCollision(hurtboxCollider, colliderToTurnOnOnceGrounded, true);
+            Physics2D.IgnoreCollision(bodyCollider, colliderToTurnOnOnceGrounded, true);
             return true;
         }
         else return false;
@@ -354,7 +351,10 @@ public class Player : MonoBehaviour
 
     private void HandleKnockback()
     {
-        if (IsInKnockback) knockbackTimer -= Time.fixedDeltaTime;
+        if (IsInKnockback)
+        {
+            knockbackTimer -= Time.fixedDeltaTime;
+        }
     }
 
     private void Knockback(Vector2 force)

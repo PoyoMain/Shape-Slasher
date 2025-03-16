@@ -399,8 +399,9 @@ MonoBehaviour:
     LookDistance: 4.5
     TimeToLook: 1
     MaxHealth: 1000
-    InvincibleTime: 1
-  hurtboxCollider: {fileID: 4829347791518249693}
+    InvincibleTime: 2
+  bodyCollider: {fileID: 4829347791518249693}
+  hurtboxCollider: {fileID: 6920433218644516185}
   camFocusTransform: {fileID: 8258641867296838082}
   jumpSFXPlayer: {fileID: 8116855035941202347}
   damageSFXPlayer: {fileID: 4657243296264815216}
