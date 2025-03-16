@@ -22,6 +22,9 @@ public class Golem : MonoBehaviour
     [SerializeField] private float playerBehindDistance;
     [SerializeField] private float attackCooldownTime;
 
+    [Header("Defending")]
+    [SerializeField] private float defendTime;
+
     [Header("Collisions")]
     [SerializeField] private CapsuleCollider2D bodyCollider;
     [SerializeField] private LayerMask groundLayers;
@@ -37,6 +40,9 @@ public class Golem : MonoBehaviour
     // Constants
     private const int ROTATION_FACINGRIGHT = 0;
     private const int ROTATION_FACINGLEFT = 180;
+
+    //Properties
+    private bool FacingRight => transform.localEulerAngles.y == ROTATION_FACINGRIGHT;
 
     // Private Variables
     private State state = State.Patroling;
@@ -67,6 +73,10 @@ public class Golem : MonoBehaviour
         {
             TurnState();
         }
+        else if (state == State.Defending)
+        {
+            DefendState();
+        }
     }
 
     private void ChangeState(State newState)
@@ -86,15 +96,18 @@ public class Golem : MonoBehaviour
                 StopMoving();
                 turnTimer = turnTime;
                 break;
+            case State.Defending:
+                CheckIfPlayerBehind();
+                StopMoving();
+                break;
         }
     }
 
     #region Patrolling
 
     private float startPatrollingTimer;
-    private bool facingRight = true;
 
-    private int MoveDirection => facingRight ? 1 : -1;
+    private int MoveDirection => FacingRight ? 1 : -1;
 
     private void PatrolState()
     {
@@ -127,7 +140,6 @@ public class Golem : MonoBehaviour
     #region Attacking
 
     private float attackCooldownTimer;
-
     private bool AttackOnCooldown => attackCooldownTimer > 0;
 
     private void AttackState()
@@ -173,10 +185,16 @@ public class Golem : MonoBehaviour
         bool playerHitBehind = Physics2D.CapsuleCast(bodyCollider.bounds.center, bodyCollider.size, bodyCollider.direction, 0, -MoveDirection * Vector2.right, playerBehindDistance, playerLayer);
 
         if (playerHit && state != State.Attacking) ChangeState(State.Attacking);
-        else if (!playerHit && state != State.Patroling) ChangeState(State.Patroling);
         else if (playerHitBehind && state != State.Turning) TurnAround();
+        else if (!playerHit && state != State.Patroling) ChangeState(State.Patroling); 
 
         return playerHit;
+    }
+
+    private void CheckIfPlayerBehind()
+    {
+        bool playerHitBehind = Physics2D.CapsuleCast(bodyCollider.bounds.center, bodyCollider.size, bodyCollider.direction, 0, -MoveDirection * Vector2.right, playerBehindDistance, playerLayer);
+        if (playerHitBehind) TurnAround();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -185,14 +203,34 @@ public class Golem : MonoBehaviour
         {
             if (IsInvincible) return;
 
+            if (Defending)
+            {
+                Vector2 directionToHitbox = (collision.transform.position - transform.position).normalized;
+                print((collision.transform.position - transform.position).normalized);
+
+                Vector2 cardinalDirectionToHitbox = Vector2.zero;
+                if (directionToHitbox.x > 0.7f) cardinalDirectionToHitbox = Vector2.right;
+                else if (directionToHitbox.x < -0.7f) cardinalDirectionToHitbox = Vector2.left;
+                else if (directionToHitbox.y > 0.7f) cardinalDirectionToHitbox = Vector2.up;
+                else if (directionToHitbox.y < 0.7f) cardinalDirectionToHitbox = Vector2.down;
+
+                if ((FacingRight && cardinalDirectionToHitbox == Vector2.right) || (!FacingRight && cardinalDirectionToHitbox == Vector2.left))
+                {
+                    StopDefense();
+                    ExecuteAttack();
+                    ChangeState(State.Attacking);
+                    return;
+                }
+                else if ((FacingRight && cardinalDirectionToHitbox == Vector2.left) || (!FacingRight && cardinalDirectionToHitbox == Vector2.right))
+                {
+                    StopDefense();
+                    ChangeState(State.Attacking);
+                }
+            }
+
             TakeDamage(damageComponent.Damage);
 
-            //Vector2 directionToHitbox = (collision.transform.position - transform.position).normalized;
-            //Vector2 force = -directionToHitbox * damageComponent.Knockback;
-            //Knockback(force);
-
             Vector2 forceDirection;
-
             if (collision.transform.position.x > transform.position.x) forceDirection = Vector2.left;
             else forceDirection = Vector2.right;
             Vector2 force = new((forceDirection * damageComponent.Knockback).x, rigid.velocity.y);
@@ -221,17 +259,17 @@ public class Golem : MonoBehaviour
         if (euler.y == ROTATION_FACINGLEFT) euler.y = ROTATION_FACINGRIGHT;
         else euler.y = ROTATION_FACINGLEFT;
         transform.localEulerAngles = euler;
-
-        facingRight = !facingRight;
     }
 
     #endregion
 
     #region Health & Damage
 
+    private int timesAttacked;
     private void TakeDamage(int damage)
     {
         health -= damage;
+        timesAttacked++;
 
         damageSFXPlayer.Play();
 
@@ -256,10 +294,50 @@ public class Golem : MonoBehaviour
 
     private void EndKnockback()
     {
-        state = cachedStateBeforeKnockback;
+        if (timesAttacked % 2 == 0)
+        {
+            ChangeState(State.Defending);
+        }
+        else state = cachedStateBeforeKnockback;
     }
 
     #endregion
 
-    private enum State { Patroling, Attacking, Turning, Knockback }
+    #region Defending
+
+    private float defendTimer;
+    private bool Defending => defendTimer > 0;
+
+    private void DefendState()
+    {
+        if (Defending)
+        {
+            defendTimer -= Time.fixedDeltaTime;
+
+            if (!Defending)
+            {
+                anim.SetBool("Defending", Defending);
+                CheckForPlayer();
+            }
+            return;
+        }
+
+        ExecuteDefense();
+    }
+
+    private void ExecuteDefense()
+    {
+        defendTimer = defendTime;
+        anim.SetBool("Defending", Defending);
+    }
+
+    private void StopDefense()
+    {
+        defendTimer = 0;
+        anim.SetBool("Defending", Defending);
+    }
+
+    #endregion
+
+    private enum State { Patroling, Attacking, Turning, Knockback, Defending }
 }
