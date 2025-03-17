@@ -248,15 +248,8 @@ MonoBehaviour:
   possibleRooms:
   - {fileID: 11400000, guid: 7b7bb4fbbab213641a33fd76c283a7bc, type: 2}
   - {fileID: 11400000, guid: 11844f63588fd3d4b8dd32cbc0c945fc, type: 2}
-  - {fileID: 11400000, guid: ba1436a2499b53641a538dc3ba3323db, type: 2}
   - {fileID: 11400000, guid: 4c0f0e1f5f4ed4c4fb1d52ee9bf3652d, type: 2}
-  - {fileID: 11400000, guid: e4ed44bb4da119d4fa946ca275c8db6f, type: 2}
-  - {fileID: 11400000, guid: deb247801aea9aa40abdc4902604b3e1, type: 2}
-  - {fileID: 11400000, guid: d5fc8c92ad45201418d85179881e04c7, type: 2}
   - {fileID: 11400000, guid: 60ee2551477fa1a44a0990d2402e2d84, type: 2}
-  - {fileID: 11400000, guid: b5e2fead7134a7d42bf2436410358dc5, type: 2}
-  - {fileID: 11400000, guid: 2686c6ae07b29f444894fc9c39031360, type: 2}
-  - {fileID: 11400000, guid: 606de3bf5eef5034fa91d2d12d35e2c2, type: 2}
   - {fileID: 11400000, guid: 314466c32c79e8848a7f5cbabe1214cd, type: 2}
   - {fileID: 11400000, guid: 8ea0ddcbf9af63941bf775c9b5dd2618, type: 2}
   - {fileID: 11400000, guid: e82b4b19aad8ecf4eaf27eb429fb5294, type: 2}
@@ -288,6 +281,7 @@ GameObject:
   - component: {fileID: 1636397735}
   - component: {fileID: 1636397734}
   - component: {fileID: 1636397737}
+  - component: {fileID: 1636397738}
   - component: {fileID: 1636397736}
   m_Layer: 0
   m_Name: Listener Parent
@@ -364,6 +358,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _channel: {fileID: 11400000, guid: 06730dad57c80f3429eb762bcac337e6, type: 2}
+  OnEventRaised:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1636397736}
+        m_TargetAssemblyTypeName: SceneTransitioner, Assembly-CSharp
+        m_MethodName: TransitionToScene
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1636397738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1636397733}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e851f1eab04fd748a82358c330fa7c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _channel: {fileID: 11400000, guid: 85132c2903af7184b824f1c99dc19a83, type: 2}
   OnEventRaised:
     m_PersistentCalls:
       m_Calls:
@@ -663,6 +685,10 @@ PrefabInstance:
     - target: {fileID: 782208810798574963, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2755181245538217731, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
+      propertyPath: stats.MaxHealth
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4166714208754174496, guid: 1fa6aca878c04f843b6f6c3d83c0314c, type: 3}
       propertyPath: m_Name
