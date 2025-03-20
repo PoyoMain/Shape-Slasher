@@ -62,6 +62,12 @@ public class CreditsMenu : MonoBehaviour
         else
         {
             onCreditsClose?.Invoke();
+
+            Vector2 newPos = content.anchoredPosition;
+            newPos.y = 0;
+            content.anchoredPosition = newPos;
+
+            currentButtonIndex = 1;
         }
     }
 
@@ -73,6 +79,8 @@ public class CreditsMenu : MonoBehaviour
     private void HandleNavigation()
     {
         if (navigationInput.y == 0) return;
+
+        if (conceptOpen) return;
 
         if (!eventSystem.currentSelectedGameObject.TryGetComponent(out Button eventCurrentButton)) return;
 
