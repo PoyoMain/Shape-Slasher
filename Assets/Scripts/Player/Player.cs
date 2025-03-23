@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
 
     [Header("Broadcast Events")]
     [SerializeField] private VoidEventSO playerDamagedEventSO;
+    [SerializeField] private VoidEventSO playerDeathEventSO;
     [SerializeField] private IntEventSO playerHealthLossEventSO;
     [SerializeField] private IntEventSO playerHealthUpdatedEventSO;
 
@@ -458,6 +459,7 @@ public class Player : MonoBehaviour
         if (health <= 0)
         {
             deathSFXPlayer.Play();
+            playerDeathEventSO.RaiseEvent();
             Destroy(gameObject);
         }
         else

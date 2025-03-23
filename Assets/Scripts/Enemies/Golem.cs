@@ -37,6 +37,9 @@ public class Golem : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private SFXPlayer damageSFXPlayer;
 
+    [Header("Broadcast Events")]
+    [SerializeField] private VoidEventSO enemyDeathEventSO;
+
     // Constants
     private const int ROTATION_FACINGRIGHT = 0;
     private const int ROTATION_FACINGLEFT = 180;
@@ -278,7 +281,11 @@ public class Golem : MonoBehaviour
         damageFlash.CallDamageFlash();
         damageSFXPlayer.Play();
 
-        if (health <= 0) Destroy(gameObject);
+        if (health <= 0)
+        {
+            enemyDeathEventSO.RaiseEvent();
+            Destroy(gameObject);
+        }
         else invincibleTimer = invincibilityTime;
     }
 

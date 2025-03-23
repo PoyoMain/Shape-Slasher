@@ -7,6 +7,7 @@ public class GolemBoss : MonoBehaviour
     [Header("Health")]
     [SerializeField] private float health;
     [SerializeField] private float invincibilityTime;
+    [SerializeField] private float deathFreezeTime;
 
     [Header("Jumping")]
     [SerializeField] private float jumpHeight;
