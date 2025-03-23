@@ -126,6 +126,7 @@ public class Golem : MonoBehaviour
         Vector2 velocity = rigid.velocity;
         velocity.x = Mathf.MoveTowards(velocity.x, MoveDirection * patrolSpeed, 150 * Time.fixedDeltaTime);
         rigid.velocity = velocity;
+        anim.SetBool("Moving", true);
     }
 
     private void StopMoving()
@@ -133,6 +134,7 @@ public class Golem : MonoBehaviour
         Vector2 velocity = rigid.velocity;
         velocity.x = 0;
         rigid.velocity = velocity;
+        anim.SetBool("Moving", false);
     }
 
     #endregion
