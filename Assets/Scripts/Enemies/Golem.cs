@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(Animator))]
+[RequireComponent(typeof(Rigidbody2D), typeof(Animator), typeof(DamageFlash))]
 public class Golem : MonoBehaviour
 {
     [Header("Health")]
@@ -48,11 +48,13 @@ public class Golem : MonoBehaviour
     private State state = State.Patroling;
     private Rigidbody2D rigid;
     private Animator anim;
+    private DamageFlash damageFlash;
 
     private void Awake()
     {
         TryGetComponent(out rigid);
         TryGetComponent(out anim);
+        TryGetComponent(out damageFlash);
 
         ChangeState(State.Patroling);
     }
@@ -273,6 +275,7 @@ public class Golem : MonoBehaviour
         health -= damage;
         timesAttacked++;
 
+        damageFlash.CallDamageFlash();
         damageSFXPlayer.Play();
 
         if (health <= 0) Destroy(gameObject);

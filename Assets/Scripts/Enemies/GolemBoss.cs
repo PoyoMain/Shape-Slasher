@@ -1,7 +1,7 @@
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(Animator))]
+[RequireComponent(typeof(Rigidbody2D), typeof(Animator), typeof(DamageFlash))]
 public class GolemBoss : MonoBehaviour
 {
     [Header("Health")]
@@ -52,10 +52,12 @@ public class GolemBoss : MonoBehaviour
     private Vector2 lastCheckedPlayerPosition;
 
     private Animator anim;
+    private DamageFlash damageFlash;
 
     private void Awake()
     {
         TryGetComponent(out anim);
+        TryGetComponent(out damageFlash);
 
         ChangeState(State.Inactive);
     }
@@ -354,6 +356,7 @@ public class GolemBoss : MonoBehaviour
     private void TakeDamage(int damage)
     {
         health -= damage;
+        damageFlash.CallDamageFlash();
 
         if (health <= 0)
         {

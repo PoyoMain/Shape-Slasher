@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(Animator))]
+[RequireComponent(typeof(Rigidbody2D), typeof(Animator), typeof(DamageFlash))]
 public class Player : MonoBehaviour
 {
     [Header("Inputs")]
@@ -49,12 +49,14 @@ public class Player : MonoBehaviour
     private float time;
     private Rigidbody2D rb;
     private Animator anim;
+    private DamageFlash damageFlash;
 
 
     private void Awake()
     {
         TryGetComponent(out rb);
         TryGetComponent(out anim);
+        TryGetComponent(out damageFlash);
 
         health = stats.MaxHealth;
         cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
@@ -451,6 +453,7 @@ public class Player : MonoBehaviour
 
         health -= dmgAmount;
         playerHealthUpdatedEventSO.RaiseEvent(health);
+        damageFlash.CallDamageFlash();
 
         if (health <= 0)
         {

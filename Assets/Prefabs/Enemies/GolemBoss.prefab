@@ -404,7 +404,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 3fa0b042d93b7154bb5cb5c6895f8b59, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1183,6 +1183,7 @@ GameObject:
   - component: {fileID: 4358404045172688156}
   - component: {fileID: 6762756180162033090}
   - component: {fileID: 1209421234912526612}
+  - component: {fileID: 4066194576489871650}
   m_Layer: 14
   m_Name: GolemBoss
   m_TagString: Untagged
@@ -1296,6 +1297,20 @@ MonoBehaviour:
   slamSFXPlayer: {fileID: 6343632582103592613}
   bossDefeatedEventSO: {fileID: 11400000, guid: 06730dad57c80f3429eb762bcac337e6, type: 2}
   bossFightStartEventSO: {fileID: 11400000, guid: 8bf5b0fc60534444ebff35a572a3a0af, type: 2}
+--- !u!114 &4066194576489871650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4525287600727683931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8b50524eecef3d4b87619dc6a257611, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flashColor: {r: 1, g: 1, b: 1, a: 1}
+  flashTime: 0.25
 --- !u!1 &4630629620161138285
 GameObject:
   m_ObjectHideFlags: 0
