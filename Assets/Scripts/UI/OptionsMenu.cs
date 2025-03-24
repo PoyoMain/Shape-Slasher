@@ -5,13 +5,51 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class OptionsMenu : MonoBehaviour
 {
+    [SerializeField] private OptionsSO optionsSO;
+
+    [Header("Scene Objects")]
+    [SerializeField] private Slider audioSlider_Master;
+    [SerializeField] private Slider audioSlider_Music;
+    [SerializeField] private Slider audioSlider_SFX;
+    [SerializeField] private Slider audioSlider_Ambience;
+    [Space(10)]
+    [SerializeField] private Toggle checkbox_ControllerRumble;
+
     [SerializeField] private UnityEvent onOptionsClose;
 
     private PlayerControls _playerControls;
     private PlayerControls.UIControlsActions controls;
+
+    private const string MIXER_MASTER = "MasterVolume";
+    private const string MIXER_MUSIC = "MusicVolume";
+    private const string MIXER_SFX = "SFXVolume";
+    private const string MIXER_AMBIENCE = "AmbienceVolume";
+    private const float VOLUME_MAX = 20;
+    private const float VOLUME_MIN = -80f;
+
+    private void Awake()
+    {
+        audioSlider_Master.maxValue = audioSlider_Music.maxValue = audioSlider_SFX.maxValue = audioSlider_Ambience.maxValue = VOLUME_MAX;
+        audioSlider_Master.minValue = audioSlider_Music.minValue = audioSlider_SFX.minValue = audioSlider_Ambience.minValue = VOLUME_MIN;
+
+        optionsSO.MainAudioMixer.GetFloat(MIXER_MASTER, out float volume);
+        audioSlider_Master.value = volume;
+
+        optionsSO.MainAudioMixer.GetFloat(MIXER_MUSIC, out volume);
+        audioSlider_Music.value = volume;
+
+        optionsSO.MainAudioMixer.GetFloat(MIXER_SFX, out volume);
+        audioSlider_SFX.value = volume;
+
+        optionsSO.MainAudioMixer.GetFloat(MIXER_AMBIENCE, out volume);
+        audioSlider_Ambience.value = volume;
+
+        checkbox_ControllerRumble.isOn = optionsSO.ControllerRumble;
+    }
 
     private void OnEnable()
     {
