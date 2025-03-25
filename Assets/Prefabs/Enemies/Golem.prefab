@@ -469,7 +469,7 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 1024
-  attackDistance: 1.5
+  attackDistance: 1.2
   playerBehindDistance: 4
   attackCooldownTime: 2
   defendTime: 3
@@ -1117,8 +1117,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1.5, y: 1.8}
+  m_Offset: {x: 0.05, y: 0}
+  m_Size: {x: 1.2, y: 1.6}
   m_Direction: 0
 --- !u!1 &8173491100615305722
 GameObject:
