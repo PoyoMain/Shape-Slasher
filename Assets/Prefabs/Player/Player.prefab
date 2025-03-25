@@ -276,7 +276,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &782208810798574963
 Transform:
   m_ObjectHideFlags: 0
@@ -396,11 +396,11 @@ MonoBehaviour:
     CoyoteTime: 0.05
     JumpBuffer: 0.1
     TimeBetweenAttacks: 0.3
-    SurfaceKnockback: 10
+    SurfaceKnockback: 5
     KnockbackAppliedTime: 0.05
     LookDistance: 4.5
     TimeToLook: 1
-    MaxHealth: 1000
+    MaxHealth: 5
     InvincibleTime: 2
   bodyCollider: {fileID: 4829347791518249693}
   hurtboxCollider: {fileID: 6920433218644516185}
