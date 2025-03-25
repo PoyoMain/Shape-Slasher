@@ -5,14 +5,10 @@ using UnityEngine;
 public class HitPause : MonoBehaviour
 {
     [Header("Settings")]
-    [SerializeField] private float playerDeathTime;
-    [SerializeField] private float enemyDeathTime;
-    [SerializeField] private float bossDeathTime;
+    [SerializeField] private float hitPauseTime;
 
     [Header("Listen Events")]
-    [SerializeField] private VoidEventSO playerDeathEventSO;
-    [SerializeField] private VoidEventSO enemyDeathEventSO;
-    [SerializeField] private VoidEventSO bossDeathEventSO;
+    [SerializeField] private VoidEventSO hitPauseEventSO;
 
     private Coroutine freezeCoroutine;
 
@@ -20,35 +16,21 @@ public class HitPause : MonoBehaviour
 
     private void OnEnable()
     {
-        playerDeathEventSO.OnEventRaised += PlayerDeathFreeze;
-        enemyDeathEventSO.OnEventRaised += EnemyDeathFreeze;
-        bossDeathEventSO.OnEventRaised += BossDeathFreeze;
+        hitPauseEventSO.OnEventRaised += PauseMethod;
     }
 
     private void OnDisable()
     {
-        playerDeathEventSO.OnEventRaised -= PlayerDeathFreeze;
-        enemyDeathEventSO.OnEventRaised -= EnemyDeathFreeze;
-        bossDeathEventSO.OnEventRaised -= BossDeathFreeze;
+        hitPauseEventSO.OnEventRaised -= PauseMethod;
     }
 
     #endregion
 
     #region Death Methods
 
-    private void PlayerDeathFreeze()
+    private void PauseMethod()
     {
-        Freeze(playerDeathTime);
-    }
-
-    private void EnemyDeathFreeze()
-    {
-        Freeze(enemyDeathTime);
-    }
-
-    private void BossDeathFreeze()
-    {
-        Freeze(bossDeathTime);
+        Freeze(hitPauseTime);
     }
 
     #endregion

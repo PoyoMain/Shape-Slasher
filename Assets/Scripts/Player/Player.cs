@@ -1,9 +1,11 @@
+using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Animator), typeof(DamageFlash))]
+[RequireComponent(typeof(CinemachineImpulseSource))]
 public class Player : MonoBehaviour
 {
     [Header("Inputs")]
@@ -51,6 +53,7 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;
     private Animator anim;
     private DamageFlash damageFlash;
+    private CinemachineImpulseSource damageImpulseSource;
 
 
     private void Awake()
@@ -58,6 +61,7 @@ public class Player : MonoBehaviour
         TryGetComponent(out rb);
         TryGetComponent(out anim);
         TryGetComponent(out damageFlash);
+        TryGetComponent(out damageImpulseSource);
 
         health = stats.MaxHealth;
         cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
@@ -455,6 +459,7 @@ public class Player : MonoBehaviour
         health -= dmgAmount;
         playerHealthUpdatedEventSO.RaiseEvent(health);
         damageFlash.CallDamageFlash();
+        damageImpulseSource.GenerateImpulse();
 
         if (health <= 0)
         {

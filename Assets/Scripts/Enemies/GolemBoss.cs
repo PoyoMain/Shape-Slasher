@@ -1,7 +1,9 @@
+using Cinemachine;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Animator), typeof(DamageFlash))]
+[RequireComponent(typeof(CinemachineImpulseSource))]
 public class GolemBoss : MonoBehaviour
 {
     [Header("Health")]
@@ -54,11 +56,13 @@ public class GolemBoss : MonoBehaviour
 
     private Animator anim;
     private DamageFlash damageFlash;
+    private CinemachineImpulseSource damageImpulseSource;
 
     private void Awake()
     {
         TryGetComponent(out anim);
         TryGetComponent(out damageFlash);
+        TryGetComponent(out damageImpulseSource);
 
         ChangeState(State.Inactive);
     }
@@ -358,6 +362,7 @@ public class GolemBoss : MonoBehaviour
     {
         health -= damage;
         damageFlash.CallDamageFlash();
+        damageImpulseSource.GenerateImpulse();
 
         if (health <= 0)
         {

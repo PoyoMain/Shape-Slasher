@@ -1,9 +1,11 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Animator), typeof(DamageFlash))]
+[RequireComponent(typeof(CinemachineImpulseSource))]
 public class Golem : MonoBehaviour
 {
     [Header("Health")]
@@ -52,12 +54,14 @@ public class Golem : MonoBehaviour
     private Rigidbody2D rigid;
     private Animator anim;
     private DamageFlash damageFlash;
+    private CinemachineImpulseSource damageImpulseSource;
 
     private void Awake()
     {
         TryGetComponent(out rigid);
         TryGetComponent(out anim);
         TryGetComponent(out damageFlash);
+        TryGetComponent(out damageImpulseSource);
 
         ChangeState(State.Patroling);
     }
@@ -213,7 +217,7 @@ public class Golem : MonoBehaviour
             if (Defending)
             {
                 Vector2 directionToHitbox = (collision.transform.position - transform.position).normalized;
-                print((collision.transform.position - transform.position).normalized);
+                //print((collision.transform.position - transform.position).normalized);
 
                 Vector2 cardinalDirectionToHitbox = Vector2.zero;
                 if (directionToHitbox.x > 0.7f) cardinalDirectionToHitbox = Vector2.right;
@@ -280,6 +284,7 @@ public class Golem : MonoBehaviour
 
         damageFlash.CallDamageFlash();
         damageSFXPlayer.Play();
+        damageImpulseSource.GenerateImpulse();
 
         if (health <= 0)
         {
