@@ -1,4 +1,5 @@
 using Cinemachine;
+using Cinemachine.Utility;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -176,6 +177,7 @@ public class Player : MonoBehaviour
                 colliderToTurnOnOnceGrounded = null;
             }
             GroundedChanged?.Invoke(true, Mathf.Abs(velocity.y));
+            anim.SetBool("IsGrounded", true);
         }
 
         //Left the Ground
@@ -184,6 +186,7 @@ public class Player : MonoBehaviour
             grounded = false;
             frameLeftGround = time;
             GroundedChanged?.Invoke(false, 0);
+            anim.SetBool("IsGrounded", false);
         }
 
         Physics2D.queriesStartInColliders = cachedQueryStartInColliders;
@@ -327,11 +330,16 @@ public class Player : MonoBehaviour
         {
             var deceleration = grounded ? stats.GroundDeceleration : stats.AirDeceleration;
             velocity.x = Mathf.MoveTowards(velocity.x, 0, deceleration * Time.fixedDeltaTime);
+
+            anim.SetBool("IsMoving", false);
         }
         else
         {
             var maxSpeed = grounded ? stats.MaxGroundSpeed : stats.MaxAirSpeed;
             velocity.x = Mathf.MoveTowards(velocity.x, moveInput.x * maxSpeed, stats.HorizontalAcceleration * Time.fixedDeltaTime);
+
+            // Set Animator movement
+            anim.SetBool("IsMoving", true);
 
             if (IsAttacking) return;
 
@@ -393,6 +401,7 @@ public class Player : MonoBehaviour
         if (grounded && velocity.y <= 0f)
         {
             velocity.y = stats.GroundingForce;
+            anim.SetInteger("VerticalSpeed", 0);
         }
         else
         {
@@ -402,6 +411,9 @@ public class Player : MonoBehaviour
                 inAirGravity *= stats.JumpEndEarlyGravityModifier;
             }
             velocity.y = Mathf.MoveTowards(velocity.y, -stats.MaxFallSpeed, inAirGravity * Time.fixedDeltaTime);
+
+            if (velocity.y > 0) anim.SetInteger("VerticalSpeed", 1);
+            else if (velocity.y < 0) anim.SetInteger("VerticalSpeed", -1);
         }
     }
 
