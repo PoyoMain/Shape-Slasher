@@ -122,6 +122,7 @@ public class GolemBoss : MonoBehaviour
                     timesJumpedInARow = 0;
                     interpolationValue = 0;
                     jumpStartPosition = transform.position;
+                    jumpSFXPlayer.Play();
                 }
                 break;
             case State.Shockwave:
@@ -210,6 +211,7 @@ public class GolemBoss : MonoBehaviour
 
         if (percentage == 1f)
         {
+            fallSFXPlayer.Play();
             ChangeState(State.Shockwave);
         }
     }
