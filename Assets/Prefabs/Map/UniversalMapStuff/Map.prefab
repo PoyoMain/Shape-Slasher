@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2656947979068990937
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8028818755699668584}
+  - component: {fileID: 8428694077068490864}
+  m_Layer: 0
+  m_Name: Map
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!4 &8028818755699668584
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2656947979068990937}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8428694077068490864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2656947979068990937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5ae805b40ebbae4a9d20a874b9d62e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  numberOfRooms: 10
+  performOnStart: 1
+  startRooms:
+  - {fileID: 11400000, guid: cb618a61ea2a8a14088c1f69879c23bb, type: 2}
+  - {fileID: 11400000, guid: 70b2ac64dd58f24499ca2fa556087873, type: 2}
+  - {fileID: 11400000, guid: 92ad1a3cd5cd4ae4db5bb4624f23b1d2, type: 2}
+  - {fileID: 11400000, guid: fc1917d6b6a18b248a5bc8a9a2f95194, type: 2}
+  bossRooms:
+  - {fileID: 11400000, guid: ed1e4891cba63f749bd7306dec7f2699, type: 2}
+  - {fileID: 11400000, guid: bea2c6761b6841943936264909dba8d0, type: 2}
+  - {fileID: 11400000, guid: 60c5cbeae37780f488406eaad72c9773, type: 2}
+  possibleRooms:
+  - {fileID: 11400000, guid: 7b7bb4fbbab213641a33fd76c283a7bc, type: 2}
+  - {fileID: 11400000, guid: 11844f63588fd3d4b8dd32cbc0c945fc, type: 2}
+  - {fileID: 11400000, guid: 4c0f0e1f5f4ed4c4fb1d52ee9bf3652d, type: 2}
+  - {fileID: 11400000, guid: 60ee2551477fa1a44a0990d2402e2d84, type: 2}
+  - {fileID: 11400000, guid: 314466c32c79e8848a7f5cbabe1214cd, type: 2}
+  - {fileID: 11400000, guid: 8ea0ddcbf9af63941bf775c9b5dd2618, type: 2}
+  - {fileID: 11400000, guid: e82b4b19aad8ecf4eaf27eb429fb5294, type: 2}
+  mapLayoutMadeSO: {fileID: 11400000, guid: 368d3df80caeb854f8117aa81800d862, type: 2}
+  mapGenerationFinishedSO: {fileID: 11400000, guid: 3a802436c7e7b4f41b015a22b99b6011, type: 2}

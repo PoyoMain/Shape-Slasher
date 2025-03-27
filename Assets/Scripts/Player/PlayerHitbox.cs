@@ -39,5 +39,16 @@ public class PlayerHitbox : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (axis == Axis.Horizontal)
+        {
+            if (OnCooldown) return;
+
+            if (transform.eulerAngles.y == ROTATION_FACINGLEFT) SendMessageUpwards("HitboxKnockback", Vector2.right);
+            else if (transform.eulerAngles.y == ROTATION_FACINGRIGHT) SendMessageUpwards("HitboxKnockback", Vector2.left);
+        }
+    }
+
     private enum Axis { Horizontal, Vertical }
 }
