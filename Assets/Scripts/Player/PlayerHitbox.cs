@@ -6,6 +6,7 @@ public class PlayerHitbox : MonoBehaviour
 {
     [SerializeField] private Axis axis;
     [SerializeField] private ParticleSystem hitEffect;
+    [SerializeField] private SFXPlayer hitSFXPlayer;
 
     private const int ROTATION_FACINGRIGHT = 0;
     private const int ROTATION_FACINGLEFT = 180;
@@ -35,6 +36,7 @@ public class PlayerHitbox : MonoBehaviour
                 Instantiate(hitEffect, collision.contacts[0].point, Random.rotation);
             }
 
+            hitSFXPlayer.Play();
             timer = COOLDOWN_TIME;
         }
     }
