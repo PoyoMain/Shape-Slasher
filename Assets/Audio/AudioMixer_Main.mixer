@@ -42,6 +42,25 @@ AudioMixerEffectController:
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
   m_Bypass: 0
+--- !u!243 &-7400259811746065648
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Player Sword
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: 5e810319079efad4ba434fdfc0d564c1
+  m_Children: []
+  m_Volume: a46c237e4dc61a64ba2d98eb4ec6a526
+  m_Pitch: d8fbba3233bf65446843bdfe98745fff
+  m_Send: 00000000000000000000000000000000
+  m_Effects:
+  - {fileID: 1304889700263915605}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
 --- !u!244 &-7327970890667183435
 AudioMixerEffectController:
   m_ObjectHideFlags: 3
@@ -234,6 +253,7 @@ AudioMixerController:
     - e2262faf25ef70348a8a64b274e2378d
     - ecb1fc676aecf044c94d5cb6f8301acf
     - db21ddb51a4b9664aac11c8aefc1e7e9
+    - 5e810319079efad4ba434fdfc0d564c1
     name: View
   m_CurrentViewIndex: 0
   m_TargetSnapshot: {fileID: 24500006}
@@ -294,6 +314,7 @@ AudioMixerSnapshotController:
     1ae2f22b4f6c5ef4a8ba10432e71f686: -25
     9b3fe93b51056d74db88c1ac9d71d129: 1
     056ed82c32669c747b40d7b479552aad: -0.3324193
+    a46c237e4dc61a64ba2d98eb4ec6a526: -24.162655
     8d6fa9eeb409c584783a73973c311aee: -19.590876
     0583049ff17005949bf4be27d6870d79: 9.757735
   m_TransitionOverrides: {}
@@ -382,6 +403,20 @@ AudioMixerGroupController:
   m_Mute: 0
   m_Solo: 0
   m_BypassEffects: 0
+--- !u!244 &1304889700263915605
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: f0ca1456c8871ad42a8d1fd49e5aa67e
+  m_EffectName: Attenuation
+  m_MixLevel: 126ca5dd03b7c474ea97772bbe81c733
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
 --- !u!244 &3527970657351134606
 AudioMixerEffectController:
   m_ObjectHideFlags: 3
@@ -409,6 +444,7 @@ AudioMixerGroupController:
   - {fileID: 1136104634798651278}
   - {fileID: 6523358701588681654}
   - {fileID: -7317481808483261405}
+  - {fileID: -7400259811746065648}
   - {fileID: -6054972381106343252}
   - {fileID: 5014768063088984561}
   - {fileID: -3846089388507981473}
