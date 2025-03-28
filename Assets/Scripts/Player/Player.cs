@@ -1,9 +1,12 @@
+using Cinemachine;
+using Cinemachine.Utility;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(Animator))]
+[RequireComponent(typeof(Rigidbody2D), typeof(Animator), typeof(DamageFlash))]
+[RequireComponent(typeof(CinemachineImpulseSource))]
 public class Player : MonoBehaviour
 {
     [Header("Inputs")]
@@ -13,6 +16,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Stats stats;
 
     [Header("Components")]
+    [SerializeField] private BoxCollider2D bodyCollider;
     [SerializeField] private BoxCollider2D hurtboxCollider;
     [SerializeField] private Transform camFocusTransform;
 
@@ -23,6 +27,7 @@ public class Player : MonoBehaviour
 
     [Header("Broadcast Events")]
     [SerializeField] private VoidEventSO playerDamagedEventSO;
+    [SerializeField] private VoidEventSO playerDeathEventSO;
     [SerializeField] private IntEventSO playerHealthLossEventSO;
     [SerializeField] private IntEventSO playerHealthUpdatedEventSO;
 
@@ -48,12 +53,16 @@ public class Player : MonoBehaviour
     private float time;
     private Rigidbody2D rb;
     private Animator anim;
+    private DamageFlash damageFlash;
+    private CinemachineImpulseSource damageImpulseSource;
 
 
     private void Awake()
     {
         TryGetComponent(out rb);
         TryGetComponent(out anim);
+        TryGetComponent(out damageFlash);
+        TryGetComponent(out damageImpulseSource);
 
         health = stats.MaxHealth;
         cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
@@ -125,7 +134,7 @@ public class Player : MonoBehaviour
 
             if (invincibilityTimer <= 0)
             {
-
+                hurtboxCollider.enabled = true;
             }
         }
     }
@@ -142,14 +151,9 @@ public class Player : MonoBehaviour
     {
         Physics2D.queriesStartInColliders = false;
 
-        // Ground, Bouncepad, and Ceiling Check
-        //bool groundHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.down, stats.GrounderDistance, stats.GroundLayers);
-        //RaycastHit2D bounceHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.down, stats.GrounderDistance, stats.BounceLayer);
-        //bool ceilingHit = Physics2D.CapsuleCast(hurtboxCollider.bounds.center, hurtboxCollider.size, hurtboxCollider.direction, 0, Vector2.up, stats.GrounderDistance, stats.CeilingLayers);
-
-        bool groundHit = Physics2D.BoxCast(hurtboxCollider.bounds.center, hurtboxCollider.size, 0, Vector2.down, stats.GrounderDistance, stats.GroundLayers);
-        RaycastHit2D bounceHit = Physics2D.BoxCast(hurtboxCollider.bounds.center, hurtboxCollider.size, 0, Vector2.down, stats.GrounderDistance, stats.BounceLayer);
-        bool ceilingHit = Physics2D.BoxCast(hurtboxCollider.bounds.center, hurtboxCollider.size, 0, Vector2.up, stats.GrounderDistance, stats.CeilingLayers);
+        bool groundHit = Physics2D.BoxCast(bodyCollider.bounds.center, bodyCollider.size, 0, Vector2.down, stats.GrounderDistance, stats.GroundLayers);
+        RaycastHit2D bounceHit = Physics2D.BoxCast(bodyCollider.bounds.center, bodyCollider.size, 0, Vector2.down, stats.GrounderDistance, stats.BounceLayer);
+        bool ceilingHit = Physics2D.BoxCast(bodyCollider.bounds.center, bodyCollider.size, 0, Vector2.up, stats.GrounderDistance, stats.CeilingLayers);
 
         // Hit a Ceiling
         if (ceilingHit) velocity.y = Mathf.Min(0, velocity.y);
@@ -169,10 +173,11 @@ public class Player : MonoBehaviour
             endedJumpEarly = false;
             if (colliderToTurnOnOnceGrounded != null)
             {
-                Physics2D.IgnoreCollision(hurtboxCollider, colliderToTurnOnOnceGrounded, false);
+                Physics2D.IgnoreCollision(bodyCollider, colliderToTurnOnOnceGrounded, false);
                 colliderToTurnOnOnceGrounded = null;
             }
             GroundedChanged?.Invoke(true, Mathf.Abs(velocity.y));
+            anim.SetBool("IsGrounded", true);
         }
 
         //Left the Ground
@@ -181,6 +186,7 @@ public class Player : MonoBehaviour
             grounded = false;
             frameLeftGround = time;
             GroundedChanged?.Invoke(false, 0);
+            anim.SetBool("IsGrounded", false);
         }
 
         Physics2D.queriesStartInColliders = cachedQueryStartInColliders;
@@ -198,6 +204,7 @@ public class Player : MonoBehaviour
             if (health > 0)
             {
                 invincibilityTimer = stats.InvincibleTime;
+                hurtboxCollider.enabled = false;
 
                 Vector2 directionToHitbox = (collider.transform.position - transform.position).normalized;
                 Vector2 force = -directionToHitbox * dmgComponent.Knockback;
@@ -299,13 +306,13 @@ public class Player : MonoBehaviour
 
     private bool CheckCrouch()
     {
-        bool groundHit = Physics2D.BoxCast(hurtboxCollider.bounds.center, hurtboxCollider.size, 0, Vector2.down, stats.PlatformDistance, stats.SolidSurfaceLayer);
-        RaycastHit2D platformHit = Physics2D.BoxCast(hurtboxCollider.bounds.center, hurtboxCollider.size, 0, Vector2.down, stats.PlatformDistance, stats.OneWayPlatformLayer);
+        bool groundHit = Physics2D.BoxCast(bodyCollider.bounds.center, bodyCollider.size, 0, Vector2.down, stats.PlatformDistance, stats.SolidSurfaceLayer);
+        RaycastHit2D platformHit = Physics2D.BoxCast(bodyCollider.bounds.center, bodyCollider.size, 0, Vector2.down, stats.PlatformDistance, stats.OneWayPlatformLayer);
 
         if (!groundHit && platformHit)
         {
             colliderToTurnOnOnceGrounded = platformHit.collider;
-            Physics2D.IgnoreCollision(hurtboxCollider, colliderToTurnOnOnceGrounded, true);
+            Physics2D.IgnoreCollision(bodyCollider, colliderToTurnOnOnceGrounded, true);
             return true;
         }
         else return false;
@@ -323,11 +330,16 @@ public class Player : MonoBehaviour
         {
             var deceleration = grounded ? stats.GroundDeceleration : stats.AirDeceleration;
             velocity.x = Mathf.MoveTowards(velocity.x, 0, deceleration * Time.fixedDeltaTime);
+
+            anim.SetBool("IsMoving", false);
         }
         else
         {
             var maxSpeed = grounded ? stats.MaxGroundSpeed : stats.MaxAirSpeed;
             velocity.x = Mathf.MoveTowards(velocity.x, moveInput.x * maxSpeed, stats.HorizontalAcceleration * Time.fixedDeltaTime);
+
+            // Set Animator movement
+            anim.SetBool("IsMoving", true);
 
             if (IsAttacking) return;
 
@@ -354,7 +366,10 @@ public class Player : MonoBehaviour
 
     private void HandleKnockback()
     {
-        if (IsInKnockback) knockbackTimer -= Time.fixedDeltaTime;
+        if (IsInKnockback)
+        {
+            knockbackTimer -= Time.fixedDeltaTime;
+        }
     }
 
     private void Knockback(Vector2 force)
@@ -386,6 +401,7 @@ public class Player : MonoBehaviour
         if (grounded && velocity.y <= 0f)
         {
             velocity.y = stats.GroundingForce;
+            anim.SetInteger("VerticalSpeed", 0);
         }
         else
         {
@@ -395,6 +411,9 @@ public class Player : MonoBehaviour
                 inAirGravity *= stats.JumpEndEarlyGravityModifier;
             }
             velocity.y = Mathf.MoveTowards(velocity.y, -stats.MaxFallSpeed, inAirGravity * Time.fixedDeltaTime);
+
+            if (velocity.y > 0) anim.SetInteger("VerticalSpeed", 1);
+            else if (velocity.y < 0) anim.SetInteger("VerticalSpeed", -1);
         }
     }
 
@@ -451,10 +470,13 @@ public class Player : MonoBehaviour
 
         health -= dmgAmount;
         playerHealthUpdatedEventSO.RaiseEvent(health);
+        damageFlash.CallDamageFlash();
+        damageImpulseSource.GenerateImpulse();
 
         if (health <= 0)
         {
             deathSFXPlayer.Play();
+            playerDeathEventSO.RaiseEvent();
             Destroy(gameObject);
         }
         else

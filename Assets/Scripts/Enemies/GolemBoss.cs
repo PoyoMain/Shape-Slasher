@@ -1,12 +1,15 @@
+using Cinemachine;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(Animator))]
+[RequireComponent(typeof(Rigidbody2D), typeof(Animator), typeof(DamageFlash))]
+[RequireComponent(typeof(CinemachineImpulseSource))]
 public class GolemBoss : MonoBehaviour
 {
     [Header("Health")]
     [SerializeField] private float health;
     [SerializeField] private float invincibilityTime;
+    [SerializeField] private float deathFreezeTime;
 
     [Header("Jumping")]
     [SerializeField] private float jumpHeight;
@@ -21,6 +24,9 @@ public class GolemBoss : MonoBehaviour
     [SerializeField] private ConstantProjectile shockwavePrefab;
     [SerializeField] private Transform shockwaveSpawnTransformFront;
     [SerializeField] private Transform shockwaveSpawnTransformBack;
+
+    [Header("Punch")]
+    [SerializeField] private float punchDistance;
 
     [Header("Collison")]
     [SerializeField] private LayerMask playerLayer;
@@ -47,13 +53,16 @@ public class GolemBoss : MonoBehaviour
 
     private State state;
     private Vector2 lastCheckedPlayerPosition;
-    private bool facingRight = true;
 
     private Animator anim;
+    private DamageFlash damageFlash;
+    private CinemachineImpulseSource damageImpulseSource;
 
     private void Awake()
     {
         TryGetComponent(out anim);
+        TryGetComponent(out damageFlash);
+        TryGetComponent(out damageImpulseSource);
 
         ChangeState(State.Inactive);
     }
@@ -127,6 +136,11 @@ public class GolemBoss : MonoBehaviour
                 break;
             case State.Shockwave:
                 anim.SetTrigger("Shockwave");
+                break;
+
+            case State.Punch:
+                timesPunchedInARow++;
+                anim.SetTrigger("Punch");
                 break;
         }
     }
@@ -240,12 +254,30 @@ public class GolemBoss : MonoBehaviour
 
             if (waitTimer <= 0)
             {
-                if (GetPlayerPosition(out Vector2 _) && timesJumpedInARow < 3)
+                if (PlayerInPunchRange() && timesPunchedInARow < 2)
                 {
+
+                    if (timesPunchedInARow == 1)
+                    {
+                        int choice = Random.Range(0, 2);
+
+                        if (choice == 0) ChangeState(State.Punch);
+                        else
+                        {
+                            timesPunchedInARow = 0;
+                            ChangeState(State.JumpingToPlayer);
+                        }
+                    }
+                    else ChangeState(State.Punch);
+                }
+                else if (GetPlayerPosition(out Vector2 _) && timesJumpedInARow < 3)
+                {
+                    timesPunchedInARow = 0;
                     ChangeState(State.JumpingToPlayer);
                 }
                 else
                 {
+                    timesPunchedInARow = 0;
                     if (transform.position.x == middleOfRoomTransform.position.x) ChangeState(State.Shockwave);
                     else ChangeState(State.JumpingToMiddleOfRoom);
                 }
@@ -257,6 +289,8 @@ public class GolemBoss : MonoBehaviour
 
     #region Attacks
 
+    private int timesPunchedInARow;
+
 #pragma warning disable IDE0051
     private void SpawnDualShockwaves()
     {
@@ -264,7 +298,7 @@ public class GolemBoss : MonoBehaviour
         ConstantProjectile backWave = Instantiate(shockwavePrefab, shockwaveSpawnTransformBack.position, transform.localRotation);
 
         Vector3 reverseEuler = transform.localEulerAngles;
-        reverseEuler.y = facingRight ? ROTATION_FACINGLEFT : ROTATION_FACINGRIGHT;
+        reverseEuler.y = FacingRight ? ROTATION_FACINGLEFT : ROTATION_FACINGRIGHT;
         backWave.transform.eulerAngles = reverseEuler;
 
         slamSFXPlayer.Play();
@@ -295,18 +329,27 @@ public class GolemBoss : MonoBehaviour
         return true;
     }
 
+    private bool PlayerInPunchRange()
+    {
+        GetPlayerPosition(out Vector2 playerPos);
+
+        float distance = Mathf.Abs(transform.position.x - playerPos.x);
+
+        if (distance < punchDistance) return true;
+        else return false;
+    }
+
+    private bool FacingRight => transform.localEulerAngles.y == ROTATION_FACINGRIGHT;
     private void FacePlayer(Vector2 playerPos)
     {
         Vector3 euler = transform.localEulerAngles;
         if (euler.y == ROTATION_FACINGLEFT && playerPos.x > transform.position.x)
         {
             euler.y = ROTATION_FACINGRIGHT;
-            facingRight = true;
         }
         else if (euler.y == ROTATION_FACINGRIGHT && playerPos.x < transform.position.x)
         {
             euler.y = ROTATION_FACINGLEFT;
-            facingRight = false;
         }
         transform.localEulerAngles = euler;
     }
@@ -318,6 +361,8 @@ public class GolemBoss : MonoBehaviour
     private void TakeDamage(int damage)
     {
         health -= damage;
+        damageFlash.CallDamageFlash();
+        damageImpulseSource.GenerateImpulse();
 
         if (health <= 0)
         {
@@ -329,6 +374,6 @@ public class GolemBoss : MonoBehaviour
 
     #endregion
 
-    private enum State { Inactive, Starting, Waiting, JumpingToPlayer, JumpingToMiddleOfRoom, Shockwave }
+    private enum State { Inactive, Starting, Waiting, JumpingToPlayer, JumpingToMiddleOfRoom, Shockwave, Punch }
     private enum Direction { Left, Right }
 }

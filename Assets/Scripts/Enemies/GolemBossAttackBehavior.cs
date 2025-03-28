@@ -14,6 +14,4 @@ public class GolemBossAttackBehavior : StateMachineBehaviour
             boss.EndAttack();
         }
     }
-
-    private enum GolemAttacks { Shockwave, }
 }
