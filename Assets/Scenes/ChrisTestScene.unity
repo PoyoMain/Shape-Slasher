@@ -123,6 +123,53 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &539313591
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 539313593}
+  - component: {fileID: 539313592}
+  m_Layer: 0
+  m_Name: RoomComparer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &539313592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 539313591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea8b56c5a5f3e594786204cd985dfe55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  compareOnStart: 0
+  room1: {fileID: 0}
+  room2: {fileID: 0}
+--- !u!4 &539313593
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 539313591}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -179.61864, y: -124.57756, z: -0.80817336}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &591440608
 GameObject:
   m_ObjectHideFlags: 0
@@ -778,8 +825,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
+      propertyPath: problemRoom
+      value: 
+      objectReference: {fileID: 11400000, guid: a9f14a53f44bd884186f92c14390177d, type: 2}
+    - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
+      propertyPath: numberOfRooms
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
+      propertyPath: performOnStart
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
       propertyPath: possibleRooms.Array.size
-      value: 12
+      value: 23
       objectReference: {fileID: 0}
     - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
       propertyPath: possibleRooms.Array.data[0]
@@ -792,41 +851,85 @@ PrefabInstance:
     - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
       propertyPath: possibleRooms.Array.data[2]
       value: 
-      objectReference: {fileID: 11400000, guid: 7b7bb4fbbab213641a33fd76c283a7bc, type: 2}
+      objectReference: {fileID: 11400000, guid: 1112590e4432b664aa0dd56383bc3e1f, type: 2}
     - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
       propertyPath: possibleRooms.Array.data[3]
       value: 
-      objectReference: {fileID: 11400000, guid: 11844f63588fd3d4b8dd32cbc0c945fc, type: 2}
+      objectReference: {fileID: 11400000, guid: 7b7bb4fbbab213641a33fd76c283a7bc, type: 2}
     - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
       propertyPath: possibleRooms.Array.data[4]
       value: 
-      objectReference: {fileID: 11400000, guid: 4c0f0e1f5f4ed4c4fb1d52ee9bf3652d, type: 2}
+      objectReference: {fileID: 11400000, guid: 11844f63588fd3d4b8dd32cbc0c945fc, type: 2}
     - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
       propertyPath: possibleRooms.Array.data[5]
       value: 
-      objectReference: {fileID: 11400000, guid: 8e91741d1d5380940b530b120f4822b5, type: 2}
+      objectReference: {fileID: 11400000, guid: ba1436a2499b53641a538dc3ba3323db, type: 2}
     - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
       propertyPath: possibleRooms.Array.data[6]
       value: 
-      objectReference: {fileID: 11400000, guid: 60ee2551477fa1a44a0990d2402e2d84, type: 2}
+      objectReference: {fileID: 11400000, guid: ec5cd23824f737844bdf8a2d0a73f87f, type: 2}
     - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
       propertyPath: possibleRooms.Array.data[7]
       value: 
-      objectReference: {fileID: 11400000, guid: 314466c32c79e8848a7f5cbabe1214cd, type: 2}
+      objectReference: {fileID: 11400000, guid: 4c0f0e1f5f4ed4c4fb1d52ee9bf3652d, type: 2}
     - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
       propertyPath: possibleRooms.Array.data[8]
       value: 
-      objectReference: {fileID: 11400000, guid: 8ea0ddcbf9af63941bf775c9b5dd2618, type: 2}
+      objectReference: {fileID: 11400000, guid: 7eb59ede8f8ef9a4bae53c06cd5e342d, type: 2}
     - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
       propertyPath: possibleRooms.Array.data[9]
       value: 
-      objectReference: {fileID: 11400000, guid: 80429f09a5cdce344b71eab6c4834563, type: 2}
+      objectReference: {fileID: 11400000, guid: 8e91741d1d5380940b530b120f4822b5, type: 2}
     - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
       propertyPath: possibleRooms.Array.data[10]
       value: 
-      objectReference: {fileID: 11400000, guid: e82b4b19aad8ecf4eaf27eb429fb5294, type: 2}
+      objectReference: {fileID: 11400000, guid: b5219301ee4c52747a3d6f06c91a6544, type: 2}
     - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
       propertyPath: possibleRooms.Array.data[11]
+      value: 
+      objectReference: {fileID: 11400000, guid: a9b4653e3efb56149a5ecc4832a22247, type: 2}
+    - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
+      propertyPath: possibleRooms.Array.data[12]
+      value: 
+      objectReference: {fileID: 11400000, guid: f13da556fcc0f2e4a89d716a32043a43, type: 2}
+    - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
+      propertyPath: possibleRooms.Array.data[13]
+      value: 
+      objectReference: {fileID: 11400000, guid: 60ee2551477fa1a44a0990d2402e2d84, type: 2}
+    - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
+      propertyPath: possibleRooms.Array.data[14]
+      value: 
+      objectReference: {fileID: 11400000, guid: a0cc934d6d5ea504284e08c614c0f091, type: 2}
+    - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
+      propertyPath: possibleRooms.Array.data[15]
+      value: 
+      objectReference: {fileID: 11400000, guid: 314466c32c79e8848a7f5cbabe1214cd, type: 2}
+    - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
+      propertyPath: possibleRooms.Array.data[16]
+      value: 
+      objectReference: {fileID: 11400000, guid: 8ea0ddcbf9af63941bf775c9b5dd2618, type: 2}
+    - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
+      propertyPath: possibleRooms.Array.data[17]
+      value: 
+      objectReference: {fileID: 11400000, guid: 49257d6bb8f21b44d9cfd9f68c183457, type: 2}
+    - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
+      propertyPath: possibleRooms.Array.data[18]
+      value: 
+      objectReference: {fileID: 11400000, guid: ea35dadc94a945a44bfe9e52846fb3b8, type: 2}
+    - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
+      propertyPath: possibleRooms.Array.data[19]
+      value: 
+      objectReference: {fileID: 11400000, guid: 72d8b1a2f243927448d06c9058a7fb49, type: 2}
+    - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
+      propertyPath: possibleRooms.Array.data[20]
+      value: 
+      objectReference: {fileID: 11400000, guid: 80429f09a5cdce344b71eab6c4834563, type: 2}
+    - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
+      propertyPath: possibleRooms.Array.data[21]
+      value: 
+      objectReference: {fileID: 11400000, guid: e82b4b19aad8ecf4eaf27eb429fb5294, type: 2}
+    - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
+      propertyPath: possibleRooms.Array.data[22]
       value: 
       objectReference: {fileID: 11400000, guid: 09183b905d069bd49b99c8de494c7c12, type: 2}
     m_RemovedComponents: []
@@ -1244,3 +1347,4 @@ SceneRoots:
   - {fileID: 873561299719386024}
   - {fileID: 6929550947926906415}
   - {fileID: 1800561107}
+  - {fileID: 539313593}

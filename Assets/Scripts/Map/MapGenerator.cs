@@ -10,6 +10,7 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private int numberOfRooms;
     //[SerializeField] private int numberOfNeighborsAllowed;
     //[SerializeField] private bool canReuseRooms;
+    [SerializeField] private bool canHaveDuplicatesInARow;
     [SerializeField] private bool performOnStart;
 
     [Header("References")]
@@ -73,6 +74,11 @@ public class MapGenerator : MonoBehaviour
                     // Look for a room that can be spawned in
                     foreach (RoomSO stanRoom in standardRooms)
                     {
+                        if (!canHaveDuplicatesInARow && currentRoom.Data == stanRoom)
+                        {
+                            continue;
+                        }
+
                         if (currentRoom.IsCompatibleWith(stanRoom, out Direction dir))
                         {
                             if (CheckIfRoomPlacingPositionIsEmpty(spawnedRooms, dir)/* && CheckIfPathsFromRoomAreEmpty(spawnedRooms, stanRoom, dir)*/)
@@ -181,6 +187,8 @@ public class MapGenerator : MonoBehaviour
                 if (!(deadEndRooms[i].GetAdjacentRoom(Direction.South) != null == bossRoom.HasAnUnusedDoorInThisDirection(Direction.South))) continue;
                 if (!(deadEndRooms[i].GetAdjacentRoom(Direction.West) != null == bossRoom.HasAnUnusedDoorInThisDirection(Direction.West))) continue;
 
+                if (!deadEndRooms[i].CanBeReplacedWith(bossRoom)) continue;
+
                 ReplaceRoom(deadEndRooms[i], new(bossRoom), spawnedRooms);
                 return true;
             }
@@ -240,6 +248,8 @@ public class MapGenerator : MonoBehaviour
             if (!(currentRoom.GetAdjacentRoom(Direction.East) != null == r.HasAnUnusedDoorInThisDirection(Direction.East))) continue;
             if (!(currentRoom.GetAdjacentRoom(Direction.South) != null == r.HasAnUnusedDoorInThisDirection(Direction.South))) continue;
             if (!(currentRoom.GetAdjacentRoom(Direction.West) != null == r.HasAnUnusedDoorInThisDirection(Direction.West))) continue;
+
+            if (!currentRoom.CanBeReplacedWith(r)) continue;
 
             return new(r);
         }

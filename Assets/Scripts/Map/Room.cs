@@ -192,6 +192,67 @@ public class Room
         direction = Direction.North;
         return false;
     }
+
+    public bool CanBeReplacedWith(RoomSO otherRoom)
+    {
+        if (northNeighborRoom != null)
+        {
+            if (!((Data.Doors.Any(door => door.Type == DoorType.North1) == otherRoom.Doors.Any(door => door.Type == DoorType.North1))
+            && (Data.Doors.Any(door => door.Type == DoorType.North2) == otherRoom.Doors.Any(door => door.Type == DoorType.North2))
+            && (Data.Doors.Any(door => door.Type == DoorType.North3) == otherRoom.Doors.Any(door => door.Type == DoorType.North3))))
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if (otherRoom.Doors.Any(door => door.Direction == Direction.North)) return false;
+        }
+
+        if (eastNeighborRoom != null)
+        {
+            if (!((Data.Doors.Any(door => door.Type == DoorType.East1) == otherRoom.Doors.Any(door => door.Type == DoorType.East1))
+            && (Data.Doors.Any(door => door.Type == DoorType.East2) == otherRoom.Doors.Any(door => door.Type == DoorType.East2))
+            && (Data.Doors.Any(door => door.Type == DoorType.East3) == otherRoom.Doors.Any(door => door.Type == DoorType.East3))))
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if (otherRoom.Doors.Any(door => door.Direction == Direction.East)) return false;
+        }
+
+        if (southNeighborRoom != null)
+        {
+            if (!((Data.Doors.Any(door => door.Type == DoorType.South1) == otherRoom.Doors.Any(door => door.Type == DoorType.South1))
+            && (Data.Doors.Any(door => door.Type == DoorType.South2) == otherRoom.Doors.Any(door => door.Type == DoorType.South2))
+            && (Data.Doors.Any(door => door.Type == DoorType.South3) == otherRoom.Doors.Any(door => door.Type == DoorType.South3))))
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if (otherRoom.Doors.Any(door => door.Direction == Direction.South)) return false;
+        }
+
+        if (westNeighborRoom != null)
+        {
+            if (!((Data.Doors.Any(door => door.Type == DoorType.West1) == otherRoom.Doors.Any(door => door.Type == DoorType.West1))
+            && (Data.Doors.Any(door => door.Type == DoorType.West2) == otherRoom.Doors.Any(door => door.Type == DoorType.West2))
+            && (Data.Doors.Any(door => door.Type == DoorType.West3) == otherRoom.Doors.Any(door => door.Type == DoorType.West3))))
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if (otherRoom.Doors.Any(door => door.Direction == Direction.West)) return false;
+        }
+
+        return true;
+    }
 }
 
 public enum RoomType
