@@ -9,6 +9,7 @@ public class HitPause : MonoBehaviour
 
     [Header("Listen Events")]
     [SerializeField] private VoidEventSO hitPauseEventSO;
+    [SerializeField] private VoidEventSO playerDeathEventSO;
 
     private Coroutine freezeCoroutine;
 
@@ -17,11 +18,19 @@ public class HitPause : MonoBehaviour
     private void OnEnable()
     {
         hitPauseEventSO.OnEventRaised += PauseMethod;
+        playerDeathEventSO.OnEventRaised += PlayerDeathEventSO_OnEventRaised;
+    }
+
+    private void PlayerDeathEventSO_OnEventRaised()
+    {
+        if (freezeCoroutine != null) StopCoroutine(freezeCoroutine);
+        StopAllCoroutines();
     }
 
     private void OnDisable()
     {
         hitPauseEventSO.OnEventRaised -= PauseMethod;
+        playerDeathEventSO.OnEventRaised -= PlayerDeathEventSO_OnEventRaised;
     }
 
     #endregion
@@ -51,7 +60,7 @@ public class HitPause : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(duration);
 
-        Time.timeScale = originalTimeScale;
+        Time.timeScale = 1;
     }
 
     #endregion

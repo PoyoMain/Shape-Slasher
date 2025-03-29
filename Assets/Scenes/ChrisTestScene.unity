@@ -203,6 +203,27 @@ Transform:
   - {fileID: 1808492829}
   m_Father: {fileID: 1987086306}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &598236417 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4439511406476123322, guid: 89afb86c13c444b458e6a98086d3dce7, type: 3}
+  m_PrefabInstance: {fileID: 1759038225939406790}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &598236423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 598236417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e851f1eab04fd748a82358c330fa7c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _channel: {fileID: 11400000, guid: 85132c2903af7184b824f1c99dc19a83, type: 2}
+  OnEventRaised:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &963052026
 GameObject:
   m_ObjectHideFlags: 0
@@ -418,6 +439,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPauseTime: 0.1
   hitPauseEventSO: {fileID: 11400000, guid: 50515061176e30247924a5ec4e884961, type: 2}
+  playerDeathEventSO: {fileID: 11400000, guid: 85132c2903af7184b824f1c99dc19a83, type: 2}
 --- !u!4 &1228249781
 Transform:
   m_ObjectHideFlags: 0
@@ -445,8 +467,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e10b0344cfb1bd46a23478b4f3f0290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitPauseTime: 0.3
+  hitPauseTime: 0
   hitPauseEventSO: {fileID: 11400000, guid: 85132c2903af7184b824f1c99dc19a83, type: 2}
+  playerDeathEventSO: {fileID: 11400000, guid: 85132c2903af7184b824f1c99dc19a83, type: 2}
 --- !u!114 &1228249783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -461,6 +484,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPauseTime: 0.3
   hitPauseEventSO: {fileID: 11400000, guid: 06730dad57c80f3429eb762bcac337e6, type: 2}
+  playerDeathEventSO: {fileID: 11400000, guid: 85132c2903af7184b824f1c99dc19a83, type: 2}
 --- !u!114 &1228249784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -475,6 +499,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPauseTime: 0.1
   hitPauseEventSO: {fileID: 11400000, guid: 00aa9ae5171760747ae68a18fa9ebba1, type: 2}
+  playerDeathEventSO: {fileID: 11400000, guid: 85132c2903af7184b824f1c99dc19a83, type: 2}
 --- !u!1 &1592913714
 GameObject:
   m_ObjectHideFlags: 0
@@ -1101,7 +1126,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4439511406476123322, guid: 89afb86c13c444b458e6a98086d3dce7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 598236423}
   m_SourcePrefab: {fileID: 100100000, guid: 89afb86c13c444b458e6a98086d3dce7, type: 3}
 --- !u!1001 &5497942786483074966
 PrefabInstance:

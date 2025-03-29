@@ -477,6 +477,7 @@ public class Player : MonoBehaviour
         {
             deathSFXPlayer.Play();
             playerDeathEventSO.RaiseEvent();
+            Time.timeScale = 1;
             Destroy(gameObject);
         }
         else
