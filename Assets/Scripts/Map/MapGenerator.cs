@@ -25,7 +25,7 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private VoidEventSO mapGenerationFinishedSO;
 
     private Room startRoom;
-    private Room bossRoomer;
+    private Room bossRoom;
     private Room currentRoom;
 
     private Coroutine mapGenCoroutine;
@@ -137,7 +137,7 @@ public class MapGenerator : MonoBehaviour
                     if (!CloseUnusedDoors(spawnedRooms)) break;
                     if (!PlaceBossRoom(spawnedRooms)) break;
                     if (!SpawnAllRooms(spawnedRooms)) break;
-                    print("Distance to Boss: " + FindDistanceFromRoom(startRoom, bossRoomer, 0));
+                    print("Distance to Boss: " + FindDistanceFromRoom(startRoom, bossRoom, 0));
                     mapLayoutMadeSO.RaiseEvent(spawnedRooms);
                     mapGenerated = true;
                 }
@@ -183,17 +183,17 @@ public class MapGenerator : MonoBehaviour
         // Find one of these rooms to replace with a boss room
         for (int i = 0; i < deadEndRooms.Count; i++)
         {
-            foreach (RoomSO bossRoom in bossRooms)
+            foreach (RoomSO bossRoomSO in bossRooms)
             {
                 // If the deadend room having a neighbor and the boss room having an unused door aren't the same sign, this isnt a fitting boss room
-                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.North) != null == bossRoom.HasAnUnusedDoorInThisDirection(Direction.North))) continue;
-                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.East) != null == bossRoom.HasAnUnusedDoorInThisDirection(Direction.East))) continue;
-                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.South) != null == bossRoom.HasAnUnusedDoorInThisDirection(Direction.South))) continue;
-                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.West) != null == bossRoom.HasAnUnusedDoorInThisDirection(Direction.West))) continue;
+                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.North) != null == bossRoomSO.HasAnUnusedDoorInThisDirection(Direction.North))) continue;
+                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.East) != null == bossRoomSO.HasAnUnusedDoorInThisDirection(Direction.East))) continue;
+                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.South) != null == bossRoomSO.HasAnUnusedDoorInThisDirection(Direction.South))) continue;
+                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.West) != null == bossRoomSO.HasAnUnusedDoorInThisDirection(Direction.West))) continue;
 
-                if (!deadEndRooms[i].CanBeReplacedWith(bossRoom)) continue;
+                if (!deadEndRooms[i].CanBeReplacedWith(bossRoomSO)) continue;
 
-                bossRoomer = ReplaceRoom(deadEndRooms[i], new(bossRoom), spawnedRooms);
+                bossRoom = ReplaceRoom(deadEndRooms[i], new(bossRoomSO), spawnedRooms);
                 return true;
             }
         }
