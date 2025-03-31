@@ -25,6 +25,7 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private VoidEventSO mapGenerationFinishedSO;
 
     private Room startRoom;
+    private Room bossRoomer;
     private Room currentRoom;
 
     private Coroutine mapGenCoroutine;
@@ -136,6 +137,7 @@ public class MapGenerator : MonoBehaviour
                     if (!CloseUnusedDoors(spawnedRooms)) break;
                     if (!PlaceBossRoom(spawnedRooms)) break;
                     if (!SpawnAllRooms(spawnedRooms)) break;
+                    print("Distance to Boss: " + FindDistanceFromRoom(startRoom, bossRoomer, 0));
                     mapLayoutMadeSO.RaiseEvent(spawnedRooms);
                     mapGenerated = true;
                 }
@@ -176,7 +178,7 @@ public class MapGenerator : MonoBehaviour
         // Get rooms with only one neighbor, excluding the start room
         deadEndRooms = spawnedRooms.Where(room => room.Neighbors.Count == 1).ToList();
         if (deadEndRooms.Contains(startRoom)) deadEndRooms.Remove(startRoom);
-        deadEndRooms = deadEndRooms.OrderByDescending(room => FindDistanceBetweenTwoRooms(room, startRoom)).ToList();
+        deadEndRooms = deadEndRooms.OrderByDescending(room => FindDistanceFromRoom(startRoom, room, 0)).ToList();
 
         // Find one of these rooms to replace with a boss room
         for (int i = 0; i < deadEndRooms.Count; i++)
@@ -191,7 +193,7 @@ public class MapGenerator : MonoBehaviour
 
                 if (!deadEndRooms[i].CanBeReplacedWith(bossRoom)) continue;
 
-                ReplaceRoom(deadEndRooms[i], new(bossRoom), spawnedRooms);
+                bossRoomer = ReplaceRoom(deadEndRooms[i], new(bossRoom), spawnedRooms);
                 return true;
             }
         }
@@ -233,22 +235,22 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    private void ReplaceRoom(Room ogRoom, Room newRoom, List<Room> spawnedRooms)
+    private Room ReplaceRoom(Room ogRoom, Room newRoom, List<Room> spawnedRooms)
     {
-        Room replacedmentRoom = newRoom;
-        replacedmentRoom.AssignPosition(ogRoom.RoomNumber);
+        Room replacementRoom = newRoom;
+        replacementRoom.AssignPosition(ogRoom.RoomNumber);
         foreach (Room neighbor in ogRoom.Neighbors)
         {
-            Direction dir = replacedmentRoom.DirectionToUnlinkedRoom(neighbor);
-            replacedmentRoom.SetAdjacentRoom(neighbor, dir);
-            neighbor.SetAdjacentRoom(replacedmentRoom, dir, true);
+            Direction dir = replacementRoom.DirectionToUnlinkedRoom(neighbor);
+            replacementRoom.SetAdjacentRoom(neighbor, dir);
+            neighbor.SetAdjacentRoom(replacementRoom, dir, true);
         }
 
         spawnedRooms.Remove(ogRoom);
-        spawnedRooms.Add(replacedmentRoom);
+        spawnedRooms.Add(replacementRoom);
         //Destroy(ogRoom.gameObject);
 
-        return;
+        return replacementRoom;
     }
 
     private Room FindReplacementRoom(Room currentRoom)
@@ -315,10 +317,26 @@ public class MapGenerator : MonoBehaviour
             _ => throw new System.NotImplementedException(),
         };
 
-    private float FindDistanceBetweenTwoRooms(Room room1, Room room2)
+    private float FindDistanceFromStartRoom(Room room)
     {
-        return Mathf.Sqrt(Mathf.Pow(room2.RoomNumber.x - room1.RoomNumber.x, 2) + Mathf.Pow(room2.RoomNumber.y - room1.RoomNumber.y, 2));
-        //return Vector2Int.Distance(room1.RoomNumber, room2.RoomNumber);
+        return Mathf.Sqrt(Mathf.Pow(startRoom.RoomNumber.x - room.RoomNumber.x, 2) + Mathf.Pow(startRoom.RoomNumber.y - room.RoomNumber.y, 2));
+    }
+
+    private int FindDistanceFromRoom(Room root, Room target, int level, Room prevRoom = null) 
+    {
+        if (root == null) return -1;
+        if (root == target) return level;
+
+        List<Room> neighborsToCheck = root.Neighbors;
+        if (prevRoom != null) neighborsToCheck.Remove(prevRoom);
+
+        for (int i = 0; i < neighborsToCheck.Count; i++)
+        {
+            int result = FindDistanceFromRoom(neighborsToCheck[i], target, level + 1, root);
+            if (result != -1) return result;
+        }
+
+        return -1;
     }
 
     #endregion
