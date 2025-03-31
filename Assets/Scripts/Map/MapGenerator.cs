@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
+using UnityEditor;
 using UnityEngine;
 
 public class MapGenerator : MonoBehaviour
@@ -9,7 +11,7 @@ public class MapGenerator : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private int numberOfRooms;
     //[SerializeField] private int numberOfNeighborsAllowed;
-    //[SerializeField] private bool canReuseRooms;
+    [SerializeField] private bool canReuseRooms;
     [SerializeField] private bool canHaveDuplicatesInARow;
     [SerializeField] private bool performOnStart;
 
@@ -133,8 +135,8 @@ public class MapGenerator : MonoBehaviour
                 {
                     if (!CloseUnusedDoors(spawnedRooms)) break;
                     if (!PlaceBossRoom(spawnedRooms)) break;
+                    if (!SpawnAllRooms(spawnedRooms)) break;
                     mapLayoutMadeSO.RaiseEvent(spawnedRooms);
-                    SpawnAllRooms(spawnedRooms);
                     mapGenerated = true;
                 }
 
@@ -197,15 +199,25 @@ public class MapGenerator : MonoBehaviour
         return false;
     }
 
-    private void SpawnAllRooms(List<Room> spawnedRooms)
+    private bool SpawnAllRooms(List<Room> spawnedRooms)
     {
+        List<string> instantiatedRooms = new();
+
         for (int i = 0; i < spawnedRooms.Count; i++)
         {
             if (spawnedRooms[i].Data.Prefabs.Length <= 0) Debug.LogError(spawnedRooms[i].Data + " does not have any prefabs listed");
 
-            GameObject roomToSpawn = spawnedRooms[i].Data.Prefabs[UnityEngine.Random.Range(0, spawnedRooms[i].Data.Prefabs.Length)];
+            List<GameObject> prefabs = spawnedRooms[i].Data.Prefabs.ToList();
+            if (!canReuseRooms) prefabs.RemoveAll(x => instantiatedRooms.Contains(x.name));
+
+            if (prefabs.Count == 0) return false;
+
+            GameObject roomToSpawn = prefabs[UnityEngine.Random.Range(0, prefabs.Count)];
             Instantiate(roomToSpawn, spawnedRooms[i].RoomNumber * spawnedRooms[i].Data.GetRoomBounds(roomToSpawn), Quaternion.identity, transform);
+            instantiatedRooms.Add(roomToSpawn.name);
         }
+
+        return true;
     }
 
     #endregion
