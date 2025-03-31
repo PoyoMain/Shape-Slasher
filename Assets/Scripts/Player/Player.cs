@@ -27,8 +27,10 @@ public class Player : MonoBehaviour
 
     [Header("Broadcast Events")]
     [SerializeField] private VoidEventSO playerDamagedEventSO;
+    [SerializeField] private VoidEventSO playerHealedEventSO;
     [SerializeField] private VoidEventSO playerDeathEventSO;
     [SerializeField] private IntEventSO playerHealthLossEventSO;
+    [SerializeField] private IntEventSO playerHealthGainedEventSO;
     [SerializeField] private IntEventSO playerHealthUpdatedEventSO;
 
     // Properties
@@ -215,6 +217,23 @@ public class Player : MonoBehaviour
         else if (collider.TryGetComponent(out UpwardForceApplier upForceApplier))
         {
             if (velocity.y > 0) Knockback(Vector2.up * upForceApplier.ForceStrength);
+        }
+        else if (collider.TryGetComponent(out Pickup pickup))
+        {
+            switch (pickup.Type)
+            {
+                case Pickup.PickupType.Health:
+                    if (health < stats.MaxHealth)
+                    {
+                        Heal(1);
+                        Destroy(pickup.gameObject);
+                    }
+                    break;
+                case Pickup.PickupType.Currency:
+                    break;
+            }
+
+            
         }
     }
 
@@ -461,6 +480,15 @@ public class Player : MonoBehaviour
     private void ApplyMovement() => rb.velocity = velocity;
 
     #region Health & Damage
+
+    private void Heal(int healAmount)
+    {
+        playerHealthGainedEventSO.RaiseEvent(healAmount);
+        playerHealedEventSO.RaiseEvent();
+
+        health += healAmount;
+        playerHealthUpdatedEventSO.RaiseEvent(health);
+    }
 
     public void Damage(int dmgAmount)
     {
