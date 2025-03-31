@@ -39,6 +39,11 @@ public class Golem : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private SFXPlayer damageSFXPlayer;
 
+    [Header("Currency")]
+    [SerializeField] private Rigidbody2D currencyPrefab;
+    [SerializeField] private int currencyDroppedOnDeath;
+    [SerializeField] private float currencyShootForce;
+
     [Header("Broadcast Events")]
     [SerializeField] private VoidEventSO enemyDeathEventSO;
 
@@ -242,7 +247,7 @@ public class Golem : MonoBehaviour
             TakeDamage(damageComponent.Damage);
 
             Vector2 forceDirection;
-            if (collision.transform.position.x > transform.position.x) forceDirection = Vector2.left;
+            if (collision.transform.root.position.x > transform.position.x) forceDirection = Vector2.left;
             else forceDirection = Vector2.right;
             Vector2 force = new((forceDirection * damageComponent.Knockback).x, rigid.velocity.y);
             Knockback(force);
@@ -289,9 +294,25 @@ public class Golem : MonoBehaviour
         if (health <= 0)
         {
             enemyDeathEventSO.RaiseEvent();
-            Destroy(gameObject);
+            Die();
         }
         else invincibleTimer = invincibilityTime;
+    }
+
+    private const float CURRENCYSHOOT_HORIZONTALDIRECTION_MIN = -0.5f;
+    private const float CURRENCYSHOOT_HORIZONTALDIRECTION_MAX = 0.5f;
+
+    private void Die()
+    {
+        for (int i = 0; i < currencyDroppedOnDeath; i++)
+        {
+            Vector2 currencyShootDirection = new Vector2(Random.Range(CURRENCYSHOOT_HORIZONTALDIRECTION_MIN, CURRENCYSHOOT_HORIZONTALDIRECTION_MAX), 1).normalized;
+
+            Rigidbody2D currency = Instantiate(currencyPrefab, transform.position, Quaternion.identity);
+            currency.AddForce(currencyShootDirection * currencyShootForce);
+        }
+
+        Destroy(gameObject);
     }
 
     #endregion

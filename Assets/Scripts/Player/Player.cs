@@ -93,6 +93,10 @@ public class Player : MonoBehaviour
             moveInput.y = Mathf.Abs(moveInput.y) < stats.VerticalDeadZoneThreshold ? 0 : Mathf.Sign(moveInput.y);
         }
 
+        if (moveInput.y < 0) anim.SetInteger("VerticalInput", -1);
+        else if (moveInput.y > 0) anim.SetInteger("VerticalInput", 1);
+        else anim.SetInteger("VerticalInput", 0);
+
         if (jumpDown)
         {
             jumpToConsume = true;
@@ -404,16 +408,32 @@ public class Player : MonoBehaviour
     } 
 
 #pragma warning disable IDE0051
-    private void HitboxKnockback(Vector2 hitColliderDirection)
+    private void HitboxKnockbackHorizontal(Vector2 hitColliderDirection)
     {        
         velocity = new ((hitColliderDirection * stats.SurfaceKnockback).x, velocity.y);
         knockbackTimer = stats.KnockbackAppliedTime;
+    }
+    private void HitboxKnockbackVertical(Vector2 hitColliderDirection)
+    {
+        velocity = new(velocity.x, (hitColliderDirection * stats.SurfaceKnockback).y);
+        //knockbackTimer = stats.KnockbackAppliedTime;
+    }
+
+    private void BounceKnockback(Vector2 hitColliderDirection)
+    {
+        StopVerticalMovement();
+        velocity = new(velocity.x, (hitColliderDirection * stats.BounceKnockback).y);
     }
 #pragma warning restore IDE0051
 
     private void KnockbackOnlyVertical(Vector2 force)
     {
         velocity.y = force.y;
+    }
+
+    private void StopVerticalMovement()
+    {
+        rb.velocity = new(rb.velocity.x, 0);
     }
 
     #endregion
@@ -577,7 +597,10 @@ public struct Stats
 
     [Header("Attacking")]
     public float TimeBetweenAttacks;
+
+    [Header("Knockback")]
     public float SurfaceKnockback;
+    public float BounceKnockback;
     public float KnockbackAppliedTime;
 
     [Header("Looking")]
