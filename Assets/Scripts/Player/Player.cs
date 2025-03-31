@@ -230,6 +230,11 @@ public class Player : MonoBehaviour
                     }
                     break;
                 case Pickup.PickupType.Currency:
+                    if (currency < 999)
+                    {
+                        GainedCurrency(1);
+                        Destroy(pickup.gameObject);
+                    }
                     break;
             }
 
@@ -512,6 +517,22 @@ public class Player : MonoBehaviour
         {
             damageSFXPlayer.Play();
         }
+    }
+
+    #endregion
+
+    #region Currency
+
+    private int currency;
+
+    private void GainedCurrency(int amount)
+    {
+        currency += amount;
+    }
+
+    private void SpentCurrency(int amount)
+    {
+        currency -= amount;
     }
 
     #endregion
