@@ -259,12 +259,15 @@ public class Player : MonoBehaviour
     #region Dash
 
     private float dashTimer;
-    private float dashDecelerationPercentage = 0.2f;
+    private readonly float dashDecelerationPercentage = 0.2f;
+    private bool hasDashAbility;
     private bool hasDashInAir;
     private bool IsDashing => dashTimer > 0;
 
     private void HandleDash()
     {
+        if (!hasDashAbility) return;
+
         if (IsDashing)
         {
             dashTimer -= Time.fixedDeltaTime;
