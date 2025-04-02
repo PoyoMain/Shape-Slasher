@@ -51,6 +51,7 @@ public class Player : MonoBehaviour
     private bool jumpDown;
     private bool jumpHeld;
     private bool attackDown;
+    private bool dashDown;
     private bool cachedQueryStartInColliders;
     private float time;
     private Rigidbody2D rb;
@@ -86,6 +87,11 @@ public class Player : MonoBehaviour
         {
             attackDown = Controls.Attack.WasPressedThisFrame();
         }
+        
+        if (!dashDown)
+        {
+            dashDown = Controls.Dash.WasPressedThisFrame();
+        }
 
         if (stats.SnapInput)
         {
@@ -116,6 +122,7 @@ public class Player : MonoBehaviour
         HandleInvincibility();
         CheckCollisions();
 
+        HandleDash();
         HandleAttack();
 
         HandleJump();
@@ -177,6 +184,7 @@ public class Player : MonoBehaviour
             coyoteUsable = true;
             bufferedJumpUsable = true;
             endedJumpEarly = false;
+            hasDashInAir = true;
             if (colliderToTurnOnOnceGrounded != null)
             {
                 Physics2D.IgnoreCollision(bodyCollider, colliderToTurnOnOnceGrounded, false);
@@ -248,6 +256,43 @@ public class Player : MonoBehaviour
 
     #endregion
 
+    #region Dash
+
+    private float dashTimer;
+    private float dashDecelerationPercentage = 0.2f;
+    private bool hasDashInAir;
+    private bool IsDashing => dashTimer > 0;
+
+    private void HandleDash()
+    {
+        if (IsDashing)
+        {
+            dashTimer -= Time.fixedDeltaTime;
+            
+            if (dashTimer <= stats.DashTime * dashDecelerationPercentage) velocity.x = Mathf.MoveTowards(velocity.x, 0, stats.GroundDeceleration * Time.fixedDeltaTime);
+
+            if (dashTimer <= 0) anim.SetBool("IsDashing", false);
+        }
+
+        if (!dashDown) return;
+
+        if (!grounded && !hasDashInAir) return;
+
+        if (dashDown && !IsDashing) ExecuteDash();
+
+        dashDown = false;
+    }
+
+    private void ExecuteDash()
+    {
+        velocity = new(stats.DashPower * NumericalFacingDirection, 0);
+        dashTimer = stats.DashTime;
+        anim.SetBool("IsDashing", true);
+        if (!grounded) hasDashInAir = false;
+    }
+
+    #endregion
+
     #region Attack
 
     private float attackTimer;
@@ -298,7 +343,7 @@ public class Player : MonoBehaviour
 
         if (CrouchDown && CheckCrouch()) return;
 
-        if (IsInKnockback) return;
+        if (IsInKnockback || IsDashing) return;
 
         if (grounded || CanUseCoyote) ExecuteJump();
 
@@ -350,9 +395,11 @@ public class Player : MonoBehaviour
 
     #region Horizontal
 
+    private int NumericalFacingDirection => transform.localEulerAngles.y == ROTATION_FACING_RIGHT ? 1 : -1;
+
     private void HandleDirection()
     {
-        if (IsInKnockback) return;
+        if (IsInKnockback || IsDashing) return;
 
         if (moveInput.x == 0)
         {
@@ -442,6 +489,8 @@ public class Player : MonoBehaviour
 
     private void HandleGravity()
     {
+        if (IsDashing) return;
+
         if (grounded && velocity.y <= 0f)
         {
             velocity.y = stats.GroundingForce;
@@ -602,6 +651,10 @@ public struct Stats
     public float SurfaceKnockback;
     public float BounceKnockback;
     public float KnockbackAppliedTime;
+
+    [Header("Dash")]
+    public float DashPower;
+    public float DashTime;
 
     [Header("Looking")]
     public float LookDistance;
