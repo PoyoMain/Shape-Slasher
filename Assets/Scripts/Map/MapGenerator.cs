@@ -23,6 +23,7 @@ public class MapGenerator : MonoBehaviour
     [Header("Broadcast Events")]
     [SerializeField] private RoomListEventSO mapLayoutMadeSO;
     [SerializeField] private VoidEventSO mapGenerationFinishedSO;
+    [SerializeField] private VoidEventSO mapDespawedEventSO;
 
     private Room startRoom;
     private Room bossRoom;
@@ -53,7 +54,7 @@ public class MapGenerator : MonoBehaviour
     private IEnumerator MapCoroutine()
     {
         DespawnMap();
-        List<RoomSO> standardRooms = possibleRooms.Where(x => x.RoomType == RoomType.Standard || x.RoomType == RoomType.Challenge).ToList();
+        List<RoomSO> roomsToPickFrom = possibleRooms.Where(x => (x.RoomType == RoomType.Standard || x.RoomType == RoomType.Challenge) && x.Prefabs.Length > 0).ToList();
 
         bool mapGenerated = false;
         while (!mapGenerated)
@@ -75,7 +76,7 @@ public class MapGenerator : MonoBehaviour
                 while (!compatibleRoomsFound)
                 {
                     // Look for a room that can be spawned in
-                    foreach (RoomSO stanRoom in standardRooms)
+                    foreach (RoomSO stanRoom in roomsToPickFrom)
                     {
                         if (!canHaveDuplicatesInARow && currentRoom.Data == stanRoom)
                         {

@@ -48,8 +48,6 @@ public class Golem : MonoBehaviour
     [Header("Broadcast Events")]
     [SerializeField] private VoidEventSO enemyDeathEventSO;
 
-    public event UnityAction OnDeath;
-
     // Constants
     private const int ROTATION_FACINGRIGHT = 0;
     private const int ROTATION_FACINGLEFT = 180;
