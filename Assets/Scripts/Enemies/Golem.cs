@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Animator), typeof(DamageFlash))]
-[RequireComponent(typeof(CinemachineImpulseSource))]
+[RequireComponent(typeof(CinemachineImpulseSource), typeof(EnemyDeathEvent))]
 public class Golem : MonoBehaviour
 {
     [Header("Health")]
@@ -47,6 +48,8 @@ public class Golem : MonoBehaviour
     [Header("Broadcast Events")]
     [SerializeField] private VoidEventSO enemyDeathEventSO;
 
+    public event UnityAction OnDeath;
+
     // Constants
     private const int ROTATION_FACINGRIGHT = 0;
     private const int ROTATION_FACINGLEFT = 180;
@@ -60,6 +63,7 @@ public class Golem : MonoBehaviour
     private Animator anim;
     private DamageFlash damageFlash;
     private CinemachineImpulseSource damageImpulseSource;
+    private EnemyDeathEvent deathEvent;
 
     private void Awake()
     {
@@ -67,6 +71,7 @@ public class Golem : MonoBehaviour
         TryGetComponent(out anim);
         TryGetComponent(out damageFlash);
         TryGetComponent(out damageImpulseSource);
+        TryGetComponent(out deathEvent);
 
         ChangeState(State.Patroling);
     }
@@ -294,6 +299,7 @@ public class Golem : MonoBehaviour
         if (health <= 0)
         {
             enemyDeathEventSO.RaiseEvent();
+            deathEvent.OnDeath?.Invoke();
             Die();
         }
         else invincibleTimer = invincibilityTime;
@@ -344,6 +350,7 @@ public class Golem : MonoBehaviour
     #region Defending
 
     private float defendTimer;
+
     private bool Defending => defendTimer > 0;
 
     private void DefendState()

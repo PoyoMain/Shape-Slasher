@@ -53,7 +53,7 @@ public class MapGenerator : MonoBehaviour
     private IEnumerator MapCoroutine()
     {
         DespawnMap();
-        List<RoomSO> standardRooms = possibleRooms.Where(x => x.RoomType == RoomType.Standard).ToList();
+        List<RoomSO> standardRooms = possibleRooms.Where(x => x.RoomType == RoomType.Standard || x.RoomType == RoomType.Challenge).ToList();
 
         bool mapGenerated = false;
         while (!mapGenerated)

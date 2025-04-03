@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47de0b46bc843de48b285f00c5d71317, type: 3}
+  m_Name: ChallengeRoom_E2W2
+  m_EditorClassIdentifier: 
+  roomType: 2
+  icon: {fileID: -1654696246, guid: cadc3bc161823ae42a7b82c41cd072ad, type: 3}
+  doors:
+  - type: 4
+  - type: 10
+  prefabs:
+  - {fileID: 1884796076057475136, guid: 29154e0c34d48984ba0386fe2341b05f, type: 3}
+  boundsCollider: {fileID: 7503822740106075452, guid: 29154e0c34d48984ba0386fe2341b05f, type: 3}
