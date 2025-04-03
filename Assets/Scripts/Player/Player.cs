@@ -524,7 +524,7 @@ public class Player : MonoBehaviour
     {
         Vector2 lookPos = camFocusTransform.localPosition;
 
-        if (moveInput.x == 0 && moveInput.y != 0)
+        if (moveInput.x == 0 && moveInput.y != 0 && grounded)
         {
             lookTimer -= Time.fixedDeltaTime;
 
