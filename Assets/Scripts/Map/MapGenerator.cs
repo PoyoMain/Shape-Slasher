@@ -178,7 +178,7 @@ public class MapGenerator : MonoBehaviour
         // Get rooms with only one neighbor, excluding the start room
         deadEndRooms = spawnedRooms.Where(room => room.Neighbors.Count == 1).ToList();
         if (deadEndRooms.Contains(startRoom)) deadEndRooms.Remove(startRoom);
-        deadEndRooms = deadEndRooms.OrderByDescending(room => FindDistanceFromRoom(startRoom, room, 0)).ToList();
+        deadEndRooms = deadEndRooms.OrderByDescending(room => FindDistanceFromRoom(startRoom, room, 0) + FindDistanceFromStartRoom(room)).ToList();
 
         // Find one of these rooms to replace with a boss room
         for (int i = 0; i < deadEndRooms.Count; i++)
