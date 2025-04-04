@@ -54,6 +54,7 @@ MonoBehaviour:
   minimapParent: {fileID: 1638824520403141977}
   bossRoomMiniIcon: {fileID: 21300000, guid: b9cf351916e49fc41a81b849290fa617, type: 3}
   mapLayoutMadeSO: {fileID: 11400000, guid: 368d3df80caeb854f8117aa81800d862, type: 2}
+  mapDespawnedSO: {fileID: 11400000, guid: 358d5297c5ce4834ba1173a0e546739b, type: 2}
   playerEnteredRoomSO: {fileID: 11400000, guid: ea2b0ffb7bfbc0a4f9e28434a54211e9, type: 2}
   playerExitedRoomSO: {fileID: 11400000, guid: 7e6e607d7bf61ee489cf2b9504f01967, type: 2}
 --- !u!225 &4460118797644865855
@@ -238,6 +239,7 @@ MonoBehaviour:
   minimapParent: {fileID: 7851545418780355700}
   bossRoomMiniIcon: {fileID: 21300000, guid: b9cf351916e49fc41a81b849290fa617, type: 3}
   mapLayoutMadeSO: {fileID: 11400000, guid: 368d3df80caeb854f8117aa81800d862, type: 2}
+  mapDespawnedSO: {fileID: 11400000, guid: 358d5297c5ce4834ba1173a0e546739b, type: 2}
   playerEnteredRoomSO: {fileID: 11400000, guid: ea2b0ffb7bfbc0a4f9e28434a54211e9, type: 2}
   playerExitedRoomSO: {fileID: 11400000, guid: 7e6e607d7bf61ee489cf2b9504f01967, type: 2}
 --- !u!225 &4518676241587563054
@@ -1466,6 +1468,7 @@ MonoBehaviour:
   healthPrefab: {fileID: 2535963474756912624, guid: 7668738c379af9c4fbabcd6c17b04891, type: 3}
   healthParent: {fileID: 3133647179392771856}
   playerDeathEventSO: {fileID: 11400000, guid: 85132c2903af7184b824f1c99dc19a83, type: 2}
+  playerHealedEventSO: {fileID: 11400000, guid: b8e434bfeb2b83044a63061dd294bc9e, type: 2}
   playerDamagedEventSO: {fileID: 11400000, guid: f9060ebb00f2eb3448c65b5630f15d48, type: 2}
 --- !u!114 &9216421943936774573
 MonoBehaviour:
@@ -1497,6 +1500,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 455fd26017a2bd0498a442f8d6330647, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeToTransition: 0
 --- !u!1 &7490857683860160307
 GameObject:
   m_ObjectHideFlags: 0

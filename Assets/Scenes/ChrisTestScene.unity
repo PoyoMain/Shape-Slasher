@@ -128,7 +128,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4439511406476123322, guid: 89afb86c13c444b458e6a98086d3dce7, type: 3}
   m_PrefabInstance: {fileID: 1759038225939406790}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &598236423
+--- !u!114 &598236429
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -140,10 +140,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e851f1eab04fd748a82358c330fa7c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _channel: {fileID: 11400000, guid: 85132c2903af7184b824f1c99dc19a83, type: 2}
+  _channel: {fileID: 11400000, guid: 358d5297c5ce4834ba1173a0e546739b, type: 2}
   OnEventRaised:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6033570470594506529}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1800561104
 GameObject:
   m_ObjectHideFlags: 0
@@ -278,22 +290,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
-      propertyPath: shopRooms.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
-      propertyPath: shopRooms.Array.data[0]
-      value: 
-      objectReference: {fileID: 11400000, guid: 8208ce546b35749499f4e0bb60cf1a79, type: 2}
-    - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
-      propertyPath: possibleRooms.Array.size
-      value: 34
-      objectReference: {fileID: 0}
-    - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
-      propertyPath: possibleRooms.Array.data[33]
-      value: 
-      objectReference: {fileID: 11400000, guid: e2b32529db0316444a3c0e42af0fef80, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -418,7 +414,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4439511406476123322, guid: 89afb86c13c444b458e6a98086d3dce7, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 598236423}
+      addedObject: {fileID: 598236429}
   m_SourcePrefab: {fileID: 100100000, guid: 89afb86c13c444b458e6a98086d3dce7, type: 3}
 --- !u!1001 &5497942786483074966
 PrefabInstance:
@@ -547,17 +543,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4033573746288931075, guid: 4a9afef52d08f914bb301fddaf77810e, type: 3}
-      propertyPath: playerHealedEventSO
-      value: 
-      objectReference: {fileID: 11400000, guid: b8e434bfeb2b83044a63061dd294bc9e, type: 2}
     - target: {fileID: 6868990254702014433, guid: 4a9afef52d08f914bb301fddaf77810e, type: 3}
       propertyPath: m_Name
       value: Canvas - InGameUI
-      objectReference: {fileID: 0}
-    - target: {fileID: 6868990254702014433, guid: 4a9afef52d08f914bb301fddaf77810e, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8400319788350019588, guid: 4a9afef52d08f914bb301fddaf77810e, type: 3}
       propertyPath: m_Pivot.x

@@ -267,6 +267,8 @@ public class MapGenerator : MonoBehaviour
         {
             Destroy(t.gameObject);
         }
+
+        mapDespawedEventSO.RaiseEvent();
     }
 
     private Room ReplaceRoom(Room ogRoom, Room newRoom, List<Room> spawnedRooms)
