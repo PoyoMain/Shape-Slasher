@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7466749480452526486}
   - component: {fileID: 8638708384702894512}
   m_Layer: 5
-  m_Name: ItemDescription
+  m_Name: ItemDescriptionText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: 1064494363997178598}
   - component: {fileID: 1175724527650030711}
   m_Layer: 5
-  m_Name: ImageBG
+  m_Name: ImageBorder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -495,7 +495,7 @@ GameObject:
   - component: {fileID: 4023452460002188450}
   - component: {fileID: 4465940518931176958}
   m_Layer: 5
-  m_Name: ImageBorder
+  m_Name: ImageDescription
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -757,6 +757,7 @@ GameObject:
   - component: {fileID: 5836333826002181935}
   - component: {fileID: 8271792650701537890}
   - component: {fileID: 3318504837379755480}
+  - component: {fileID: 128982807137401242}
   m_Layer: 18
   m_Name: BuyableItem
   m_TagString: Untagged
@@ -795,7 +796,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cost: 10
   type: 0
-  itemDescriptionBox: {fileID: 891602460006250899}
+  itemDescriptionBox: {fileID: 6249414258579262541}
   priceText: {fileID: 4086966085893727542}
 --- !u!61 &3318504837379755480
 BoxCollider2D:
@@ -842,3 +843,30 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2, y: 2}
   m_EdgeRadius: 0
+--- !u!50 &128982807137401242
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8766333139864863262}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0

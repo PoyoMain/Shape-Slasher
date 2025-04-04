@@ -18,6 +18,7 @@ public class MapGenerator : MonoBehaviour
     [Header("References")]
     [SerializeField] private RoomSO[] startRooms;
     [SerializeField] private RoomSO[] bossRooms;
+    [SerializeField] private RoomSO[] shopRooms;
     [SerializeField] private List<RoomSO> possibleRooms;
 
     [Header("Broadcast Events")]
@@ -27,6 +28,7 @@ public class MapGenerator : MonoBehaviour
 
     private Room startRoom;
     private Room bossRoom;
+    private Room shopRoom;
     private Room currentRoom;
 
     private Coroutine mapGenCoroutine;
@@ -137,6 +139,7 @@ public class MapGenerator : MonoBehaviour
                 {
                     if (!CloseUnusedDoors(spawnedRooms)) break;
                     if (!PlaceBossRoom(spawnedRooms)) break;
+                    if (!PlaceShopRoom(spawnedRooms)) break;
                     if (!SpawnAllRooms(spawnedRooms)) break;
                     print("Distance to Boss: " + FindDistanceFromRoom(startRoom, bossRoom, 0));
                     mapLayoutMadeSO.RaiseEvent(spawnedRooms);
@@ -195,6 +198,36 @@ public class MapGenerator : MonoBehaviour
                 if (!deadEndRooms[i].CanBeReplacedWith(bossRoomSO)) continue;
 
                 bossRoom = ReplaceRoom(deadEndRooms[i], new(bossRoomSO), spawnedRooms);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool PlaceShopRoom(List<Room> spawnedRooms)
+    {
+        List<Room> deadEndRooms = new();
+
+        // Get rooms with only one neighbor, excluding the start room
+        deadEndRooms = spawnedRooms.Where(room => room.Neighbors.Count == 1 && room.Data.RoomType != RoomType.Boss).ToList();
+        if (deadEndRooms.Contains(startRoom)) deadEndRooms.Remove(startRoom);
+        deadEndRooms = deadEndRooms.OrderByDescending(room => FindDistanceFromRoom(startRoom, room, 0) + FindDistanceFromStartRoom(room)).ToList();
+
+        // Find one of these rooms to replace with a boss room
+        for (int i = 0; i < deadEndRooms.Count; i++)
+        {
+            foreach (RoomSO shopRoomSO in shopRooms)
+            {
+                // If the deadend room having a neighbor and the boss room having an unused door aren't the same sign, this isnt a fitting boss room
+                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.North) != null == shopRoomSO.HasAnUnusedDoorInThisDirection(Direction.North))) continue;
+                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.East) != null == shopRoomSO.HasAnUnusedDoorInThisDirection(Direction.East))) continue;
+                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.South) != null == shopRoomSO.HasAnUnusedDoorInThisDirection(Direction.South))) continue;
+                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.West) != null == shopRoomSO.HasAnUnusedDoorInThisDirection(Direction.West))) continue;
+
+                if (!deadEndRooms[i].CanBeReplacedWith(shopRoomSO)) continue;
+
+                shopRoom = ReplaceRoom(deadEndRooms[i], new(shopRoomSO), spawnedRooms);
                 return true;
             }
         }

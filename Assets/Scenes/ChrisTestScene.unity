@@ -279,6 +279,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
+      propertyPath: shopRooms.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
+      propertyPath: shopRooms.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 8208ce546b35749499f4e0bb60cf1a79, type: 2}
+    - target: {fileID: 8428694077068490864, guid: b03606c91b745654abc6c9418a4772e8, type: 3}
       propertyPath: possibleRooms.Array.size
       value: 34
       objectReference: {fileID: 0}
@@ -549,7 +557,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6868990254702014433, guid: 4a9afef52d08f914bb301fddaf77810e, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8400319788350019588, guid: 4a9afef52d08f914bb301fddaf77810e, type: 3}
       propertyPath: m_Pivot.x
