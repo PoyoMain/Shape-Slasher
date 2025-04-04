@@ -71,6 +71,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""132889ca-ae3d-4b65-9031-ae7593b6dec7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -346,6 +355,28 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Controller"",
                     ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4f89a28d-0c12-45fc-884c-a306817bcdbd"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""061c3ed5-205e-4570-9dd8-7f7321ff86ae"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Controller"",
+                    ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -727,6 +758,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_GameplayControls_Attack = m_GameplayControls.FindAction("Attack", throwIfNotFound: true);
         m_GameplayControls_Pause = m_GameplayControls.FindAction("Pause", throwIfNotFound: true);
         m_GameplayControls_Dash = m_GameplayControls.FindAction("Dash", throwIfNotFound: true);
+        m_GameplayControls_Interact = m_GameplayControls.FindAction("Interact", throwIfNotFound: true);
         // UIControls
         m_UIControls = asset.FindActionMap("UIControls", throwIfNotFound: true);
         m_UIControls_Navigate = m_UIControls.FindAction("Navigate", throwIfNotFound: true);
@@ -798,6 +830,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_GameplayControls_Attack;
     private readonly InputAction m_GameplayControls_Pause;
     private readonly InputAction m_GameplayControls_Dash;
+    private readonly InputAction m_GameplayControls_Interact;
     public struct GameplayControlsActions
     {
         private @PlayerControls m_Wrapper;
@@ -807,6 +840,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @Attack => m_Wrapper.m_GameplayControls_Attack;
         public InputAction @Pause => m_Wrapper.m_GameplayControls_Pause;
         public InputAction @Dash => m_Wrapper.m_GameplayControls_Dash;
+        public InputAction @Interact => m_Wrapper.m_GameplayControls_Interact;
         public InputActionMap Get() { return m_Wrapper.m_GameplayControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -831,6 +865,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Dash.started += instance.OnDash;
             @Dash.performed += instance.OnDash;
             @Dash.canceled += instance.OnDash;
+            @Interact.started += instance.OnInteract;
+            @Interact.performed += instance.OnInteract;
+            @Interact.canceled += instance.OnInteract;
         }
 
         private void UnregisterCallbacks(IGameplayControlsActions instance)
@@ -850,6 +887,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Dash.started -= instance.OnDash;
             @Dash.performed -= instance.OnDash;
             @Dash.canceled -= instance.OnDash;
+            @Interact.started -= instance.OnInteract;
+            @Interact.performed -= instance.OnInteract;
+            @Interact.canceled -= instance.OnInteract;
         }
 
         public void RemoveCallbacks(IGameplayControlsActions instance)
@@ -954,6 +994,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnAttack(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
     }
     public interface IUIControlsActions
     {

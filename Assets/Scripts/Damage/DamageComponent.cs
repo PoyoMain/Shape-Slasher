@@ -9,4 +9,9 @@ public class DamageComponent : MonoBehaviour
 
     public int Damage => damage;
     public int Knockback => knockback;
+
+    public void IncreaseDamageByMultiplier(float multiplier)
+    {
+        damage = Mathf.CeilToInt(damage * multiplier);
+    }
 }

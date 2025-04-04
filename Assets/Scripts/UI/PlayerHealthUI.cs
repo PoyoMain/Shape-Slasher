@@ -67,8 +67,10 @@ public class PlayerHealthUI : MonoBehaviour
 
     private void Heal(int amount)
     {
-        if (Health < maxHealth)
+        for (int i = 0; i < amount; i++)
         {
+            if (Health >= maxHealth) break;
+
             Animator spawnedHealth = Instantiate(healthPrefab, healthParent);
             healthImages.Add(spawnedHealth);
         }

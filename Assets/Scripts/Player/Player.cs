@@ -52,6 +52,7 @@ public class Player : MonoBehaviour
     private bool jumpHeld;
     private bool attackDown;
     private bool dashDown;
+    private bool interactDown;
     private bool cachedQueryStartInColliders;
     private float time;
     private Rigidbody2D rb;
@@ -88,9 +89,14 @@ public class Player : MonoBehaviour
             attackDown = Controls.Attack.WasPressedThisFrame();
         }
         
-        if (!dashDown)
+        if (!dashDown && hasDashAbility)
         {
             dashDown = Controls.Dash.WasPressedThisFrame();
+        }
+
+        if (!interactDown)
+        {
+            interactDown = Controls.Interact.WasPressedThisFrame();
         }
 
         if (stats.SnapInput)
@@ -122,6 +128,7 @@ public class Player : MonoBehaviour
         HandleInvincibility();
         CheckCollisions();
 
+        HandleInteract();
         HandleDash();
         HandleAttack();
 
@@ -256,6 +263,46 @@ public class Player : MonoBehaviour
 
     #endregion
 
+    #region Interact
+
+    private void HandleInteract()
+    {
+        if (!interactDown) return;
+
+        if (!grounded && !IsDashing && !IsAttacking && !IsInKnockback) return;
+
+        ExecuteInteract();
+        interactDown = false;
+    }
+
+    private void ExecuteInteract()
+    {
+        RaycastHit2D interactHit = Physics2D.BoxCast(bodyCollider.bounds.center, bodyCollider.size, 0, Vector2.down, 0, stats.InteractLayer);
+
+        if (interactHit && interactHit.collider.TryGetComponent(out BuyableItem buyable))
+        {
+            if (currency < buyable.Cost) return;
+            
+            SpentCurrency(buyable.Cost);
+            buyable.Buy();
+
+            switch (buyable.Type)
+            {
+                case BuyableItem.Buyable.Dash:
+                    hasDashAbility = true;
+                    break;
+                case BuyableItem.Buyable.AttackUp:
+                    IncreaseAttack(1.5f);
+                    break;
+                case BuyableItem.Buyable.FullRecovery:
+                    Heal(stats.MaxHealth);
+                    break;
+            }
+        }
+    }
+
+    #endregion
+
     #region Dash
 
     private float dashTimer;
@@ -266,8 +313,6 @@ public class Player : MonoBehaviour
 
     private void HandleDash()
     {
-        if (!hasDashAbility) return;
-
         if (IsDashing)
         {
             dashTimer -= Time.fixedDeltaTime;
@@ -315,6 +360,16 @@ public class Player : MonoBehaviour
     {
         anim.SetTrigger("Attack");
         attackTimer = stats.TimeBetweenAttacks;
+    }
+
+    private void IncreaseAttack(float multiplier)
+    {
+        DamageComponent[] damageComponents = GetComponentsInChildren<DamageComponent>(includeInactive: true);
+
+        for (int i = 0; i < damageComponents.Length; i++)
+        {
+            damageComponents[i].IncreaseDamageByMultiplier(multiplier);
+        }
     }
 
     #endregion
@@ -620,6 +675,7 @@ public struct Stats
     public LayerMask BounceLayer;
     public LayerMask OneWayPlatformLayer;
     public LayerMask SolidSurfaceLayer;
+    public LayerMask InteractLayer;
 
     [Header("Input")]
     public bool SnapInput;
