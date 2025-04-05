@@ -6,6 +6,7 @@ public class ChallengeRoom : MonoBehaviour
 {
     [SerializeField] private Animator[] autoDoors;
     [SerializeField] private EnemyDeathEvent[] enemies;
+    [SerializeField] private bool isBossRoom;
 
     private int EnemiesInRoom => enemies.Length;
     private int enemiesKilled;
@@ -30,7 +31,7 @@ public class ChallengeRoom : MonoBehaviour
 
     public void LockRoom()
     {
-        if (EnemiesInRoom == 0) return;
+        if (EnemiesInRoom == 0 && !isBossRoom) return;
         //Freeze();
 
         for (int i = 0; i < autoDoors.Length; i++)

@@ -75,6 +75,7 @@ public class MinimapHandler : MonoBehaviour
         }
 
         MinimapIcon iconToActivate = minimapIcons.Find(x => x.RoomNum == numToCheck);
+        if (iconToActivate == null) return;
         iconToActivate.Activate();
 
         minimapParent.localPosition = -(numToCheck * iconToActivate.Size);
