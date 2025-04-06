@@ -400,6 +400,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 1
   knockback: 5
+  knockbackOrigin: {fileID: 1650382962934967136}
 --- !u!1 &2539059503987102350
 GameObject:
   m_ObjectHideFlags: 0
@@ -498,6 +499,7 @@ GameObject:
   - component: {fileID: 2769796151950484721}
   - component: {fileID: 2288345019311347388}
   - component: {fileID: 702343699440525163}
+  - component: {fileID: 605958347430944074}
   m_Layer: 14
   m_Name: Golem
   m_TagString: Untagged
@@ -675,6 +677,18 @@ MonoBehaviour:
     m_DissipationDistance: 100
     m_PropagationSpeed: 343
   m_DefaultVelocity: {x: 0.1, y: 0.1, z: 0}
+--- !u!114 &605958347430944074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2987421179374726055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 538f2ca3ff9cd7640980dc907bf763ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3415108422913029640
 GameObject:
   m_ObjectHideFlags: 0
@@ -984,7 +998,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 1
-  knockback: 5
+  knockback: 10
+  knockbackOrigin: {fileID: 1650382962934967136}
 --- !u!1 &7274729280455980632
 GameObject:
   m_ObjectHideFlags: 0
@@ -1158,6 +1173,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 1
   knockback: 15
+  knockbackOrigin: {fileID: 1650382962934967136}
 --- !u!1 &7849165200553402634
 GameObject:
   m_ObjectHideFlags: 0

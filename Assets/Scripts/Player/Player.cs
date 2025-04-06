@@ -227,7 +227,8 @@ public class Player : MonoBehaviour
                 invincibilityTimer = stats.InvincibleTime;
                 hurtboxCollider.enabled = false;
 
-                Vector2 directionToHitbox = (collider.transform.position - transform.position).normalized;
+                Vector2 directionToHitbox = (dmgComponent.KnockbackOrigin.position - transform.position).normalized;
+                directionToHitbox.y = Mathf.Max(0, directionToHitbox.y);
                 Vector2 force = -directionToHitbox * dmgComponent.Knockback;
                 Knockback(force);
 
