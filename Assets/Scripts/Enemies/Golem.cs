@@ -291,16 +291,20 @@ public class Golem : MonoBehaviour
         timesAttacked++;
 
         damageFlash.CallDamageFlash();
-        damageSFXPlayer.Play();
         damageImpulseSource.GenerateImpulse();
 
         if (health <= 0)
         {
             enemyDeathEventSO.RaiseEvent();
             deathEvent.OnDeath?.Invoke();
+            damageSFXPlayer.PlayClipAtPoint();
             Die();
         }
-        else invincibleTimer = invincibilityTime;
+        else
+        {
+            damageSFXPlayer.Play();
+            invincibleTimer = invincibilityTime;
+        }
     }
 
     private const float CURRENCYSHOOT_HORIZONTALDIRECTION_MIN = -0.5f;

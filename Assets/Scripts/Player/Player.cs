@@ -636,7 +636,7 @@ public class Player : MonoBehaviour
 
         if (health <= 0)
         {
-            deathSFXPlayer.Play();
+            deathSFXPlayer.PlayClipAtPoint();
             playerDeathEventSO.RaiseEvent();
             Time.timeScale = 1;
             Destroy(gameObject);

@@ -40,6 +40,7 @@ public class GolemBoss : MonoBehaviour
     [SerializeField] private SFXPlayer jumpSFXPlayer;
     [SerializeField] private SFXPlayer fallSFXPlayer;
     [SerializeField] private SFXPlayer slamSFXPlayer;
+    [SerializeField] private SFXPlayer damageSFXPlayer;
 
     [Header("Broadcast Events")]
     [SerializeField] private VoidEventSO bossDefeatedEventSO;
@@ -367,9 +368,14 @@ public class GolemBoss : MonoBehaviour
         if (health <= 0)
         {
             Destroy(gameObject);
+            damageSFXPlayer.PlayClipAtPoint();
             bossDefeatedEventSO.RaiseEvent();
         }
-        else invincibleTimer = invincibilityTime;
+        else
+        {
+            damageSFXPlayer.Play();
+            invincibleTimer = invincibilityTime;
+        }
     }
 
     #endregion
