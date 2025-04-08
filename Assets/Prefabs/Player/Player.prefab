@@ -389,13 +389,13 @@ MonoBehaviour:
     GroundingForce: -1.5
     GrounderDistance: 0.07
     PlatformDistance: 0.1
-    JumpPower: 22
-    JumpTime: 0.06
+    JumpPower: 16.5
+    JumpTime: 0.2
     MinJumpTime: 0.08
     MaxFallSpeed: 20
-    JumpAcceleration: 400
-    FallAcceleration: 40
-    JumpEndEarlyGravityModifier: 3
+    JumpAcceleration: 500
+    FallAcceleration: 50
+    JumpEndEarlyGravityModifier: 4
     CoyoteTime: 0.05
     JumpBuffer: 0.1
     TimeBetweenAttacks: 0.3
@@ -486,7 +486,7 @@ MonoBehaviour:
     m_DissipationMode: 2
     m_DissipationDistance: 100
     m_PropagationSpeed: 343
-  m_DefaultVelocity: {x: 0, y: -1, z: 0}
+  m_DefaultVelocity: {x: 0.1, y: 0.1, z: 0}
 --- !u!1 &5404893861035855074
 GameObject:
   m_ObjectHideFlags: 0
