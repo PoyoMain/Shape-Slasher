@@ -178,6 +178,7 @@ public class Golem : MonoBehaviour
 
     private void ExecuteAttack()
     {
+        StopMoving();
         anim.SetTrigger("Attack");
         attackCooldownTimer = attackCooldownTime;
     }
