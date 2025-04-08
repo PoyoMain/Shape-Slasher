@@ -22,7 +22,9 @@ public class Golem : MonoBehaviour
     [Header("Attacking")]
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] private float attackDistance;
+    [SerializeField] private float playerFrontDistance;
     [SerializeField] private float playerBehindDistance;
+    [SerializeField] private float attackMoveSpeed;
     [SerializeField] private float attackCooldownTime;
 
     [Header("Defending")]
@@ -135,13 +137,13 @@ public class Golem : MonoBehaviour
             return;
         }
         if (CheckForTurn()) return;
-        Move();
+        Move(patrolSpeed);
     }
 
-    private void Move()
+    private void Move(float speed)
     {
         Vector2 velocity = rigid.velocity;
-        velocity.x = Mathf.MoveTowards(velocity.x, MoveDirection * patrolSpeed, 150 * Time.fixedDeltaTime);
+        velocity.x = Mathf.MoveTowards(velocity.x, MoveDirection * speed, 150 * Time.fixedDeltaTime);
         rigid.velocity = velocity;
         anim.SetBool("Moving", true);
     }
@@ -170,7 +172,8 @@ public class Golem : MonoBehaviour
         }
         if (!CheckForPlayer()) return;
 
-        ExecuteAttack();
+        if (IsPlayerInAttackDistance()) ExecuteAttack();
+        else Move(attackMoveSpeed);
     }
 
     private void ExecuteAttack()
@@ -200,7 +203,7 @@ public class Golem : MonoBehaviour
 
     private bool CheckForPlayer()
     {
-        bool playerHit = Physics2D.CapsuleCast(bodyCollider.bounds.center, bodyCollider.size, bodyCollider.direction, 0, MoveDirection * Vector2.right, attackDistance, playerLayer);
+        bool playerHit = Physics2D.CapsuleCast(bodyCollider.bounds.center, bodyCollider.size, bodyCollider.direction, 0, MoveDirection * Vector2.right, playerFrontDistance, playerLayer);
         bool playerHitBehind = Physics2D.CapsuleCast(bodyCollider.bounds.center, bodyCollider.size, bodyCollider.direction, 0, -MoveDirection * Vector2.right, playerBehindDistance, playerLayer);
 
         if (playerHit && state != State.Attacking) ChangeState(State.Attacking);
@@ -208,6 +211,11 @@ public class Golem : MonoBehaviour
         else if (!playerHit && state != State.Patroling) ChangeState(State.Patroling); 
 
         return playerHit;
+    }
+
+    private bool IsPlayerInAttackDistance()
+    {
+        return Physics2D.CapsuleCast(bodyCollider.bounds.center, bodyCollider.size, bodyCollider.direction, 0, MoveDirection * Vector2.right, attackDistance, playerLayer);
     }
 
     private void CheckIfPlayerBehind()

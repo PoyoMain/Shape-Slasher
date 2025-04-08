@@ -569,13 +569,15 @@ MonoBehaviour:
   knockbackTime: 0.5
   patrolSpeed: 2
   startPatrolTime: 1
-  turnTime: 2
+  turnTime: 1
   playerLayer:
     serializedVersion: 2
     m_Bits: 1024
   attackDistance: 1.35
+  playerFrontDistance: 4
   playerBehindDistance: 4
-  attackCooldownTime: 2
+  attackMoveSpeed: 3
+  attackCooldownTime: 1.75
   defendTime: 2
   bodyCollider: {fileID: 1729735120251882078}
   groundLayers:
