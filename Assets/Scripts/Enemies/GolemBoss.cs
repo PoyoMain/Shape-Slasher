@@ -113,13 +113,11 @@ public class GolemBoss : MonoBehaviour
                 break;
             case State.Waiting:
                 waitTimer = waitTime;
-                if (GetPlayerPosition(out Vector2 playerPos))
-                {
-                    FacePlayer(playerPos);
-                }
+                TurnToPlayerIfPossible();
                 break;
             case State.JumpingToPlayer:
                 {
+                    TurnToPlayerIfPossible();
                     interpolationValue = 0;
                     jumpStartPosition = transform.position;
                     timesJumpedInARow++;
@@ -141,6 +139,7 @@ public class GolemBoss : MonoBehaviour
 
             case State.Punch:
                 timesPunchedInARow++;
+                TurnToPlayerIfPossible();
                 anim.SetTrigger("Punch");
                 break;
         }
@@ -341,6 +340,15 @@ public class GolemBoss : MonoBehaviour
     }
 
     private bool FacingRight => transform.localEulerAngles.y == ROTATION_FACINGRIGHT;
+
+    private void TurnToPlayerIfPossible()
+    {
+        if (GetPlayerPosition(out Vector2 playerPos))
+        {
+            FacePlayer(playerPos);
+        }
+    }
+
     private void FacePlayer(Vector2 playerPos)
     {
         Vector3 euler = transform.localEulerAngles;
