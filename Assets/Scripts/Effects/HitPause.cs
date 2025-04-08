@@ -12,6 +12,7 @@ public class HitPause : MonoBehaviour
     [SerializeField] private VoidEventSO playerDeathEventSO;
 
     private Coroutine freezeCoroutine;
+    private float stunTimer;
 
     #region OnEnable/OnDisable
 
@@ -39,6 +40,13 @@ public class HitPause : MonoBehaviour
 
     private void PauseMethod()
     {
+        if (Time.timeScale == 0)
+        {
+            stunTimer += hitPauseTime;
+            return;
+        }
+        else stunTimer = hitPauseTime;
+
         Freeze(hitPauseTime);
     }
 
@@ -55,12 +63,18 @@ public class HitPause : MonoBehaviour
 
     private IEnumerator DoFreeze(float duration)
     {
-        float originalTimeScale = Time.timeScale;
         Time.timeScale = 0f;
 
-        yield return new WaitForSecondsRealtime(duration);
+        while (stunTimer > 0)
+        {
+            stunTimer -= Time.fixedUnscaledDeltaTime;
+            yield return null;
+        }
 
         Time.timeScale = 1;
+        stunTimer = 0;
+
+        yield break;
     }
 
     #endregion
