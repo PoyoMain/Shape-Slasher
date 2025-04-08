@@ -47,21 +47,21 @@ public class HitPause : MonoBehaviour
         }
         else stunTimer = hitPauseTime;
 
-        Freeze(hitPauseTime);
+        Freeze();
     }
 
     #endregion
 
     #region Freezing
 
-    private void Freeze(float duration)
+    private void Freeze()
     {
         if (freezeCoroutine != null) StopCoroutine(freezeCoroutine);
 
-        freezeCoroutine = StartCoroutine(DoFreeze(duration));
+        freezeCoroutine = StartCoroutine(DoFreeze());
     }
 
-    private IEnumerator DoFreeze(float duration)
+    private IEnumerator DoFreeze()
     {
         Time.timeScale = 0f;
 
