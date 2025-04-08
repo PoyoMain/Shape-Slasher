@@ -155,6 +155,8 @@ public class Player : MonoBehaviour
             if (invincibilityTimer <= 0)
             {
                 hurtboxCollider.enabled = true;
+                damageFlash.SetAlphaToOne();
+                anim.SetBool("IsInvincible", false);
             }
         }
     }
@@ -225,6 +227,7 @@ public class Player : MonoBehaviour
             if (health > 0)
             {
                 invincibilityTimer = stats.InvincibleTime;
+                anim.SetBool("IsInvincible", true);
                 hurtboxCollider.enabled = false;
 
                 Vector2 directionToHitbox = (dmgComponent.KnockbackOrigin.position - transform.position).normalized;
@@ -511,7 +514,7 @@ public class Player : MonoBehaviour
         velocity += force;
         knockbackTimer = stats.KnockbackAppliedTime;
         
-    } 
+    }
 
 #pragma warning disable IDE0051
     private void HitboxKnockbackHorizontal(Vector2 hitColliderDirection)

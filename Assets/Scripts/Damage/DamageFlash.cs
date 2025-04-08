@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class DamageFlash : MonoBehaviour
 {
     [SerializeField] private Color flashColor = Color.white;
     [SerializeField] private float flashTime = 0.25f;
+
+    public float FlashTime => flashTime;
 
     private SpriteRenderer[] spriteRenderers;
     private Material[] materials;
@@ -64,6 +67,16 @@ public class DamageFlash : MonoBehaviour
         for (int i = 0; i < materials.Length; i++)
         {
             materials[i].SetFloat("_FlashAmount", amount);
+        }
+    }
+
+    public void SetAlphaToOne()
+    {
+        for (int i = 0; i < spriteRenderers.Length; i++)
+        {
+            Color tempColor = spriteRenderers[i].color;
+            tempColor.a = 1;
+            spriteRenderers[i].color = tempColor;
         }
     }
 }
