@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ public class MinimapHandler : MonoBehaviour
 
     [Header("Listen Events")]
     [SerializeField] private RoomListEventSO mapLayoutMadeSO;
+    [SerializeField] private VoidEventSO mapDespawnedSO;
     [SerializeField] private Vector2EventSO playerEnteredRoomSO;
     [SerializeField] private Vector2EventSO playerExitedRoomSO;
 
@@ -24,6 +26,7 @@ public class MinimapHandler : MonoBehaviour
     private void OnEnable()
     {
         mapLayoutMadeSO.OnEventRaised += GenerateMinimap;
+        mapDespawnedSO.OnEventRaised += DespawnMinimap;
         playerEnteredRoomSO.OnEventRaised += ActivateRoomIcon;
         playerExitedRoomSO.OnEventRaised += DeactivateRoomIcon;
     }
@@ -31,6 +34,7 @@ public class MinimapHandler : MonoBehaviour
     private void OnDisable()
     {
         mapLayoutMadeSO.OnEventRaised -= GenerateMinimap;
+        mapDespawnedSO.OnEventRaised -= DespawnMinimap;
         playerEnteredRoomSO.OnEventRaised -= ActivateRoomIcon;
         playerExitedRoomSO.OnEventRaised -= DeactivateRoomIcon;
     }
@@ -52,6 +56,17 @@ public class MinimapHandler : MonoBehaviour
         }
     }
 
+    private void DespawnMinimap()
+    {
+        foreach(Transform t in minimapParent)
+        {
+            Destroy(t.gameObject);
+        }
+
+        minimapIcons.Clear();
+    }
+
+
     private void ActivateRoomIcon(Vector2 numToCheck)
     {
         for(int i = 0; i < minimapIcons.Count; i++)
@@ -60,6 +75,7 @@ public class MinimapHandler : MonoBehaviour
         }
 
         MinimapIcon iconToActivate = minimapIcons.Find(x => x.RoomNum == numToCheck);
+        if (iconToActivate == null) return;
         iconToActivate.Activate();
 
         minimapParent.localPosition = -(numToCheck * iconToActivate.Size);

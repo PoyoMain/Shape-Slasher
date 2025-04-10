@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
+using UnityEditor;
 using UnityEngine;
 
 public class MapGenerator : MonoBehaviour
@@ -9,19 +11,24 @@ public class MapGenerator : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private int numberOfRooms;
     //[SerializeField] private int numberOfNeighborsAllowed;
-    //[SerializeField] private bool canReuseRooms;
+    [SerializeField] private bool canReuseRooms;
+    [SerializeField] private bool canHaveDuplicatesInARow;
     [SerializeField] private bool performOnStart;
 
     [Header("References")]
     [SerializeField] private RoomSO[] startRooms;
     [SerializeField] private RoomSO[] bossRooms;
+    [SerializeField] private RoomSO[] shopRooms;
     [SerializeField] private List<RoomSO> possibleRooms;
 
     [Header("Broadcast Events")]
     [SerializeField] private RoomListEventSO mapLayoutMadeSO;
     [SerializeField] private VoidEventSO mapGenerationFinishedSO;
+    [SerializeField] private VoidEventSO mapDespawedEventSO;
 
     private Room startRoom;
+    private Room bossRoom;
+    private Room shopRoom;
     private Room currentRoom;
 
     private Coroutine mapGenCoroutine;
@@ -49,7 +56,7 @@ public class MapGenerator : MonoBehaviour
     private IEnumerator MapCoroutine()
     {
         DespawnMap();
-        List<RoomSO> standardRooms = possibleRooms.Where(x => x.RoomType == RoomType.Standard).ToList();
+        List<RoomSO> roomsToPickFrom = possibleRooms.Where(x => (x.RoomType == RoomType.Standard || x.RoomType == RoomType.Challenge) && x.Prefabs.Length > 0).ToList();
 
         bool mapGenerated = false;
         while (!mapGenerated)
@@ -71,8 +78,13 @@ public class MapGenerator : MonoBehaviour
                 while (!compatibleRoomsFound)
                 {
                     // Look for a room that can be spawned in
-                    foreach (RoomSO stanRoom in standardRooms)
+                    foreach (RoomSO stanRoom in roomsToPickFrom)
                     {
+                        if (!canHaveDuplicatesInARow && currentRoom.Data == stanRoom)
+                        {
+                            continue;
+                        }
+
                         if (currentRoom.IsCompatibleWith(stanRoom, out Direction dir))
                         {
                             if (CheckIfRoomPlacingPositionIsEmpty(spawnedRooms, dir)/* && CheckIfPathsFromRoomAreEmpty(spawnedRooms, stanRoom, dir)*/)
@@ -127,8 +139,10 @@ public class MapGenerator : MonoBehaviour
                 {
                     if (!CloseUnusedDoors(spawnedRooms)) break;
                     if (!PlaceBossRoom(spawnedRooms)) break;
+                    if (!PlaceShopRoom(spawnedRooms)) break;
+                    if (!SpawnAllRooms(spawnedRooms)) break;
+                    print("Distance to Boss: " + FindDistanceFromRoom(startRoom, bossRoom, 0));
                     mapLayoutMadeSO.RaiseEvent(spawnedRooms);
-                    SpawnAllRooms(spawnedRooms);
                     mapGenerated = true;
                 }
 
@@ -168,20 +182,22 @@ public class MapGenerator : MonoBehaviour
         // Get rooms with only one neighbor, excluding the start room
         deadEndRooms = spawnedRooms.Where(room => room.Neighbors.Count == 1).ToList();
         if (deadEndRooms.Contains(startRoom)) deadEndRooms.Remove(startRoom);
-        deadEndRooms = deadEndRooms.OrderByDescending(room => FindDistanceBetweenTwoRooms(room, startRoom)).ToList();
+        deadEndRooms = deadEndRooms.OrderByDescending(room => FindDistanceFromRoom(startRoom, room, 0) + FindDistanceFromStartRoom(room)).ToList();
 
         // Find one of these rooms to replace with a boss room
         for (int i = 0; i < deadEndRooms.Count; i++)
         {
-            foreach (RoomSO bossRoom in bossRooms)
+            foreach (RoomSO bossRoomSO in bossRooms)
             {
                 // If the deadend room having a neighbor and the boss room having an unused door aren't the same sign, this isnt a fitting boss room
-                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.North) != null == bossRoom.HasAnUnusedDoorInThisDirection(Direction.North))) continue;
-                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.East) != null == bossRoom.HasAnUnusedDoorInThisDirection(Direction.East))) continue;
-                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.South) != null == bossRoom.HasAnUnusedDoorInThisDirection(Direction.South))) continue;
-                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.West) != null == bossRoom.HasAnUnusedDoorInThisDirection(Direction.West))) continue;
+                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.North) != null == bossRoomSO.HasAnUnusedDoorInThisDirection(Direction.North))) continue;
+                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.East) != null == bossRoomSO.HasAnUnusedDoorInThisDirection(Direction.East))) continue;
+                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.South) != null == bossRoomSO.HasAnUnusedDoorInThisDirection(Direction.South))) continue;
+                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.West) != null == bossRoomSO.HasAnUnusedDoorInThisDirection(Direction.West))) continue;
 
-                ReplaceRoom(deadEndRooms[i], new(bossRoom), spawnedRooms);
+                if (!deadEndRooms[i].CanBeReplacedWith(bossRoomSO)) continue;
+
+                bossRoom = ReplaceRoom(deadEndRooms[i], new(bossRoomSO), spawnedRooms);
                 return true;
             }
         }
@@ -189,15 +205,55 @@ public class MapGenerator : MonoBehaviour
         return false;
     }
 
-    private void SpawnAllRooms(List<Room> spawnedRooms)
+    private bool PlaceShopRoom(List<Room> spawnedRooms)
     {
+        List<Room> deadEndRooms = new();
+
+        // Get rooms with only one neighbor, excluding the start room
+        deadEndRooms = spawnedRooms.Where(room => room.Neighbors.Count == 1 && room.Data.RoomType != RoomType.Boss).ToList();
+        if (deadEndRooms.Contains(startRoom)) deadEndRooms.Remove(startRoom);
+        deadEndRooms = deadEndRooms.OrderByDescending(room => FindDistanceFromRoom(startRoom, room, 0) + FindDistanceFromStartRoom(room)).ToList();
+
+        // Find one of these rooms to replace with a boss room
+        for (int i = 0; i < deadEndRooms.Count; i++)
+        {
+            foreach (RoomSO shopRoomSO in shopRooms)
+            {
+                // If the deadend room having a neighbor and the boss room having an unused door aren't the same sign, this isnt a fitting boss room
+                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.North) != null == shopRoomSO.HasAnUnusedDoorInThisDirection(Direction.North))) continue;
+                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.East) != null == shopRoomSO.HasAnUnusedDoorInThisDirection(Direction.East))) continue;
+                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.South) != null == shopRoomSO.HasAnUnusedDoorInThisDirection(Direction.South))) continue;
+                if (!(deadEndRooms[i].GetAdjacentRoom(Direction.West) != null == shopRoomSO.HasAnUnusedDoorInThisDirection(Direction.West))) continue;
+
+                if (!deadEndRooms[i].CanBeReplacedWith(shopRoomSO)) continue;
+
+                shopRoom = ReplaceRoom(deadEndRooms[i], new(shopRoomSO), spawnedRooms);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool SpawnAllRooms(List<Room> spawnedRooms)
+    {
+        List<string> instantiatedRooms = new();
+
         for (int i = 0; i < spawnedRooms.Count; i++)
         {
             if (spawnedRooms[i].Data.Prefabs.Length <= 0) Debug.LogError(spawnedRooms[i].Data + " does not have any prefabs listed");
 
-            GameObject roomToSpawn = spawnedRooms[i].Data.Prefabs[UnityEngine.Random.Range(0, spawnedRooms[i].Data.Prefabs.Length)];
+            List<GameObject> prefabs = spawnedRooms[i].Data.Prefabs.ToList();
+            if (!canReuseRooms) prefabs.RemoveAll(x => instantiatedRooms.Contains(x.name));
+
+            if (prefabs.Count == 0) return false;
+
+            GameObject roomToSpawn = prefabs[UnityEngine.Random.Range(0, prefabs.Count)];
             Instantiate(roomToSpawn, spawnedRooms[i].RoomNumber * spawnedRooms[i].Data.GetRoomBounds(roomToSpawn), Quaternion.identity, transform);
+            instantiatedRooms.Add(roomToSpawn.name);
         }
+
+        return true;
     }
 
     #endregion
@@ -211,24 +267,26 @@ public class MapGenerator : MonoBehaviour
         {
             Destroy(t.gameObject);
         }
+
+        mapDespawedEventSO.RaiseEvent();
     }
 
-    private void ReplaceRoom(Room ogRoom, Room newRoom, List<Room> spawnedRooms)
+    private Room ReplaceRoom(Room ogRoom, Room newRoom, List<Room> spawnedRooms)
     {
-        Room replacedmentRoom = newRoom;
-        replacedmentRoom.AssignPosition(ogRoom.RoomNumber);
+        Room replacementRoom = newRoom;
+        replacementRoom.AssignPosition(ogRoom.RoomNumber);
         foreach (Room neighbor in ogRoom.Neighbors)
         {
-            Direction dir = replacedmentRoom.DirectionToUnlinkedRoom(neighbor);
-            replacedmentRoom.SetAdjacentRoom(neighbor, dir);
-            neighbor.SetAdjacentRoom(replacedmentRoom, dir, true);
+            Direction dir = replacementRoom.DirectionToUnlinkedRoom(neighbor);
+            replacementRoom.SetAdjacentRoom(neighbor, dir);
+            neighbor.SetAdjacentRoom(replacementRoom, dir, true);
         }
 
         spawnedRooms.Remove(ogRoom);
-        spawnedRooms.Add(replacedmentRoom);
+        spawnedRooms.Add(replacementRoom);
         //Destroy(ogRoom.gameObject);
 
-        return;
+        return replacementRoom;
     }
 
     private Room FindReplacementRoom(Room currentRoom)
@@ -240,6 +298,8 @@ public class MapGenerator : MonoBehaviour
             if (!(currentRoom.GetAdjacentRoom(Direction.East) != null == r.HasAnUnusedDoorInThisDirection(Direction.East))) continue;
             if (!(currentRoom.GetAdjacentRoom(Direction.South) != null == r.HasAnUnusedDoorInThisDirection(Direction.South))) continue;
             if (!(currentRoom.GetAdjacentRoom(Direction.West) != null == r.HasAnUnusedDoorInThisDirection(Direction.West))) continue;
+
+            if (!currentRoom.CanBeReplacedWith(r)) continue;
 
             return new(r);
         }
@@ -293,10 +353,26 @@ public class MapGenerator : MonoBehaviour
             _ => throw new System.NotImplementedException(),
         };
 
-    private float FindDistanceBetweenTwoRooms(Room room1, Room room2)
+    private float FindDistanceFromStartRoom(Room room)
     {
-        return Mathf.Sqrt(Mathf.Pow(room2.RoomNumber.x - room1.RoomNumber.x, 2) + Mathf.Pow(room2.RoomNumber.y - room1.RoomNumber.y, 2));
-        //return Vector2Int.Distance(room1.RoomNumber, room2.RoomNumber);
+        return Mathf.Sqrt(Mathf.Pow(startRoom.RoomNumber.x - room.RoomNumber.x, 2) + Mathf.Pow(startRoom.RoomNumber.y - room.RoomNumber.y, 2));
+    }
+
+    private int FindDistanceFromRoom(Room root, Room target, int level, Room prevRoom = null) 
+    {
+        if (root == null) return -1;
+        if (root == target) return level;
+
+        List<Room> neighborsToCheck = root.Neighbors;
+        if (prevRoom != null) neighborsToCheck.Remove(prevRoom);
+
+        for (int i = 0; i < neighborsToCheck.Count; i++)
+        {
+            int result = FindDistanceFromRoom(neighborsToCheck[i], target, level + 1, root);
+            if (result != -1) return result;
+        }
+
+        return -1;
     }
 
     #endregion

@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Animator), typeof(DamageFlash))]
-[RequireComponent(typeof(CinemachineImpulseSource))]
+[RequireComponent(typeof(CinemachineImpulseSource), typeof(EnemyDeathEvent))]
 public class Golem : MonoBehaviour
 {
     [Header("Health")]
@@ -21,7 +22,9 @@ public class Golem : MonoBehaviour
     [Header("Attacking")]
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] private float attackDistance;
+    [SerializeField] private float playerFrontDistance;
     [SerializeField] private float playerBehindDistance;
+    [SerializeField] private float attackMoveSpeed;
     [SerializeField] private float attackCooldownTime;
 
     [Header("Defending")]
@@ -39,6 +42,11 @@ public class Golem : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private SFXPlayer damageSFXPlayer;
 
+    [Header("Currency")]
+    [SerializeField] private Rigidbody2D currencyPrefab;
+    [SerializeField] private int currencyDroppedOnDeath;
+    [SerializeField] private float currencyShootForce;
+
     [Header("Broadcast Events")]
     [SerializeField] private VoidEventSO enemyDeathEventSO;
 
@@ -55,6 +63,7 @@ public class Golem : MonoBehaviour
     private Animator anim;
     private DamageFlash damageFlash;
     private CinemachineImpulseSource damageImpulseSource;
+    private EnemyDeathEvent deathEvent;
 
     private void Awake()
     {
@@ -62,6 +71,7 @@ public class Golem : MonoBehaviour
         TryGetComponent(out anim);
         TryGetComponent(out damageFlash);
         TryGetComponent(out damageImpulseSource);
+        TryGetComponent(out deathEvent);
 
         ChangeState(State.Patroling);
     }
@@ -127,13 +137,13 @@ public class Golem : MonoBehaviour
             return;
         }
         if (CheckForTurn()) return;
-        Move();
+        Move(patrolSpeed);
     }
 
-    private void Move()
+    private void Move(float speed)
     {
         Vector2 velocity = rigid.velocity;
-        velocity.x = Mathf.MoveTowards(velocity.x, MoveDirection * patrolSpeed, 150 * Time.fixedDeltaTime);
+        velocity.x = Mathf.MoveTowards(velocity.x, MoveDirection * speed, 150 * Time.fixedDeltaTime);
         rigid.velocity = velocity;
         anim.SetBool("Moving", true);
     }
@@ -162,11 +172,13 @@ public class Golem : MonoBehaviour
         }
         if (!CheckForPlayer()) return;
 
-        ExecuteAttack();
+        if (IsPlayerInAttackDistance()) ExecuteAttack();
+        else Move(attackMoveSpeed);
     }
 
     private void ExecuteAttack()
     {
+        StopMoving();
         anim.SetTrigger("Attack");
         attackCooldownTimer = attackCooldownTime;
     }
@@ -192,7 +204,7 @@ public class Golem : MonoBehaviour
 
     private bool CheckForPlayer()
     {
-        bool playerHit = Physics2D.CapsuleCast(bodyCollider.bounds.center, bodyCollider.size, bodyCollider.direction, 0, MoveDirection * Vector2.right, attackDistance, playerLayer);
+        bool playerHit = Physics2D.CapsuleCast(bodyCollider.bounds.center, bodyCollider.size, bodyCollider.direction, 0, MoveDirection * Vector2.right, playerFrontDistance, playerLayer);
         bool playerHitBehind = Physics2D.CapsuleCast(bodyCollider.bounds.center, bodyCollider.size, bodyCollider.direction, 0, -MoveDirection * Vector2.right, playerBehindDistance, playerLayer);
 
         if (playerHit && state != State.Attacking) ChangeState(State.Attacking);
@@ -200,6 +212,11 @@ public class Golem : MonoBehaviour
         else if (!playerHit && state != State.Patroling) ChangeState(State.Patroling); 
 
         return playerHit;
+    }
+
+    private bool IsPlayerInAttackDistance()
+    {
+        return Physics2D.CapsuleCast(bodyCollider.bounds.center, bodyCollider.size, bodyCollider.direction, 0, MoveDirection * Vector2.right, attackDistance, playerLayer);
     }
 
     private void CheckIfPlayerBehind()
@@ -242,7 +259,7 @@ public class Golem : MonoBehaviour
             TakeDamage(damageComponent.Damage);
 
             Vector2 forceDirection;
-            if (collision.transform.position.x > transform.position.x) forceDirection = Vector2.left;
+            if (collision.transform.root.position.x > transform.position.x) forceDirection = Vector2.left;
             else forceDirection = Vector2.right;
             Vector2 force = new((forceDirection * damageComponent.Knockback).x, rigid.velocity.y);
             Knockback(force);
@@ -283,15 +300,36 @@ public class Golem : MonoBehaviour
         timesAttacked++;
 
         damageFlash.CallDamageFlash();
-        damageSFXPlayer.Play();
         damageImpulseSource.GenerateImpulse();
 
         if (health <= 0)
         {
             enemyDeathEventSO.RaiseEvent();
-            Destroy(gameObject);
+            deathEvent.OnDeath?.Invoke();
+            damageSFXPlayer.PlayClipAtPoint();
+            Die();
         }
-        else invincibleTimer = invincibilityTime;
+        else
+        {
+            damageSFXPlayer.Play();
+            invincibleTimer = invincibilityTime;
+        }
+    }
+
+    private const float CURRENCYSHOOT_HORIZONTALDIRECTION_MIN = -0.5f;
+    private const float CURRENCYSHOOT_HORIZONTALDIRECTION_MAX = 0.5f;
+
+    private void Die()
+    {
+        for (int i = 0; i < currencyDroppedOnDeath; i++)
+        {
+            Vector2 currencyShootDirection = new Vector2(Random.Range(CURRENCYSHOOT_HORIZONTALDIRECTION_MIN, CURRENCYSHOOT_HORIZONTALDIRECTION_MAX), 1).normalized;
+
+            Rigidbody2D currency = Instantiate(currencyPrefab, transform.position, Quaternion.identity);
+            currency.AddForce(currencyShootDirection * currencyShootForce);
+        }
+
+        Destroy(gameObject);
     }
 
     #endregion
@@ -323,6 +361,7 @@ public class Golem : MonoBehaviour
     #region Defending
 
     private float defendTimer;
+
     private bool Defending => defendTimer > 0;
 
     private void DefendState()

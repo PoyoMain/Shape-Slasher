@@ -40,6 +40,7 @@ public class GolemBoss : MonoBehaviour
     [SerializeField] private SFXPlayer jumpSFXPlayer;
     [SerializeField] private SFXPlayer fallSFXPlayer;
     [SerializeField] private SFXPlayer slamSFXPlayer;
+    [SerializeField] private SFXPlayer damageSFXPlayer;
 
     [Header("Broadcast Events")]
     [SerializeField] private VoidEventSO bossDefeatedEventSO;
@@ -112,13 +113,11 @@ public class GolemBoss : MonoBehaviour
                 break;
             case State.Waiting:
                 waitTimer = waitTime;
-                if (GetPlayerPosition(out Vector2 playerPos))
-                {
-                    FacePlayer(playerPos);
-                }
+                TurnToPlayerIfPossible();
                 break;
             case State.JumpingToPlayer:
                 {
+                    TurnToPlayerIfPossible();
                     interpolationValue = 0;
                     jumpStartPosition = transform.position;
                     timesJumpedInARow++;
@@ -140,6 +139,7 @@ public class GolemBoss : MonoBehaviour
 
             case State.Punch:
                 timesPunchedInARow++;
+                TurnToPlayerIfPossible();
                 anim.SetTrigger("Punch");
                 break;
         }
@@ -340,6 +340,15 @@ public class GolemBoss : MonoBehaviour
     }
 
     private bool FacingRight => transform.localEulerAngles.y == ROTATION_FACINGRIGHT;
+
+    private void TurnToPlayerIfPossible()
+    {
+        if (GetPlayerPosition(out Vector2 playerPos))
+        {
+            FacePlayer(playerPos);
+        }
+    }
+
     private void FacePlayer(Vector2 playerPos)
     {
         Vector3 euler = transform.localEulerAngles;
@@ -367,9 +376,14 @@ public class GolemBoss : MonoBehaviour
         if (health <= 0)
         {
             Destroy(gameObject);
+            damageSFXPlayer.PlayClipAtPoint();
             bossDefeatedEventSO.RaiseEvent();
         }
-        else invincibleTimer = invincibilityTime;
+        else
+        {
+            damageSFXPlayer.Play();
+            invincibleTimer = invincibilityTime;
+        }
     }
 
     #endregion

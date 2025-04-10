@@ -27,8 +27,10 @@ public class Player : MonoBehaviour
 
     [Header("Broadcast Events")]
     [SerializeField] private VoidEventSO playerDamagedEventSO;
+    [SerializeField] private VoidEventSO playerHealedEventSO;
     [SerializeField] private VoidEventSO playerDeathEventSO;
     [SerializeField] private IntEventSO playerHealthLossEventSO;
+    [SerializeField] private IntEventSO playerHealthGainedEventSO;
     [SerializeField] private IntEventSO playerHealthUpdatedEventSO;
 
     // Properties
@@ -49,6 +51,8 @@ public class Player : MonoBehaviour
     private bool jumpDown;
     private bool jumpHeld;
     private bool attackDown;
+    private bool dashDown;
+    private bool interactDown;
     private bool cachedQueryStartInColliders;
     private float time;
     private Rigidbody2D rb;
@@ -84,12 +88,26 @@ public class Player : MonoBehaviour
         {
             attackDown = Controls.Attack.WasPressedThisFrame();
         }
+        
+        if (!dashDown && hasDashAbility)
+        {
+            dashDown = Controls.Dash.WasPressedThisFrame();
+        }
+
+        if (!interactDown)
+        {
+            interactDown = Controls.Interact.WasPressedThisFrame();
+        }
 
         if (stats.SnapInput)
         {
             moveInput.x = Mathf.Abs(moveInput.x) < stats.HorizontalDeadZoneThreshold ? 0 : Mathf.Sign(moveInput.x);
             moveInput.y = Mathf.Abs(moveInput.y) < stats.VerticalDeadZoneThreshold ? 0 : Mathf.Sign(moveInput.y);
         }
+
+        if (moveInput.y < 0) anim.SetInteger("VerticalInput", -1);
+        else if (moveInput.y > 0) anim.SetInteger("VerticalInput", 1);
+        else anim.SetInteger("VerticalInput", 0);
 
         if (jumpDown)
         {
@@ -110,6 +128,8 @@ public class Player : MonoBehaviour
         HandleInvincibility();
         CheckCollisions();
 
+        HandleInteract();
+        HandleDash();
         HandleAttack();
 
         HandleJump();
@@ -135,6 +155,8 @@ public class Player : MonoBehaviour
             if (invincibilityTimer <= 0)
             {
                 hurtboxCollider.enabled = true;
+                damageFlash.SetAlphaToOne();
+                anim.SetBool("IsInvincible", false);
             }
         }
     }
@@ -171,6 +193,7 @@ public class Player : MonoBehaviour
             coyoteUsable = true;
             bufferedJumpUsable = true;
             endedJumpEarly = false;
+            hasDashInAir = true;
             if (colliderToTurnOnOnceGrounded != null)
             {
                 Physics2D.IgnoreCollision(bodyCollider, colliderToTurnOnOnceGrounded, false);
@@ -204,9 +227,11 @@ public class Player : MonoBehaviour
             if (health > 0)
             {
                 invincibilityTimer = stats.InvincibleTime;
+                anim.SetBool("IsInvincible", true);
                 hurtboxCollider.enabled = false;
 
-                Vector2 directionToHitbox = (collider.transform.position - transform.position).normalized;
+                Vector2 directionToHitbox = (dmgComponent.KnockbackOrigin.position - transform.position).normalized;
+                directionToHitbox.y = Mathf.Max(0, directionToHitbox.y);
                 Vector2 force = -directionToHitbox * dmgComponent.Knockback;
                 Knockback(force);
 
@@ -216,6 +241,106 @@ public class Player : MonoBehaviour
         {
             if (velocity.y > 0) Knockback(Vector2.up * upForceApplier.ForceStrength);
         }
+        else if (collider.TryGetComponent(out Pickup pickup))
+        {
+            switch (pickup.Type)
+            {
+                case Pickup.PickupType.Health:
+                    if (health < stats.MaxHealth)
+                    {
+                        Heal(1);
+                        Destroy(pickup.gameObject);
+                    }
+                    break;
+                case Pickup.PickupType.Currency:
+                    if (currency < 999)
+                    {
+                        GainedCurrency(1);
+                        Destroy(pickup.gameObject);
+                    }
+                    break;
+            }
+
+            
+        }
+    }
+
+    #endregion
+
+    #region Interact
+
+    private void HandleInteract()
+    {
+        if (!interactDown) return;
+
+        if (!grounded && !IsDashing && !IsAttacking && !IsInKnockback) return;
+
+        ExecuteInteract();
+        interactDown = false;
+    }
+
+    private void ExecuteInteract()
+    {
+        RaycastHit2D interactHit = Physics2D.BoxCast(bodyCollider.bounds.center, bodyCollider.size, 0, Vector2.down, 0, stats.InteractLayer);
+
+        if (interactHit && interactHit.collider.TryGetComponent(out BuyableItem buyable))
+        {
+            if (currency < buyable.Cost) return;
+            
+            SpentCurrency(buyable.Cost);
+            buyable.Buy();
+
+            switch (buyable.Type)
+            {
+                case BuyableItem.Buyable.Dash:
+                    hasDashAbility = true;
+                    break;
+                case BuyableItem.Buyable.AttackUp:
+                    IncreaseAttack(1.5f);
+                    break;
+                case BuyableItem.Buyable.FullRecovery:
+                    Heal(stats.MaxHealth);
+                    break;
+            }
+        }
+    }
+
+    #endregion
+
+    #region Dash
+
+    private float dashTimer;
+    private readonly float dashDecelerationPercentage = 0.2f;
+    private bool hasDashAbility;
+    private bool hasDashInAir;
+    private bool IsDashing => dashTimer > 0;
+
+    private void HandleDash()
+    {
+        if (IsDashing)
+        {
+            dashTimer -= Time.fixedDeltaTime;
+            
+            if (dashTimer <= stats.DashTime * dashDecelerationPercentage) velocity.x = Mathf.MoveTowards(velocity.x, 0, stats.GroundDeceleration * Time.fixedDeltaTime);
+
+            if (dashTimer <= 0) anim.SetBool("IsDashing", false);
+        }
+
+        if (!dashDown) return;
+
+        if (!grounded && !hasDashInAir) return;
+
+        if (dashDown && !IsDashing) ExecuteDash();
+
+        dashDown = false;
+    }
+
+    private void ExecuteDash()
+    {
+        velocity = new(stats.DashPower * NumericalFacingDirection, 0);
+        dashTimer = stats.DashTime;
+        anim.SetBool("IsDashing", true);
+        if (!grounded) hasDashInAir = false;
     }
 
     #endregion
@@ -239,6 +364,16 @@ public class Player : MonoBehaviour
     {
         anim.SetTrigger("Attack");
         attackTimer = stats.TimeBetweenAttacks;
+    }
+
+    private void IncreaseAttack(float multiplier)
+    {
+        DamageComponent[] damageComponents = GetComponentsInChildren<DamageComponent>(includeInactive: true);
+
+        for (int i = 0; i < damageComponents.Length; i++)
+        {
+            damageComponents[i].IncreaseDamageByMultiplier(multiplier);
+        }
     }
 
     #endregion
@@ -270,7 +405,7 @@ public class Player : MonoBehaviour
 
         if (CrouchDown && CheckCrouch()) return;
 
-        if (IsInKnockback) return;
+        if (IsInKnockback || IsDashing) return;
 
         if (grounded || CanUseCoyote) ExecuteJump();
 
@@ -322,9 +457,11 @@ public class Player : MonoBehaviour
 
     #region Horizontal
 
+    private int NumericalFacingDirection => transform.localEulerAngles.y == ROTATION_FACING_RIGHT ? 1 : -1;
+
     private void HandleDirection()
     {
-        if (IsInKnockback) return;
+        if (IsInKnockback || IsDashing) return;
 
         if (moveInput.x == 0)
         {
@@ -377,13 +514,24 @@ public class Player : MonoBehaviour
         velocity += force;
         knockbackTimer = stats.KnockbackAppliedTime;
         
-    } 
+    }
 
 #pragma warning disable IDE0051
-    private void HitboxKnockback(Vector2 hitColliderDirection)
+    private void HitboxKnockbackHorizontal(Vector2 hitColliderDirection)
     {        
         velocity = new ((hitColliderDirection * stats.SurfaceKnockback).x, velocity.y);
         knockbackTimer = stats.KnockbackAppliedTime;
+    }
+    private void HitboxKnockbackVertical(Vector2 hitColliderDirection)
+    {
+        velocity = new(velocity.x, (hitColliderDirection * stats.SurfaceKnockback).y);
+        //knockbackTimer = stats.KnockbackAppliedTime;
+    }
+
+    private void BounceKnockback(Vector2 hitColliderDirection)
+    {
+        StopVerticalMovement();
+        velocity = new(velocity.x, (hitColliderDirection * stats.BounceKnockback).y);
     }
 #pragma warning restore IDE0051
 
@@ -392,12 +540,19 @@ public class Player : MonoBehaviour
         velocity.y = force.y;
     }
 
+    private void StopVerticalMovement()
+    {
+        rb.velocity = new(rb.velocity.x, 0);
+    }
+
     #endregion
 
     #region Gravity
 
     private void HandleGravity()
     {
+        if (IsDashing) return;
+
         if (grounded && velocity.y <= 0f)
         {
             velocity.y = stats.GroundingForce;
@@ -428,7 +583,7 @@ public class Player : MonoBehaviour
     {
         Vector2 lookPos = camFocusTransform.localPosition;
 
-        if (moveInput.x == 0 && moveInput.y != 0)
+        if (moveInput.x == 0 && moveInput.y != 0 && grounded)
         {
             lookTimer -= Time.fixedDeltaTime;
 
@@ -462,6 +617,15 @@ public class Player : MonoBehaviour
 
     #region Health & Damage
 
+    private void Heal(int healAmount)
+    {
+        playerHealthGainedEventSO.RaiseEvent(healAmount);
+        playerHealedEventSO.RaiseEvent();
+
+        health += healAmount;
+        playerHealthUpdatedEventSO.RaiseEvent(health);
+    }
+
     public void Damage(int dmgAmount)
     {
         playerHealthLossEventSO.RaiseEvent(dmgAmount);
@@ -475,14 +639,31 @@ public class Player : MonoBehaviour
 
         if (health <= 0)
         {
-            deathSFXPlayer.Play();
+            deathSFXPlayer.PlayClipAtPoint();
             playerDeathEventSO.RaiseEvent();
+            Time.timeScale = 1;
             Destroy(gameObject);
         }
         else
         {
             damageSFXPlayer.Play();
         }
+    }
+
+    #endregion
+
+    #region Currency
+
+    private int currency;
+
+    private void GainedCurrency(int amount)
+    {
+        currency += amount;
+    }
+
+    private void SpentCurrency(int amount)
+    {
+        currency -= amount;
     }
 
     #endregion
@@ -498,6 +679,7 @@ public struct Stats
     public LayerMask BounceLayer;
     public LayerMask OneWayPlatformLayer;
     public LayerMask SolidSurfaceLayer;
+    public LayerMask InteractLayer;
 
     [Header("Input")]
     public bool SnapInput;
@@ -527,8 +709,15 @@ public struct Stats
 
     [Header("Attacking")]
     public float TimeBetweenAttacks;
+
+    [Header("Knockback")]
     public float SurfaceKnockback;
+    public float BounceKnockback;
     public float KnockbackAppliedTime;
+
+    [Header("Dash")]
+    public float DashPower;
+    public float DashTime;
 
     [Header("Looking")]
     public float LookDistance;

@@ -9,19 +9,29 @@ public class HitPause : MonoBehaviour
 
     [Header("Listen Events")]
     [SerializeField] private VoidEventSO hitPauseEventSO;
+    [SerializeField] private VoidEventSO playerDeathEventSO;
 
     private Coroutine freezeCoroutine;
+    private float stunTimer;
 
     #region OnEnable/OnDisable
 
     private void OnEnable()
     {
         hitPauseEventSO.OnEventRaised += PauseMethod;
+        playerDeathEventSO.OnEventRaised += PlayerDeathEventSO_OnEventRaised;
+    }
+
+    private void PlayerDeathEventSO_OnEventRaised()
+    {
+        if (freezeCoroutine != null) StopCoroutine(freezeCoroutine);
+        StopAllCoroutines();
     }
 
     private void OnDisable()
     {
         hitPauseEventSO.OnEventRaised -= PauseMethod;
+        playerDeathEventSO.OnEventRaised -= PlayerDeathEventSO_OnEventRaised;
     }
 
     #endregion
@@ -30,28 +40,41 @@ public class HitPause : MonoBehaviour
 
     private void PauseMethod()
     {
-        Freeze(hitPauseTime);
+        if (Time.timeScale == 0)
+        {
+            stunTimer += hitPauseTime;
+            return;
+        }
+        else stunTimer = hitPauseTime;
+
+        Freeze();
     }
 
     #endregion
 
     #region Freezing
 
-    private void Freeze(float duration)
+    private void Freeze()
     {
         if (freezeCoroutine != null) StopCoroutine(freezeCoroutine);
 
-        freezeCoroutine = StartCoroutine(DoFreeze(duration));
+        freezeCoroutine = StartCoroutine(DoFreeze());
     }
 
-    private IEnumerator DoFreeze(float duration)
+    private IEnumerator DoFreeze()
     {
-        float originalTimeScale = Time.timeScale;
         Time.timeScale = 0f;
 
-        yield return new WaitForSecondsRealtime(duration);
+        while (stunTimer > 0)
+        {
+            stunTimer -= Time.fixedUnscaledDeltaTime;
+            yield return null;
+        }
 
-        Time.timeScale = originalTimeScale;
+        Time.timeScale = 1;
+        stunTimer = 0;
+
+        yield break;
     }
 
     #endregion
