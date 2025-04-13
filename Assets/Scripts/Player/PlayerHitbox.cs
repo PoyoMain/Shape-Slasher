@@ -15,9 +15,6 @@ public class PlayerHitbox : MonoBehaviour
     private bool OnSurfaceCooldown => surfaceHitTimer > 0;
     private float surfaceHitTimer;
 
-    private bool OnTriggerCooldown => triggerHitTimer > 0;
-    private float triggerHitTimer;
-
 
     private void LateUpdate()
     {
@@ -26,6 +23,7 @@ public class PlayerHitbox : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.gameObject.GetComponent<CutableProp>()) return;
         if (OnSurfaceCooldown) return;
 
         if (axis == Axis.Horizontal)
@@ -42,6 +40,8 @@ public class PlayerHitbox : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collision.GetComponent<CutableProp>()) return;
+
         if (axis == Axis.Horizontal)
         {
             if (transform.eulerAngles.y == ROTATION_FACINGLEFT) SendMessageUpwards("HitboxKnockbackHorizontal", Vector2.right);
