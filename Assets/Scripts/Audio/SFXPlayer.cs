@@ -22,6 +22,11 @@ public class SFXPlayer : MonoBehaviour
 
         AudioClip clipToPlay = clips[Random.Range(0, clips.Length)];
 
+        if (audioSource == null)
+        {
+            if (!TryGetComponent(out audioSource)) return;
+        }
+
         if (clipToPlay != null) audioSource.PlayOneShot(clipToPlay);
     }
 
