@@ -32,6 +32,7 @@ public class Player : MonoBehaviour
     [SerializeField] private IntEventSO playerHealthLossEventSO;
     [SerializeField] private IntEventSO playerHealthGainedEventSO;
     [SerializeField] private IntEventSO playerHealthUpdatedEventSO;
+    [SerializeField] private IntEventSO playerCurrencyUpdateEventSO;
 
     // Properties
     private PlayerControls.GameplayControlsActions Controls => inputReader.Controls;
@@ -661,11 +662,13 @@ public class Player : MonoBehaviour
     private void GainedCurrency(int amount)
     {
         currency += amount;
+        playerCurrencyUpdateEventSO.RaiseEvent(currency);
     }
 
     private void SpentCurrency(int amount)
     {
         currency -= amount;
+        playerCurrencyUpdateEventSO.RaiseEvent(currency);
     }
 
     #endregion
