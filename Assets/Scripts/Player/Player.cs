@@ -134,8 +134,8 @@ public class Player : MonoBehaviour
 
         HandleJump();
         HandleDirection();
-        HandleKnockback();
         HandleGravity();
+        HandleKnockback();
 
         HandleLooking();
 
@@ -239,7 +239,7 @@ public class Player : MonoBehaviour
         }
         else if (collider.TryGetComponent(out UpwardForceApplier upForceApplier))
         {
-            if (velocity.y > 0) Knockback(Vector2.up * upForceApplier.ForceStrength);
+            if (velocity.y > 0) KnockbackOnlyVertical(Vector2.up * upForceApplier.ForceStrength);
         }
         else if (collider.TryGetComponent(out Pickup pickup))
         {
@@ -434,7 +434,7 @@ public class Player : MonoBehaviour
         if (jumpTimer > 0)
         {
             jumpTimer -= Time.fixedDeltaTime;
-            velocity.y = Mathf.MoveTowards(velocity.y, stats.JumpPower, stats.JumpAcceleration * Time.fixedDeltaTime);
+            if (velocity.y < stats.JumpPower) velocity.y = Mathf.MoveTowards(velocity.y, stats.JumpPower, stats.JumpAcceleration * Time.fixedDeltaTime);
         }
         
     }
@@ -537,12 +537,12 @@ public class Player : MonoBehaviour
 
     private void KnockbackOnlyVertical(Vector2 force)
     {
-        velocity.y = force.y;
+        velocity = new(velocity.x, force.y);
     }
 
     private void StopVerticalMovement()
     {
-        rb.velocity = new(rb.velocity.x, 0);
+        velocity = Vector2.zero;
     }
 
     #endregion
