@@ -583,7 +583,7 @@ public class Player : MonoBehaviour
     {
         Vector2 lookPos = camFocusTransform.localPosition;
 
-        if (moveInput.x == 0 && moveInput.y != 0 && grounded)
+        if (moveInput.x == 0 && moveInput.y != 0 && grounded && !IsAttacking && !IsDashing && !IsInKnockback)
         {
             lookTimer -= Time.fixedDeltaTime;
 
@@ -601,6 +601,8 @@ public class Player : MonoBehaviour
         }
         else
         {
+            if (lookTimer != stats.TimeToLook) lookTimer = stats.TimeToLook;
+
             if (lookPos.y != 0)
             {
                 lookPos.y = 0;
