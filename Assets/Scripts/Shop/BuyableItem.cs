@@ -8,6 +8,7 @@ public class BuyableItem : MonoBehaviour
     [Header("Stats")]
     [SerializeField] private int cost;
     [SerializeField] private Buyable type;
+    [SerializeField] private bool onlyBuyOnce;
 
     [Header("Components")]
     [SerializeField] private GameObject itemDescriptionBox;
@@ -24,7 +25,7 @@ public class BuyableItem : MonoBehaviour
 
     public void Buy()
     {
-        print("Bought");
+        if (onlyBuyOnce) Destroy(gameObject);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
