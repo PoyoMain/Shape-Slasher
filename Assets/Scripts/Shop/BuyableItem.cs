@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+[RequireComponent(typeof(Animator))]
 public class BuyableItem : MonoBehaviour
 {
     [Header("Stats")]
@@ -16,6 +17,13 @@ public class BuyableItem : MonoBehaviour
 
     public int Cost => cost;
     public Buyable Type => type;
+
+    private Animator anim;
+
+    private void Awake()
+    {
+        TryGetComponent(out anim);
+    }
 
     private void OnEnable()
     {
@@ -32,7 +40,7 @@ public class BuyableItem : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            itemDescriptionBox.SetActive(true);
+            anim.SetBool("Toggled", true);
         }
     }
 
@@ -40,7 +48,7 @@ public class BuyableItem : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            itemDescriptionBox.SetActive(false);
+            anim.SetBool("Toggled", false);
         }
     }
 

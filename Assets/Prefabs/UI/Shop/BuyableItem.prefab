@@ -511,7 +511,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5311683233286296167}
   m_Father: {fileID: 1160580527761602552}
@@ -758,6 +758,7 @@ GameObject:
   - component: {fileID: 8271792650701537890}
   - component: {fileID: 3318504837379755480}
   - component: {fileID: 128982807137401242}
+  - component: {fileID: 6945087399798242829}
   m_Layer: 18
   m_Name: BuyableItem
   m_TagString: Untagged
@@ -796,6 +797,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cost: 10
   type: 0
+  onlyBuyOnce: 0
   itemDescriptionBox: {fileID: 6249414258579262541}
   priceText: {fileID: 4086966085893727542}
 --- !u!61 &3318504837379755480
@@ -870,3 +872,24 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!95 &6945087399798242829
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8766333139864863262}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 06b86803dcac1f04291adb90f44fb2af, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
