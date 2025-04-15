@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerHitbox : MonoBehaviour
@@ -15,6 +13,12 @@ public class PlayerHitbox : MonoBehaviour
     private bool OnSurfaceCooldown => surfaceHitTimer > 0;
     private float surfaceHitTimer;
 
+    private Player player;
+
+    private void Awake()
+    {
+        player = GetComponentInParent<Player>();
+    }
 
     private void LateUpdate()
     {
@@ -28,8 +32,8 @@ public class PlayerHitbox : MonoBehaviour
 
         if (axis == Axis.Horizontal)
         {
-            if (transform.eulerAngles.y == ROTATION_FACINGLEFT) SendMessageUpwards("HitboxKnockbackHorizontal", Vector2.right);
-            else if (transform.eulerAngles.y == ROTATION_FACINGRIGHT) SendMessageUpwards("HitboxKnockbackHorizontal", Vector2.left);
+            if (transform.eulerAngles.y == ROTATION_FACINGLEFT) player.HitboxKnockbackHorizontal(Vector2.right);
+            else if (transform.eulerAngles.y == ROTATION_FACINGRIGHT) player.HitboxKnockbackHorizontal(Vector2.left);
         }
 
         if (collision.contacts.Length > 0) Instantiate(hitEffect, collision.contacts[^1].point, Random.rotation);
@@ -44,10 +48,13 @@ public class PlayerHitbox : MonoBehaviour
 
         if (axis == Axis.Horizontal)
         {
-            if (transform.eulerAngles.y == ROTATION_FACINGLEFT) SendMessageUpwards("HitboxKnockbackHorizontal", Vector2.right);
-            else if (transform.eulerAngles.y == ROTATION_FACINGRIGHT) SendMessageUpwards("HitboxKnockbackHorizontal", Vector2.left);
+            if (transform.eulerAngles.y == ROTATION_FACINGLEFT) player.HitboxKnockbackHorizontal(Vector2.right);
+            else if (transform.eulerAngles.y == ROTATION_FACINGRIGHT) player.HitboxKnockbackHorizontal(Vector2.left);
         }
-        else if (axis == Axis.Down) SendMessageUpwards("BounceKnockback", Vector2.up);
+        else if (axis == Axis.Down) player.BounceKnockback(Vector2.up);
+
+        int energy = collision.GetComponentInParent<IHasEnergy>().EnergyAmountOnHit;
+        player.GainedEnergy(energy);
     }
 
     private enum Axis { Horizontal, Up, Down }
