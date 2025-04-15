@@ -18,6 +18,7 @@ public class PlayerHitbox : MonoBehaviour
     private void Awake()
     {
         player = GetComponentInParent<Player>();
+        if (player == null) Debug.LogError("Player Hitbox script doesnt have an associated Player script in parent");
     }
 
     private void LateUpdate()

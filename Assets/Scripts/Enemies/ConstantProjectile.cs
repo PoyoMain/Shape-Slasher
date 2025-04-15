@@ -9,6 +9,10 @@ public class ConstantProjectile : MonoBehaviour
     [SerializeField] private Vector2 targetVelocity;
     [SerializeField] private float acceleration;
 
+    [Space(15)]
+    [SerializeField] private bool excludeXVelocity;
+    [SerializeField] private bool excludeYVelocity;
+
     private float disappearTimer;
     private Vector2 velocity;
 
@@ -23,12 +27,34 @@ public class ConstantProjectile : MonoBehaviour
 
     private void Update()
     {
-        if (velocity != targetVelocity)
+        if (!excludeXVelocity && !excludeYVelocity)
         {
-            velocity.x = Mathf.MoveTowards(velocity.x, targetVelocity.x, acceleration * Time.deltaTime);
-            velocity.y = Mathf.MoveTowards(velocity.y, targetVelocity.y, acceleration * Time.deltaTime);
-            rb.velocity = velocity * transform.right;
+            if (velocity != targetVelocity)
+            {
+                velocity.x = Mathf.MoveTowards(velocity.x, targetVelocity.x, acceleration * Time.deltaTime);
+                velocity.y = Mathf.MoveTowards(velocity.y, targetVelocity.y, acceleration * Time.deltaTime);
+                rb.velocity = velocity * transform.right;
+            }
         }
+        else if (!excludeXVelocity)
+        {
+            if (velocity.x != targetVelocity.x)
+            {
+                velocity.x = Mathf.MoveTowards(velocity.x, targetVelocity.x, acceleration * Time.deltaTime);
+                velocity.y = rb.velocity.y;
+                rb.velocity = new((velocity * transform.right).x, velocity.y);
+            }
+        }
+        else if (!excludeYVelocity)
+        {
+            if (velocity.x != targetVelocity.x)
+            {
+                velocity.y = Mathf.MoveTowards(velocity.y, targetVelocity.y, acceleration * Time.deltaTime);
+                velocity.x = rb.velocity.x;
+                rb.velocity = new(velocity.x, (velocity * transform.right).y);
+            }
+        }
+
 
         if (disappearTimer > 0)
         {
