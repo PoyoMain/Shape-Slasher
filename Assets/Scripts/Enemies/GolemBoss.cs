@@ -4,12 +4,15 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Animator), typeof(DamageFlash))]
 [RequireComponent(typeof(CinemachineImpulseSource))]
-public class GolemBoss : MonoBehaviour
+public class GolemBoss : MonoBehaviour, IHasEnergy
 {
     [Header("Health")]
     [SerializeField] private float health;
     [SerializeField] private float invincibilityTime;
     [SerializeField] private float deathFreezeTime;
+
+    [Header("Energy")]
+    [SerializeField] private int energyAmountOnHit;
 
     [Header("Jumping")]
     [SerializeField] private float jumpHeight;
@@ -385,6 +388,12 @@ public class GolemBoss : MonoBehaviour
             invincibleTimer = invincibilityTime;
         }
     }
+
+    #endregion
+
+    #region Energy
+
+    public int EnergyAmountOnHit { get => energyAmountOnHit; private set => energyAmountOnHit = value; }
 
     #endregion
 
