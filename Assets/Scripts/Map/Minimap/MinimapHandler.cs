@@ -13,6 +13,7 @@ public class MinimapHandler : MonoBehaviour
 
     [Header("Room Mini Icons")]
     [SerializeField] private Sprite bossRoomMiniIcon;
+    [SerializeField] private Sprite shopRoomMiniIcon;
 
     [Header("Listen Events")]
     [SerializeField] private RoomListEventSO mapLayoutMadeSO;
@@ -50,6 +51,7 @@ public class MinimapHandler : MonoBehaviour
         {
             MinimapIcon roomIcon = Instantiate(roomIconPrefab, minimapParent);
             if (rooms[i].Data.RoomType == RoomType.Boss) roomIcon.Init(rooms[i], bossRoomMiniIcon);
+            else if (rooms[i].Data.RoomType == RoomType.Shop) roomIcon.Init(rooms[i], shopRoomMiniIcon);
             else roomIcon.Init(rooms[i]);
 
             minimapIcons.Add(roomIcon);
