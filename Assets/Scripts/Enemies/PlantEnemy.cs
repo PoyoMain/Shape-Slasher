@@ -15,6 +15,7 @@ public class PlantEnemy : MonoBehaviour, IHasEnergy
 
     [Header("Detection")]
     [SerializeField] private float playerDetectDistance;
+    [SerializeField] private float playerDetectHeight;
     [SerializeField] private LayerMask playerLayer;
 
     [Header("Attacking")]
@@ -97,7 +98,7 @@ public class PlantEnemy : MonoBehaviour, IHasEnergy
 
     private bool CheckForPlayer()
     {
-        bool playerHit = Physics2D.CapsuleCast(bodyCollider.bounds.center, bodyCollider.size, bodyCollider.direction, 0, -transform.right, playerDetectDistance, playerLayer);
+        bool playerHit = Physics2D.CapsuleCast(bodyCollider.bounds.center, new (bodyCollider.size.x, bodyCollider.size.y * playerDetectHeight), bodyCollider.direction, 0, -transform.right, playerDetectDistance, playerLayer);
 
         if (playerHit) ChangeState(State.Attacking);
         else ChangeState(State.Idle);
