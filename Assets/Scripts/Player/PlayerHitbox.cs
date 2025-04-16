@@ -37,7 +37,12 @@ public class PlayerHitbox : MonoBehaviour
             else if (transform.eulerAngles.y == ROTATION_FACINGRIGHT) player.HitboxKnockbackHorizontal(Vector2.left);
         }
 
-        if (collision.contacts.Length > 0) Instantiate(hitEffect, collision.contacts[^1].point, Random.rotation);
+        if (collision.contacts.Length > 0)
+        {
+            Quaternion rot = Quaternion.identity;
+            rot.z = Random.rotation.z;
+            Instantiate(hitEffect, collision.contacts[^1].point, rot);
+        }
 
         hitSFXPlayer.Play();
         surfaceHitTimer = COOLDOWN_TIME;
@@ -54,8 +59,8 @@ public class PlayerHitbox : MonoBehaviour
         }
         else if (axis == Axis.Down) player.BounceKnockback(Vector2.up);
 
-        int energy = collision.GetComponentInParent<IHasEnergy>().EnergyAmountOnHit;
-        player.GainedEnergy(energy);
+        IHasEnergy energy = collision.GetComponentInParent<IHasEnergy>();
+        if (energy != null) player.GainedEnergy(energy.EnergyAmountOnHit);
     }
 
     private enum Axis { Horizontal, Up, Down }

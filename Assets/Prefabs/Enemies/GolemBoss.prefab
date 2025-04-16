@@ -1422,11 +1422,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 60
   invincibilityTime: 0.01
-  deathFreezeTime: 0
   energyAmountOnHit: 1
   jumpHeight: 6
   jumpTime: 2
-  timeBetweenJumps: 0
   middleOfRoomTransform: {fileID: 0}
   waitTime: 2
   shockwavePrefab: {fileID: 7634046414602002718, guid: 9dfde823d8eb9b7428668e9632ca2434, type: 3}
@@ -1448,6 +1446,7 @@ MonoBehaviour:
   slamSFXPlayer: {fileID: 6343632582103592613}
   damageSFXPlayer: {fileID: 5562521056297481175}
   bossDefeatedEventSO: {fileID: 11400000, guid: 06730dad57c80f3429eb762bcac337e6, type: 2}
+  ceilingCrumbleEventSO: {fileID: 11400000, guid: d951ccba2a56502449b815dd3bb8160b, type: 2}
   bossFightStartEventSO: {fileID: 11400000, guid: 8bf5b0fc60534444ebff35a572a3a0af, type: 2}
 --- !u!114 &4066194576489871650
 MonoBehaviour:
