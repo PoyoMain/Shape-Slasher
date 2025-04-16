@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3657007799348935292}
   - component: {fileID: 8185872481078282054}
+  - component: {fileID: 272889949799425593}
   m_Layer: 16
   m_Name: HitboxCollider
   m_TagString: Untagged
@@ -67,6 +68,21 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1.25, y: 1}
   m_Direction: 1
+--- !u!114 &272889949799425593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1137015969028734924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e39374c44e13f444ab7e630c5f71eee1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 1
+  knockback: 0
+  knockbackOrigin: {fileID: 0}
 --- !u!1 &1425477167360103089
 GameObject:
   m_ObjectHideFlags: 0
@@ -660,7 +676,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 3fa0b042d93b7154bb5cb5c6895f8b59, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
