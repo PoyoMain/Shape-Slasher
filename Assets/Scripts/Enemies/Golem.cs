@@ -310,7 +310,7 @@ public class Golem : MonoBehaviour, IHasEnergy
             enemyDeathEventSO.RaiseEvent();
             deathEvent.OnDeath?.Invoke();
             damageSFXPlayer.PlayClipAtPoint();
-            Die();
+            Invoke(nameof(Die), 0.1f);
         }
         else
         {
