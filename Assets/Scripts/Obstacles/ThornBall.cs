@@ -5,6 +5,7 @@ using UnityEngine;
 public class ThornBall : MonoBehaviour
 {
     [SerializeField] private CircleCollider2D coll;
+    [SerializeField] private LayerMask wallLayer;
 
     private void Update()
     {
@@ -13,11 +14,6 @@ public class ThornBall : MonoBehaviour
 
     private bool CheckForWall()
     {
-        return Physics2D.Raycast(coll.bounds.center, Vector2.left, coll.radius + 0.01f);
-    }
-
-    private void OnDrawGizmos()
-    {
-        Debug.DrawRay(coll.bounds.center, Vector2.left);
+        return Physics2D.Raycast(coll.bounds.center, Vector2.left, coll.radius + 0.03f, wallLayer);
     }
 }
