@@ -318,14 +318,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 674895461098754453, guid: bbff9d89ca715d84194dcf10b1147b8c, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 3fa0b042d93b7154bb5cb5c6895f8b59, type: 2}
-    - target: {fileID: 1425477167360103089, guid: bbff9d89ca715d84194dcf10b1147b8c, type: 3}
-      propertyPath: m_Icon
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 4146121085594651056, guid: bbff9d89ca715d84194dcf10b1147b8c, type: 3}
       propertyPath: m_Name
       value: PlantEnemy
@@ -373,31 +365,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1137015969028734924, guid: bbff9d89ca715d84194dcf10b1147b8c, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 750748491}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bbff9d89ca715d84194dcf10b1147b8c, type: 3}
---- !u!1 &750748488 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1137015969028734924, guid: bbff9d89ca715d84194dcf10b1147b8c, type: 3}
-  m_PrefabInstance: {fileID: 749467491}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &750748491
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 750748488}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e39374c44e13f444ab7e630c5f71eee1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 1
-  knockback: 0
-  knockbackOrigin: {fileID: 0}
 --- !u!1001 &1347406378
 PrefabInstance:
   m_ObjectHideFlags: 0
