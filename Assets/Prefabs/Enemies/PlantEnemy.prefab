@@ -278,6 +278,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6856949785760202567}
   - component: {fileID: 7551304024379799136}
+  - component: {fileID: 7586531252453707009}
   - component: {fileID: 8480111674811819542}
   - component: {fileID: 3804022781975374815}
   - component: {fileID: 4847606753788054336}
@@ -338,6 +339,33 @@ MonoBehaviour:
   currencyDroppedOnDeath: 3
   currencyShootForce: 500
   enemyDeathEventSO: {fileID: 11400000, guid: 94ee03ea8d179094da4b025eb5343d73, type: 2}
+--- !u!50 &7586531252453707009
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4146121085594651056}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 7
 --- !u!95 &8480111674811819542
 Animator:
   serializedVersion: 5

@@ -2,7 +2,7 @@ using Cinemachine;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-[RequireComponent(typeof(Animator), typeof(DamageFlash))]
+[RequireComponent(typeof(Rigidbody2D), typeof(Animator), typeof(DamageFlash))]
 [RequireComponent(typeof(CinemachineImpulseSource), typeof(EnemyDeathEvent))]
 public class PlantEnemy : MonoBehaviour, IHasEnergy
 {
@@ -71,6 +71,8 @@ public class PlantEnemy : MonoBehaviour, IHasEnergy
 
     private void FixedUpdate()
     {
+        if (invincibleTimer > 0) invincibleTimer -= Time.deltaTime;
+
         switch (state)
         {
             case State.Idle:
