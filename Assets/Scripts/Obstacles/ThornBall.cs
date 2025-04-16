@@ -4,24 +4,20 @@ using UnityEngine;
 
 public class ThornBall : MonoBehaviour
 {
-    // Start is called before the first frame update
-    public float speed = 5f;
-    public Vector2 direction = Vector2.left;
+    [SerializeField] private CircleCollider2D coll;
 
-    private Rigidbody2D rb;
-
-    void Start()
+    private void Update()
     {
-        rb = GetComponent<Rigidbody2D>();
-        rb.velocity = direction.normalized * speed; 
+        if (CheckForWall()) Destroy(gameObject);
     }
 
-    // Update is called once per frame
-    void OnTriggerEnter2D(Collider2D other)
+    private bool CheckForWall()
     {
-        if (other.CompareTag("Player"))
-        {
-            Destroy(gameObject);
-        }
+        return Physics2D.Raycast(coll.bounds.center, Vector2.left, coll.radius + 0.01f);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Debug.DrawRay(coll.bounds.center, Vector2.left);
     }
 }
