@@ -309,6 +309,8 @@ public class GolemBoss : MonoBehaviour, IHasEnergy
 
         slamSFXPlayer.Play();
         ceilingCrumbleEventSO.RaiseEvent();
+        if (ControllerHapticsHandler.Instance != null)
+            ControllerHapticsHandler.Instance.ShakeController(0.005f, 0.005f, 1f);
     }
 #pragma warning restore IDE0051
 
