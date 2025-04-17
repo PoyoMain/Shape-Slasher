@@ -25,6 +25,7 @@ public class SFXPlayer : MonoBehaviour
         if (audioSource == null)
         {
             if (!TryGetComponent(out audioSource)) return;
+            if (!audioSource.isActiveAndEnabled) return;
         }
 
         if (clipToPlay != null) audioSource.PlayOneShot(clipToPlay);

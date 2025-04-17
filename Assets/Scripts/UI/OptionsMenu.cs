@@ -18,6 +18,11 @@ public class OptionsMenu : MonoBehaviour
     [SerializeField] private Slider audioSlider_Ambience;
     [Space(10)]
     [SerializeField] private Toggle checkbox_ControllerRumble;
+    [SerializeField] private Toggle checkbox_Speedrun;
+    [Space(10)]
+    [SerializeField] private Toggle toggle_EasyDifficulty;
+    [SerializeField] private Toggle toggle_MediumDifficulty;
+    [SerializeField] private Toggle toggle_HardDifficulty;
 
     [SerializeField] private UnityEvent onOptionsClose;
 
@@ -32,6 +37,11 @@ public class OptionsMenu : MonoBehaviour
     private const float VOLUME_MIN = -80f;
 
     private void Awake()
+    {
+        RefreshAllElements();
+    }
+
+    public void RefreshAllElements()
     {
         audioSlider_Master.maxValue = audioSlider_Music.maxValue = audioSlider_SFX.maxValue = audioSlider_Ambience.maxValue = VOLUME_MAX;
         audioSlider_Master.minValue = audioSlider_Music.minValue = audioSlider_SFX.minValue = audioSlider_Ambience.minValue = VOLUME_MIN;
@@ -49,6 +59,20 @@ public class OptionsMenu : MonoBehaviour
         audioSlider_Ambience.value = volume;
 
         checkbox_ControllerRumble.isOn = optionsSO.ControllerRumble;
+        checkbox_Speedrun.isOn = optionsSO.SpeedrunMode;
+
+        switch (optionsSO.Difficulty)
+        {
+            case Difficulty.Easy:
+                toggle_EasyDifficulty.isOn = true;
+                break;
+            case Difficulty.Medium:
+                toggle_MediumDifficulty.isOn = true;
+                break;
+            case Difficulty.Hard:
+                toggle_HardDifficulty.isOn = true;
+                break;
+        }
     }
 
     private void OnEnable()
