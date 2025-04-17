@@ -15,6 +15,10 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private bool canHaveDuplicatesInARow;
     [SerializeField] private bool performOnStart;
 
+    [Header("Room Specific Settings")]
+    [SerializeField] private bool spawnBoss;
+    [SerializeField] private bool spawnShop;
+
     [Header("References")]
     [SerializeField] private RoomSO[] startRooms;
     [SerializeField] private RoomSO[] bossRooms;
@@ -138,8 +142,8 @@ public class MapGenerator : MonoBehaviour
                 if (i == numberOfRooms - 1)
                 {
                     if (!CloseUnusedDoors(spawnedRooms)) break;
-                    if (!PlaceBossRoom(spawnedRooms)) break;
-                    if (!PlaceShopRoom(spawnedRooms)) break;
+                    if (spawnBoss) if (!PlaceBossRoom(spawnedRooms)) break;
+                    if (spawnShop) if (!PlaceShopRoom(spawnedRooms)) break;
                     if (!SpawnAllRooms(spawnedRooms)) break;
                     print("Distance to Boss: " + FindDistanceFromRoom(startRoom, bossRoom, 0));
                     mapLayoutMadeSO.RaiseEvent(spawnedRooms);

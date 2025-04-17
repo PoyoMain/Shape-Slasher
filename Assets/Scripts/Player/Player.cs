@@ -15,6 +15,9 @@ public class Player : MonoBehaviour
     [Space(20)]
     [SerializeField] private Stats stats;
 
+    [Header("Prefabs")]
+    [SerializeField] private GameObject energyShot;
+
     [Header("Components")]
     [SerializeField] private BoxCollider2D bodyCollider;
     [SerializeField] private BoxCollider2D hurtboxCollider;
@@ -33,6 +36,7 @@ public class Player : MonoBehaviour
     [SerializeField] private IntEventSO playerHealthGainedEventSO;
     [SerializeField] private IntEventSO playerHealthUpdatedEventSO;
     [SerializeField] private IntEventSO playerCurrencyUpdateEventSO;
+    [SerializeField] private IntEventSO playerEnergyUpdateEventSO;
 
     // Properties
     private PlayerControls.GameplayControlsActions Controls => inputReader.Controls;
@@ -44,6 +48,7 @@ public class Player : MonoBehaviour
     // Public variables
     public event Action<bool, float> GroundedChanged;
     public event Action Jumped;
+    public event Action<int> EnergyGained;
 
     // Private Variables
     private int health;
@@ -52,6 +57,7 @@ public class Player : MonoBehaviour
     private bool jumpDown;
     private bool jumpHeld;
     private bool attackDown;
+    private bool specialAttackDown;
     private bool dashDown;
     private bool interactDown;
     private bool cachedQueryStartInColliders;
@@ -73,6 +79,12 @@ public class Player : MonoBehaviour
         cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
     }
 
+    private void Start()
+    {
+        playerCurrencyUpdateEventSO.RaiseEvent(0);
+        playerEnergyUpdateEventSO.RaiseEvent(0);
+    }
+
     private void Update()
     {
         time += Time.deltaTime;
@@ -89,7 +101,12 @@ public class Player : MonoBehaviour
         {
             attackDown = Controls.Attack.WasPressedThisFrame();
         }
-        
+
+        if (!specialAttackDown)
+        {
+            specialAttackDown = Controls.SpecialAttack.WasPressedThisFrame();
+        }
+
         if (!dashDown && hasDashAbility)
         {
             dashDown = Controls.Dash.WasPressedThisFrame();
@@ -131,6 +148,7 @@ public class Player : MonoBehaviour
 
         HandleInteract();
         HandleDash();
+        HandleSpecialAttack();
         HandleAttack();
 
         HandleJump();
@@ -262,7 +280,7 @@ public class Player : MonoBehaviour
                     break;
             }
 
-            
+
         }
     }
 
@@ -274,7 +292,7 @@ public class Player : MonoBehaviour
     {
         if (!interactDown) return;
 
-        if (!grounded && !IsDashing && !IsAttacking && !IsInKnockback) return;
+        if (!grounded && !IsDashing && !IsAttacking && !IsSpecialAttacking && !IsInKnockback) return;
 
         ExecuteInteract();
         interactDown = false;
@@ -287,7 +305,7 @@ public class Player : MonoBehaviour
         if (interactHit && interactHit.collider.TryGetComponent(out BuyableItem buyable))
         {
             if (currency < buyable.Cost) return;
-            
+
             SpentCurrency(buyable.Cost);
             buyable.Buy();
 
@@ -321,7 +339,7 @@ public class Player : MonoBehaviour
         if (IsDashing)
         {
             dashTimer -= Time.fixedDeltaTime;
-            
+
             if (dashTimer <= stats.DashTime * dashDecelerationPercentage) velocity.x = Mathf.MoveTowards(velocity.x, 0, stats.GroundDeceleration * Time.fixedDeltaTime);
 
             if (dashTimer <= 0) anim.SetBool("IsDashing", false);
@@ -346,6 +364,42 @@ public class Player : MonoBehaviour
 
     #endregion
 
+    #region Special Attack
+
+    private float specialAttackTimer;
+    private float specialAttackCooldownTimer;
+    private bool IsSpecialAttacking => specialAttackTimer > 0;
+    private bool SpecialAttackOnCooldown => specialAttackCooldownTimer > 0;
+    private bool CanSpecialAttack => energy > stats.SpecialAttackEnergyCost;
+    private void HandleSpecialAttack()
+    {
+        if (IsSpecialAttacking)
+        {
+            specialAttackTimer -= Time.fixedDeltaTime;
+
+            if (!IsSpecialAttacking) specialAttackCooldownTimer = stats.TimeBetweenSpecialAttacks;
+        }
+
+        if (SpecialAttackOnCooldown) specialAttackCooldownTimer -= Time.fixedDeltaTime;
+
+        if (!specialAttackDown || IsDashing || IsInKnockback || IsAttacking || !CanSpecialAttack) return;
+
+        if (specialAttackDown && !IsSpecialAttacking && !SpecialAttackOnCooldown) ExecuteSpecialAttack();
+
+        specialAttackDown = false;
+    }
+
+    private void ExecuteSpecialAttack()
+    {
+        StopVerticalMovement();
+        Instantiate(energyShot, transform.position, transform.localRotation);
+        LostEnergy(stats.SpecialAttackEnergyCost);
+        anim.SetTrigger("SpecialAttack");
+        specialAttackTimer = stats.SpecialAttackTime;
+    }
+
+    #endregion
+
     #region Attack
 
     private float attackTimer;
@@ -354,7 +408,7 @@ public class Player : MonoBehaviour
     {
         if (IsAttacking) attackTimer -= Time.fixedDeltaTime;
 
-        if (!attackDown) return;
+        if (!attackDown || IsDashing || IsInKnockback || IsSpecialAttacking) return;
 
         if (attackDown && !IsAttacking) ExecuteAttack();
 
@@ -437,7 +491,7 @@ public class Player : MonoBehaviour
             jumpTimer -= Time.fixedDeltaTime;
             if (velocity.y < stats.JumpPower) velocity.y = Mathf.MoveTowards(velocity.y, stats.JumpPower, stats.JumpAcceleration * Time.fixedDeltaTime);
         }
-        
+
     }
 
     private bool CheckCrouch()
@@ -462,7 +516,7 @@ public class Player : MonoBehaviour
 
     private void HandleDirection()
     {
-        if (IsInKnockback || IsDashing) return;
+        if (IsInKnockback || IsDashing || IsSpecialAttacking) return;
 
         if (moveInput.x == 0)
         {
@@ -479,7 +533,7 @@ public class Player : MonoBehaviour
             // Set Animator movement
             anim.SetBool("IsMoving", true);
 
-            if (IsAttacking) return;
+            if (IsAttacking || IsSpecialAttacking) return;
 
             // Rotate GameObject based on movement input
             if (moveInput.x > 0 && transform.localEulerAngles.y != ROTATION_FACING_RIGHT)
@@ -514,27 +568,20 @@ public class Player : MonoBehaviour
     {
         velocity += force;
         knockbackTimer = stats.KnockbackAppliedTime;
-        
+
     }
 
-#pragma warning disable IDE0051
-    private void HitboxKnockbackHorizontal(Vector2 hitColliderDirection)
-    {        
-        velocity = new ((hitColliderDirection * stats.SurfaceKnockback).x, velocity.y);
+    public void HitboxKnockbackHorizontal(Vector2 hitColliderDirection)
+    {
+        velocity = new((hitColliderDirection * stats.SurfaceKnockback).x, velocity.y);
         knockbackTimer = stats.KnockbackAppliedTime;
     }
-    private void HitboxKnockbackVertical(Vector2 hitColliderDirection)
-    {
-        velocity = new(velocity.x, (hitColliderDirection * stats.SurfaceKnockback).y);
-        //knockbackTimer = stats.KnockbackAppliedTime;
-    }
 
-    private void BounceKnockback(Vector2 hitColliderDirection)
+    public void BounceKnockback(Vector2 hitColliderDirection)
     {
         StopVerticalMovement();
         velocity = new(velocity.x, (hitColliderDirection * stats.BounceKnockback).y);
     }
-#pragma warning restore IDE0051
 
     private void KnockbackOnlyVertical(Vector2 force)
     {
@@ -552,7 +599,7 @@ public class Player : MonoBehaviour
 
     private void HandleGravity()
     {
-        if (IsDashing) return;
+        if (IsDashing || IsSpecialAttacking) return;
 
         if (grounded && velocity.y <= 0f)
         {
@@ -584,7 +631,7 @@ public class Player : MonoBehaviour
     {
         Vector2 lookPos = camFocusTransform.localPosition;
 
-        if (moveInput.x == 0 && moveInput.y != 0 && grounded && !IsAttacking && !IsDashing && !IsInKnockback)
+        if (moveInput.x == 0 && moveInput.y != 0 && grounded && !IsAttacking && !IsSpecialAttacking && !IsDashing && !IsInKnockback)
         {
             lookTimer -= Time.fixedDeltaTime;
 
@@ -598,7 +645,7 @@ public class Player : MonoBehaviour
                 {
                     if (lookPos.y != -stats.LookDistance) lookPos.y = -stats.LookDistance;
                 }
-            }  
+            }
         }
         else
         {
@@ -672,6 +719,24 @@ public class Player : MonoBehaviour
     }
 
     #endregion
+
+    #region Energy
+
+    private int energy;
+
+    public void GainedEnergy(int amount)
+    {
+        energy = Mathf.Min(energy + amount, 100);
+        playerEnergyUpdateEventSO.RaiseEvent(energy);
+    }
+
+    private void LostEnergy(int amount)
+    {
+        energy -= amount;
+        playerEnergyUpdateEventSO.RaiseEvent(energy);
+    }
+
+    #endregion
 }
 
 [Serializable]
@@ -714,6 +779,9 @@ public struct Stats
 
     [Header("Attacking")]
     public float TimeBetweenAttacks;
+    public float SpecialAttackTime;
+    public float TimeBetweenSpecialAttacks;
+    public int SpecialAttackEnergyCost;
 
     [Header("Knockback")]
     public float SurfaceKnockback;

@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+[RequireComponent(typeof(Animator))]
 public class BuyableItem : MonoBehaviour
 {
     [Header("Stats")]
     [SerializeField] private int cost;
     [SerializeField] private Buyable type;
+    [SerializeField] private bool onlyBuyOnce;
 
     [Header("Components")]
     [SerializeField] private GameObject itemDescriptionBox;
@@ -15,6 +17,13 @@ public class BuyableItem : MonoBehaviour
 
     public int Cost => cost;
     public Buyable Type => type;
+
+    private Animator anim;
+
+    private void Awake()
+    {
+        TryGetComponent(out anim);
+    }
 
     private void OnEnable()
     {
@@ -24,14 +33,14 @@ public class BuyableItem : MonoBehaviour
 
     public void Buy()
     {
-        print("Bought");
+        if (onlyBuyOnce) Destroy(gameObject);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
-            itemDescriptionBox.SetActive(true);
+            anim.SetBool("Toggled", true);
         }
     }
 
@@ -39,7 +48,7 @@ public class BuyableItem : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            itemDescriptionBox.SetActive(false);
+            anim.SetBool("Toggled", false);
         }
     }
 

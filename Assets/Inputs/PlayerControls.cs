@@ -55,6 +55,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""SpecialAttack"",
+                    ""type"": ""Button"",
+                    ""id"": ""8abd7bde-8755-480c-9d48-797788953bdb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Pause"",
                     ""type"": ""Button"",
                     ""id"": ""3ee5376a-49d4-413b-aa03-c994c2c38555"",
@@ -377,6 +386,28 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Controller"",
                     ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a64be0cf-645c-474d-b492-975db55b7e81"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""SpecialAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fb1acc34-ec6b-4b9d-844f-e5a783bd329c"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Controller"",
+                    ""action"": ""SpecialAttack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -756,6 +787,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_GameplayControls_Move = m_GameplayControls.FindAction("Move", throwIfNotFound: true);
         m_GameplayControls_Jump = m_GameplayControls.FindAction("Jump", throwIfNotFound: true);
         m_GameplayControls_Attack = m_GameplayControls.FindAction("Attack", throwIfNotFound: true);
+        m_GameplayControls_SpecialAttack = m_GameplayControls.FindAction("SpecialAttack", throwIfNotFound: true);
         m_GameplayControls_Pause = m_GameplayControls.FindAction("Pause", throwIfNotFound: true);
         m_GameplayControls_Dash = m_GameplayControls.FindAction("Dash", throwIfNotFound: true);
         m_GameplayControls_Interact = m_GameplayControls.FindAction("Interact", throwIfNotFound: true);
@@ -828,6 +860,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_GameplayControls_Move;
     private readonly InputAction m_GameplayControls_Jump;
     private readonly InputAction m_GameplayControls_Attack;
+    private readonly InputAction m_GameplayControls_SpecialAttack;
     private readonly InputAction m_GameplayControls_Pause;
     private readonly InputAction m_GameplayControls_Dash;
     private readonly InputAction m_GameplayControls_Interact;
@@ -838,6 +871,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_GameplayControls_Move;
         public InputAction @Jump => m_Wrapper.m_GameplayControls_Jump;
         public InputAction @Attack => m_Wrapper.m_GameplayControls_Attack;
+        public InputAction @SpecialAttack => m_Wrapper.m_GameplayControls_SpecialAttack;
         public InputAction @Pause => m_Wrapper.m_GameplayControls_Pause;
         public InputAction @Dash => m_Wrapper.m_GameplayControls_Dash;
         public InputAction @Interact => m_Wrapper.m_GameplayControls_Interact;
@@ -859,6 +893,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Attack.started += instance.OnAttack;
             @Attack.performed += instance.OnAttack;
             @Attack.canceled += instance.OnAttack;
+            @SpecialAttack.started += instance.OnSpecialAttack;
+            @SpecialAttack.performed += instance.OnSpecialAttack;
+            @SpecialAttack.canceled += instance.OnSpecialAttack;
             @Pause.started += instance.OnPause;
             @Pause.performed += instance.OnPause;
             @Pause.canceled += instance.OnPause;
@@ -881,6 +918,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Attack.started -= instance.OnAttack;
             @Attack.performed -= instance.OnAttack;
             @Attack.canceled -= instance.OnAttack;
+            @SpecialAttack.started -= instance.OnSpecialAttack;
+            @SpecialAttack.performed -= instance.OnSpecialAttack;
+            @SpecialAttack.canceled -= instance.OnSpecialAttack;
             @Pause.started -= instance.OnPause;
             @Pause.performed -= instance.OnPause;
             @Pause.canceled -= instance.OnPause;
@@ -992,6 +1032,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
+        void OnSpecialAttack(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);

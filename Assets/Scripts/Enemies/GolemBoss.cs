@@ -4,17 +4,18 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Animator), typeof(DamageFlash))]
 [RequireComponent(typeof(CinemachineImpulseSource))]
-public class GolemBoss : MonoBehaviour
+public class GolemBoss : MonoBehaviour, IHasEnergy
 {
     [Header("Health")]
     [SerializeField] private float health;
     [SerializeField] private float invincibilityTime;
-    [SerializeField] private float deathFreezeTime;
+
+    [Header("Energy")]
+    [SerializeField] private int energyAmountOnHit;
 
     [Header("Jumping")]
     [SerializeField] private float jumpHeight;
     [SerializeField] private float jumpTime;
-    [SerializeField] private float timeBetweenJumps;
     [SerializeField] private Transform middleOfRoomTransform;
 
     [Header("Waiting")]
@@ -44,6 +45,7 @@ public class GolemBoss : MonoBehaviour
 
     [Header("Broadcast Events")]
     [SerializeField] private VoidEventSO bossDefeatedEventSO;
+    [SerializeField] private VoidEventSO ceilingCrumbleEventSO;
 
     [Header("Listen Events")]
     [SerializeField] private VoidEventSO bossFightStartEventSO;
@@ -167,6 +169,8 @@ public class GolemBoss : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collision.GetComponentInParent<FallingRock>()) return;
+
         if (collision.TryGetComponent(out DamageComponent damageComponent))
         {
             if (IsInvincible) return;
@@ -302,6 +306,7 @@ public class GolemBoss : MonoBehaviour
         backWave.transform.eulerAngles = reverseEuler;
 
         slamSFXPlayer.Play();
+        ceilingCrumbleEventSO.RaiseEvent();
     }
 #pragma warning restore IDE0051
 
@@ -385,6 +390,12 @@ public class GolemBoss : MonoBehaviour
             invincibleTimer = invincibilityTime;
         }
     }
+
+    #endregion
+
+    #region Energy
+
+    public int EnergyAmountOnHit { get => energyAmountOnHit; private set => energyAmountOnHit = value; }
 
     #endregion
 

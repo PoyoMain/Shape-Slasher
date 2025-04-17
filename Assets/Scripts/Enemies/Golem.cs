@@ -7,12 +7,15 @@ using UnityEngine.Events;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Animator), typeof(DamageFlash))]
 [RequireComponent(typeof(CinemachineImpulseSource), typeof(EnemyDeathEvent))]
-public class Golem : MonoBehaviour
+public class Golem : MonoBehaviour, IHasEnergy
 {
     [Header("Health")]
     [SerializeField] private float health;
     [SerializeField] private float invincibilityTime;
     [SerializeField] private float knockbackTime;
+
+    [Header("Energy")]
+    [SerializeField] private int energyAmountOnHit;
 
     [Header("Patrol")]
     [SerializeField] private float patrolSpeed;
@@ -307,7 +310,7 @@ public class Golem : MonoBehaviour
             enemyDeathEventSO.RaiseEvent();
             deathEvent.OnDeath?.Invoke();
             damageSFXPlayer.PlayClipAtPoint();
-            Die();
+            Invoke(nameof(Die), 0.1f);
         }
         else
         {
@@ -392,6 +395,12 @@ public class Golem : MonoBehaviour
         defendTimer = 0;
         anim.SetBool("Defending", Defending);
     }
+
+    #endregion
+
+    #region Energy
+
+    public int EnergyAmountOnHit { get => energyAmountOnHit; private set => energyAmountOnHit = value; }
 
     #endregion
 

@@ -276,7 +276,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &782208810798574963
 Transform:
   m_ObjectHideFlags: 0
@@ -399,6 +399,9 @@ MonoBehaviour:
     CoyoteTime: 0.05
     JumpBuffer: 0.1
     TimeBetweenAttacks: 0.3
+    SpecialAttackTime: 0.25
+    TimeBetweenSpecialAttacks: 0.25
+    SpecialAttackEnergyCost: 20
     SurfaceKnockback: 5
     BounceKnockback: 35
     KnockbackAppliedTime: 0.05
@@ -408,6 +411,7 @@ MonoBehaviour:
     TimeToLook: 0.75
     MaxHealth: 5
     InvincibleTime: 1
+  energyShot: {fileID: 2159096984476535445, guid: 0cae504d09e26bd4f8b88ec33cc406eb, type: 3}
   bodyCollider: {fileID: 4829347791518249693}
   hurtboxCollider: {fileID: 6920433218644516185}
   camFocusTransform: {fileID: 8258641867296838082}
@@ -421,6 +425,7 @@ MonoBehaviour:
   playerHealthGainedEventSO: {fileID: 11400000, guid: b8e434bfeb2b83044a63061dd294bc9e, type: 2}
   playerHealthUpdatedEventSO: {fileID: 11400000, guid: e9ecf39e1b1439f4c8f04b6140a28529, type: 2}
   playerCurrencyUpdateEventSO: {fileID: 11400000, guid: aebc4cab0b196724490ae502687f5374, type: 2}
+  playerEnergyUpdateEventSO: {fileID: 11400000, guid: e8b888aaf0ee14e42af4623fa15e6392, type: 2}
 --- !u!114 &2831384106462213000
 MonoBehaviour:
   m_ObjectHideFlags: 0
