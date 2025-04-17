@@ -29,6 +29,7 @@ public class Golem : MonoBehaviour, IHasEnergy
     [SerializeField] private float playerBehindDistance;
     [SerializeField] private float attackMoveSpeed;
     [SerializeField] private float attackCooldownTime;
+    [SerializeField, Range(0f, 1f)] private float counterAttackChance;
 
     [Header("Defending")]
     [SerializeField] private float defendTime;
@@ -184,6 +185,13 @@ public class Golem : MonoBehaviour, IHasEnergy
         StopMoving();
         anim.SetTrigger("Attack");
         attackCooldownTimer = attackCooldownTime;
+    }
+
+    private void CounterAttackChance()
+    {
+        bool counter = Random.Range(0f, 1f) <= counterAttackChance;
+
+        if (counter && CheckForPlayer()) ExecuteAttack();
     }
 
     #endregion
