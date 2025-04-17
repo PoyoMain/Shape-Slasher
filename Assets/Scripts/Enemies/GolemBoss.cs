@@ -207,6 +207,8 @@ public class GolemBoss : MonoBehaviour, IHasEnergy
         if (percentage == 1f)
         {
             fallSFXPlayer.Play();
+            if (ControllerHapticsHandler.Instance != null)
+                ControllerHapticsHandler.Instance.ShakeController(0.005f, 0.005f, 1f);
             ChangeState(State.Waiting);
         }
     }
