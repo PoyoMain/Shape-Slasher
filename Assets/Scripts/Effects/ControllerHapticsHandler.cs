@@ -43,6 +43,8 @@ public class ControllerHapticsHandler : MonoBehaviour
 
     private IEnumerator ShakingController(float low, float high, float timeTillStop)
     {
+        if (Gamepad.current == null) yield break;
+
         Gamepad.current.SetMotorSpeeds(low, high);
 
         float initLow = low;
