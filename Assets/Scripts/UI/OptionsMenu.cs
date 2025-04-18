@@ -36,7 +36,7 @@ public class OptionsMenu : MonoBehaviour
     private const float VOLUME_MAX = 20;
     private const float VOLUME_MIN = -80f;
 
-    private void Awake()
+    private void Start()
     {
         RefreshAllElements();
     }
@@ -82,6 +82,9 @@ public class OptionsMenu : MonoBehaviour
         controls.Enable();
 
         controls.Cancel.performed += Cancel;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     private void Cancel(InputAction.CallbackContext context)
