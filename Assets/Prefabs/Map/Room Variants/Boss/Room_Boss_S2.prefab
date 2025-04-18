@@ -1559,7 +1559,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3115447247589178261, guid: 632e03a183b11084390f2a27326767ab, type: 3}
       propertyPath: forceStrength
-      value: 7
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 3126711767812144352, guid: 632e03a183b11084390f2a27326767ab, type: 3}
       propertyPath: m_Name
@@ -2117,6 +2117,14 @@ PrefabInstance:
     - target: {fileID: 383823971389036451, guid: 6682238eb54a55b4e8d13b951a9a5ca9, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1283807270406854708, guid: 6682238eb54a55b4e8d13b951a9a5ca9, type: 3}
+      propertyPath: m_Waypoints.Array.data[0].position.x
+      value: -5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1283807270406854708, guid: 6682238eb54a55b4e8d13b951a9a5ca9, type: 3}
+      propertyPath: m_Waypoints.Array.data[1].position.x
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2024334050424521367, guid: 6682238eb54a55b4e8d13b951a9a5ca9, type: 3}
       propertyPath: m_IsActive
