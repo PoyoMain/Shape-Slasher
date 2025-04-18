@@ -734,6 +734,7 @@ public class Player : MonoBehaviour
     {
         energy = Mathf.Min(energy + amount, 100);
         playerEnergyUpdateEventSO.RaiseEvent(energy);
+        EnergyGained?.Invoke(amount);
     }
 
     private void LostEnergy(int amount)

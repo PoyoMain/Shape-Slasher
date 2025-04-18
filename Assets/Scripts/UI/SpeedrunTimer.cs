@@ -10,7 +10,7 @@ public class SpeedrunTimer : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timerTextBox;
     [SerializeField] private VoidEventSO timerStartEventSO;
     [SerializeField] private VoidEventSO timerSucceedEventSO;
-    [SerializeField] private VoidEventSO timerFailEventSO;
+    [SerializeField] private VoidEventSO[] timerFailEventSOs;
 
     public string TimerValue { get; private set; }
 
@@ -30,14 +30,23 @@ public class SpeedrunTimer : MonoBehaviour
     {
         timerStartEventSO.OnEventRaised += StartTimer;
         timerSucceedEventSO.OnEventRaised += StopTimer;
-        timerFailEventSO.OnEventRaised += DestoyThis;
+
+        for (int i = 0; i < timerFailEventSOs.Length; i++)
+        {
+            timerFailEventSOs[i].OnEventRaised += DestoyThis;
+        }
     }
 
     private void OnDisable()
     {
         timerStartEventSO.OnEventRaised -= StartTimer;
         timerSucceedEventSO.OnEventRaised -= StopTimer;
-        timerFailEventSO.OnEventRaised -= DestoyThis;
+
+
+        for (int i = 0; i < timerFailEventSOs.Length; i++)
+        {
+            timerFailEventSOs[i].OnEventRaised -= DestoyThis;
+        }
     }
 
     private void FixedUpdate()

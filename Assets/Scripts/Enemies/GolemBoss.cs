@@ -6,8 +6,13 @@ using UnityEngine;
 [RequireComponent(typeof(CinemachineImpulseSource))]
 public class GolemBoss : MonoBehaviour, IHasEnergy
 {
+    [Header("Options")]
+    [SerializeField] private OptionsSO options;
+    [SerializeField] private bool useOptionsValues;
+
     [Header("Health")]
-    [SerializeField] private float health;
+    [SerializeField] private DifficultyInt startHealth;
+    [SerializeField] private int testStartHealth;
     [SerializeField] private float invincibilityTime;
 
     [Header("Energy")]
@@ -54,9 +59,12 @@ public class GolemBoss : MonoBehaviour, IHasEnergy
     private const int ROTATION_FACINGRIGHT = 0;
     private const int ROTATION_FACINGLEFT = 180;
 
+    // Properties
+    private int StartingHealth => useOptionsValues ? startHealth.ReturnValue(options.Difficulty) : testStartHealth;
+
+    private int health;
     private State state;
     private Vector2 lastCheckedPlayerPosition;
-
     private Animator anim;
     private DamageFlash damageFlash;
     private CinemachineImpulseSource damageImpulseSource;
@@ -78,6 +86,11 @@ public class GolemBoss : MonoBehaviour, IHasEnergy
     private void OnDisable()
     {
         bossFightStartEventSO.OnEventRaised -= Activate;
+    }
+
+    private void Start()
+    {
+        health = StartingHealth;
     }
 
     private void Activate()

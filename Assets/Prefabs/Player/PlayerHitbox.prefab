@@ -213,8 +213,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e39374c44e13f444ab7e630c5f71eee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
+  options: {fileID: 11400000, guid: f5eee3582d6e5f7479ad6c0128364369, type: 2}
+  usesOptionsValues: 0
+  damage:
+    EasyValue: 0
+    MediumValue: 0
+    HardValue: 0
+  testDamage: 1
   knockback: 3
+  knockbackOrigin: {fileID: 0}
 --- !u!114 &194094563571064064
 MonoBehaviour:
   m_ObjectHideFlags: 0

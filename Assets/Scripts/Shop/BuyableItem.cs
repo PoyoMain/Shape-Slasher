@@ -6,8 +6,14 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class BuyableItem : MonoBehaviour
 {
+    [Header("Options")]
+    [SerializeField] private OptionsSO options;
+    [SerializeField] private bool useOptionsValues;
+
+    [Space(10)]
     [Header("Stats")]
-    [SerializeField] private int cost;
+    [SerializeField] private DifficultyInt cost;
+    [SerializeField] private int testCost;
     [SerializeField] private Buyable type;
     [SerializeField] private bool onlyBuyOnce;
 
@@ -15,7 +21,7 @@ public class BuyableItem : MonoBehaviour
     [SerializeField] private GameObject itemDescriptionBox;
     [SerializeField] private TextMeshProUGUI priceText;
 
-    public int Cost => cost;
+    public int Cost => useOptionsValues ? cost.ReturnValue(options.Difficulty) : testCost;
     public Buyable Type => type;
 
     private Animator anim;
@@ -28,7 +34,7 @@ public class BuyableItem : MonoBehaviour
     private void OnEnable()
     {
         itemDescriptionBox.SetActive(false);
-        priceText.text = cost.ToString();
+        priceText.text = Cost.ToString();
     }
 
     public void Buy()

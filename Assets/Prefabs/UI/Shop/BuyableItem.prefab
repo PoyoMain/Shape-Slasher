@@ -796,7 +796,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dbee1bf3ca6daa4d9d05b52a147a495, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 10
+  options: {fileID: 11400000, guid: f5eee3582d6e5f7479ad6c0128364369, type: 2}
+  useOptionsValues: 1
+  cost:
+    EasyValue: 10
+    MediumValue: 20
+    HardValue: 30
+  testCost: 20
   type: 0
   onlyBuyOnce: 0
   itemDescriptionBox: {fileID: 6249414258579262541}

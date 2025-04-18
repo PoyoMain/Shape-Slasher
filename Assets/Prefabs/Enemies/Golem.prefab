@@ -398,7 +398,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e39374c44e13f444ab7e630c5f71eee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
+  options: {fileID: 11400000, guid: f5eee3582d6e5f7479ad6c0128364369, type: 2}
+  usesOptionsValues: 1
+  damage:
+    EasyValue: 1
+    MediumValue: 1
+    HardValue: 1
+  testDamage: 1
   knockback: 5
   knockbackOrigin: {fileID: 1650382962934967136}
 --- !u!1 &2539059503987102350
@@ -565,7 +571,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53065a1f5d5b60b4f9dd2dca90479ea1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 5
+  options: {fileID: 0}
+  useOptionsValues: 0
+  startHealth:
+    EasyValue: 3
+    MediumValue: 5
+    HardValue: 8
+  testStartHealth: 5
   invincibilityTime: 0.01
   knockbackTime: 0.5
   energyAmountOnHit: 1
@@ -1055,7 +1067,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e39374c44e13f444ab7e630c5f71eee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
+  options: {fileID: 11400000, guid: f5eee3582d6e5f7479ad6c0128364369, type: 2}
+  usesOptionsValues: 0
+  damage:
+    EasyValue: 1
+    MediumValue: 1
+    HardValue: 1
+  testDamage: 1
   knockback: 10
   knockbackOrigin: {fileID: 1650382962934967136}
 --- !u!1 &7274729280455980632
@@ -1229,7 +1247,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e39374c44e13f444ab7e630c5f71eee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
+  options: {fileID: 11400000, guid: f5eee3582d6e5f7479ad6c0128364369, type: 2}
+  usesOptionsValues: 1
+  damage:
+    EasyValue: 1
+    MediumValue: 1
+    HardValue: 2
+  testDamage: 1
   knockback: 5
   knockbackOrigin: {fileID: 1650382962934967136}
 --- !u!1 &7538134221649005106
@@ -1403,7 +1427,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e39374c44e13f444ab7e630c5f71eee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
+  options: {fileID: 11400000, guid: f5eee3582d6e5f7479ad6c0128364369, type: 2}
+  usesOptionsValues: 1
+  damage:
+    EasyValue: 1
+    MediumValue: 1
+    HardValue: 2
+  testDamage: 1
   knockback: 10
   knockbackOrigin: {fileID: 1650382962934967136}
 --- !u!1 &7849165200553402634

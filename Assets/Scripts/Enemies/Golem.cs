@@ -9,8 +9,13 @@ using UnityEngine.Events;
 [RequireComponent(typeof(CinemachineImpulseSource), typeof(EnemyDeathEvent))]
 public class Golem : MonoBehaviour, IHasEnergy
 {
+    [Header("Options")]
+    [SerializeField] private OptionsSO options;
+    [SerializeField] private bool useOptionsValues;
+
     [Header("Health")]
-    [SerializeField] private float health;
+    [SerializeField] private DifficultyInt startHealth;
+    [SerializeField] private int testStartHealth;
     [SerializeField] private float invincibilityTime;
     [SerializeField] private float knockbackTime;
 
@@ -60,8 +65,10 @@ public class Golem : MonoBehaviour, IHasEnergy
 
     //Properties
     private bool FacingRight => transform.localEulerAngles.y == ROTATION_FACINGRIGHT;
+    private int StartingHealth => useOptionsValues ? startHealth.ReturnValue(options.Difficulty) : testStartHealth;
 
     // Private Variables
+    private int health;
     private State state = State.Patroling;
     private Rigidbody2D rigid;
     private Animator anim;
@@ -78,6 +85,11 @@ public class Golem : MonoBehaviour, IHasEnergy
         TryGetComponent(out deathEvent);
 
         ChangeState(State.Patroling);
+    }
+
+    private void Start()
+    {
+        health = StartingHealth;
     }
 
     private void FixedUpdate()
