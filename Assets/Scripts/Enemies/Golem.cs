@@ -256,6 +256,13 @@ public class Golem : MonoBehaviour, IHasEnergy
 
             if (Defending)
             {
+                if (collision.TryGetComponent(out PlayerEnergyBlast _))
+                {
+                    StopDefense();
+                    ChangeState(State.Attacking); 
+                    return;
+                }
+
                 Vector2 directionToHitbox = (collision.transform.position - transform.position).normalized;
                 //print((collision.transform.position - transform.position).normalized);
 
