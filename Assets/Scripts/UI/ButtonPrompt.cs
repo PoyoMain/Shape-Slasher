@@ -43,6 +43,7 @@ public class ButtonPrompt : MonoBehaviour
                 "Circle" => "<sprite=\"Icon_PlaystationButtons\" index=1>",
                 "Cross" => "<sprite=\"Icon_PlaystationButtons\" index=2>",
                 "Square" => "<sprite=\"Icon_PlaystationButtons\" index=3>",
+                "Options" => "<sprite=\"Icon_Playstation_Options\" index=0>",
                 _ => text
             }; 
         }
@@ -54,6 +55,14 @@ public class ButtonPrompt : MonoBehaviour
                 "Shift" => keyboardRectButtonSprite,
                 "Space" => keyboardRectButtonSprite,
                 _ => keyboardSquareButtonSprite,
+            };
+        }
+        else
+        {
+            text = text switch
+            {
+                "Plus" => "<sprite=\"Icon_Options\" index=0>",
+                _ => text
             };
         }
 
