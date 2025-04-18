@@ -59,7 +59,8 @@ public class OptionsMenu : MonoBehaviour
         audioSlider_Ambience.value = volume;
 
         checkbox_ControllerRumble.isOn = optionsSO.ControllerRumble;
-        checkbox_Speedrun.isOn = optionsSO.SpeedrunMode;
+        checkbox_Speedrun.isOn = false;
+        optionsSO.SetSpeedRunMode(false);
 
         switch (optionsSO.Difficulty)
         {
