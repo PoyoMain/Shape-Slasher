@@ -1706,11 +1706,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 879912779459309449}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 160, y: -100}
-  m_SizeDelta: {x: 600, y: 200}
-  m_Pivot: {x: 0.5, y: 1}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: -300}
+  m_SizeDelta: {x: 300, y: 100}
+  m_Pivot: {x: 1, y: 1}
 --- !u!222 &846358802584445954
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1766,12 +1766,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 200
+  m_fontSize: 89.5
   m_fontSizeBase: 200
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 200
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -2587,7 +2587,7 @@ MonoBehaviour:
   timerTextBox: {fileID: 8759099697045742242}
   timerStartEventSO: {fileID: 11400000, guid: 3a802436c7e7b4f41b015a22b99b6011, type: 2}
   timerSucceedEventSO: {fileID: 11400000, guid: 06730dad57c80f3429eb762bcac337e6, type: 2}
-  timerFailEventSO: {fileID: 11400000, guid: 85132c2903af7184b824f1c99dc19a83, type: 2}
+  timerFailEventSOs: []
 --- !u!1 &7490857683860160307
 GameObject:
   m_ObjectHideFlags: 0
