@@ -585,6 +585,9 @@ public class Player : MonoBehaviour
     {
         StopVerticalMovement();
         velocity = new(velocity.x, (hitColliderDirection * stats.BounceKnockback).y);
+        endedJumpEarly = true;
+        jumpTimer = 0;
+        
     }
 
     private void KnockbackOnlyVertical(Vector2 force)
