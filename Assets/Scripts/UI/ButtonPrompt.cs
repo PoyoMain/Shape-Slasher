@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.DualShock;
+using UnityEngine.InputSystem.XInput;
 using UnityEngine.UI;
 
 public class ButtonPrompt : MonoBehaviour
@@ -47,6 +48,14 @@ public class ButtonPrompt : MonoBehaviour
                 _ => text
             }; 
         }
+        else if (Gamepad.current is XInputController)
+        {
+            text = text switch
+            {
+                "Start" => "<sprite=\"Icon_Xbox_Start\", index=0>",
+                _ => text
+            };
+        }
         else if (Gamepad.current == null)
         {
             promptImage.sprite = text switch
@@ -61,7 +70,7 @@ public class ButtonPrompt : MonoBehaviour
         {
             text = text switch
             {
-                "Plus" => "<sprite=\"Icon_Options\" index=0>",
+                "Plus" => "<sprite=\"Icon_Switch_Plus\" index=0>",
                 _ => text
             };
         }
