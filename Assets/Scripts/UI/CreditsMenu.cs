@@ -42,33 +42,11 @@ public class CreditsMenu : MonoBehaviour
 
         buttons = GetComponentsInChildren<Button>();
         eventSystem.currentSelectedGameObject.TryGetComponent(out currentButton);
-
-        controls.Cancel.performed += Cancel;
     }
 
     private void Update()
     {
         navigationInput = controls.Navigate.ReadValue<Vector2>();
-    }
-
-    private void Cancel(UnityEngine.InputSystem.InputAction.CallbackContext _)
-    {
-        if (conceptOpen)
-        {
-            eventSystem.SetSelectedGameObject(prevSelectedObject);
-            conceptOpen = false;
-            onConceptClose?.Invoke();
-        }
-        else
-        {
-            onCreditsClose?.Invoke();
-
-            Vector2 newPos = content.anchoredPosition;
-            newPos.y = 0;
-            content.anchoredPosition = newPos;
-
-            currentButtonIndex = 1;
-        }
     }
 
     private void FixedUpdate()
@@ -116,9 +94,29 @@ public class CreditsMenu : MonoBehaviour
         onConceptOpen?.Invoke();
     }
 
+
+    public void GoBack()
+    {
+        if (conceptOpen)
+        {
+            eventSystem.SetSelectedGameObject(prevSelectedObject);
+            conceptOpen = false;
+            onConceptClose?.Invoke();
+        }
+        else
+        {
+            onCreditsClose?.Invoke();
+
+            Vector2 newPos = content.anchoredPosition;
+            newPos.y = 0;
+            content.anchoredPosition = newPos;
+
+            currentButtonIndex = 1;
+        }
+    }
+
     private void OnDisable()
     {
-        controls.Cancel.performed -= Cancel;
         controls.Disable();
     }
 }

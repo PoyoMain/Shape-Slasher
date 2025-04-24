@@ -9,8 +9,13 @@ using UnityEngine.Events;
 [RequireComponent(typeof(CinemachineImpulseSource), typeof(EnemyDeathEvent))]
 public class Golem : MonoBehaviour, IHasEnergy
 {
+    [Header("Options")]
+    [SerializeField] private OptionsSO options;
+    [SerializeField] private bool useOptionsValues;
+
     [Header("Health")]
-    [SerializeField] private float health;
+    [SerializeField] private DifficultyInt startHealth;
+    [SerializeField] private int testStartHealth;
     [SerializeField] private float invincibilityTime;
     [SerializeField] private float knockbackTime;
 
@@ -29,6 +34,7 @@ public class Golem : MonoBehaviour, IHasEnergy
     [SerializeField] private float playerBehindDistance;
     [SerializeField] private float attackMoveSpeed;
     [SerializeField] private float attackCooldownTime;
+    [SerializeField, Range(0f, 1f)] private float counterAttackChance;
 
     [Header("Defending")]
     [SerializeField] private float defendTime;
@@ -59,8 +65,10 @@ public class Golem : MonoBehaviour, IHasEnergy
 
     //Properties
     private bool FacingRight => transform.localEulerAngles.y == ROTATION_FACINGRIGHT;
+    private int StartingHealth => useOptionsValues ? startHealth.ReturnValue(options.Difficulty) : testStartHealth;
 
     // Private Variables
+    private int health;
     private State state = State.Patroling;
     private Rigidbody2D rigid;
     private Animator anim;
@@ -77,6 +85,11 @@ public class Golem : MonoBehaviour, IHasEnergy
         TryGetComponent(out deathEvent);
 
         ChangeState(State.Patroling);
+    }
+
+    private void Start()
+    {
+        health = StartingHealth;
     }
 
     private void FixedUpdate()
@@ -186,6 +199,13 @@ public class Golem : MonoBehaviour, IHasEnergy
         attackCooldownTimer = attackCooldownTime;
     }
 
+    private void CounterAttackChance()
+    {
+        bool counter = Random.Range(0f, 1f) <= counterAttackChance;
+
+        if (counter && CheckForPlayer()) ExecuteAttack();
+    }
+
     #endregion
 
     #region Collisions
@@ -236,6 +256,13 @@ public class Golem : MonoBehaviour, IHasEnergy
 
             if (Defending)
             {
+                if (collision.TryGetComponent(out PlayerEnergyBlast _))
+                {
+                    StopDefense();
+                    ChangeState(State.Attacking); 
+                    return;
+                }
+
                 Vector2 directionToHitbox = (collision.transform.position - transform.position).normalized;
                 //print((collision.transform.position - transform.position).normalized);
 

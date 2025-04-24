@@ -29,12 +29,12 @@ public class Player : MonoBehaviour
     [SerializeField] private SFXPlayer deathSFXPlayer;
 
     [Header("Broadcast Events")]
-    [SerializeField] private VoidEventSO playerDamagedEventSO;
     [SerializeField] private VoidEventSO playerHealedEventSO;
-    [SerializeField] private VoidEventSO playerDeathEventSO;
     [SerializeField] private IntEventSO playerHealthLossEventSO;
     [SerializeField] private IntEventSO playerHealthGainedEventSO;
     [SerializeField] private IntEventSO playerHealthUpdatedEventSO;
+    [SerializeField] private VoidEventSO playerDamagedEventSO;
+    [SerializeField] private VoidEventSO playerDeathEventSO;
     [SerializeField] private IntEventSO playerCurrencyUpdateEventSO;
     [SerializeField] private IntEventSO playerEnergyUpdateEventSO;
 
@@ -91,6 +91,8 @@ public class Player : MonoBehaviour
         GetInput();
     }
 
+    #region Input
+
     private void GetInput()
     {
         jumpDown = Controls.Jump.WasPressedThisFrame();
@@ -140,6 +142,8 @@ public class Player : MonoBehaviour
 
         previousVertDirectionValue = moveInput.y;
     }
+
+    #endregion
 
     private void FixedUpdate()
     {
@@ -357,6 +361,8 @@ public class Player : MonoBehaviour
     private void ExecuteDash()
     {
         velocity = new(stats.DashPower * NumericalFacingDirection, 0);
+        if (ControllerHapticsHandler.Instance != null)
+            ControllerHapticsHandler.Instance.ShakeController(0.003f, 0.005f, 0.7f);
         dashTimer = stats.DashTime;
         anim.SetBool("IsDashing", true);
         if (!grounded) hasDashInAir = false;
@@ -396,6 +402,8 @@ public class Player : MonoBehaviour
         LostEnergy(stats.SpecialAttackEnergyCost);
         anim.SetTrigger("SpecialAttack");
         specialAttackTimer = stats.SpecialAttackTime;
+        if (ControllerHapticsHandler.Instance != null)
+            ControllerHapticsHandler.Instance.ShakeController(0.005f, 0.01f, 0.4f);
     }
 
     #endregion
@@ -581,6 +589,9 @@ public class Player : MonoBehaviour
     {
         StopVerticalMovement();
         velocity = new(velocity.x, (hitColliderDirection * stats.BounceKnockback).y);
+        endedJumpEarly = true;
+        jumpTimer = 0;
+        
     }
 
     private void KnockbackOnlyVertical(Vector2 force)
@@ -697,6 +708,8 @@ public class Player : MonoBehaviour
         else
         {
             damageSFXPlayer.Play();
+            if (ControllerHapticsHandler.Instance != null)
+                ControllerHapticsHandler.Instance.ShakeController(0.002f, 0.1f, 0.1f);
         }
     }
 
@@ -728,6 +741,7 @@ public class Player : MonoBehaviour
     {
         energy = Mathf.Min(energy + amount, 100);
         playerEnergyUpdateEventSO.RaiseEvent(energy);
+        EnergyGained?.Invoke(amount);
     }
 
     private void LostEnergy(int amount)

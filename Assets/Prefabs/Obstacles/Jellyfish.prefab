@@ -97,11 +97,11 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0, y: 0.8}
-      - {x: -0.6, y: 0.7}
-      - {x: -1, y: 0.3}
-      - {x: 1, y: 0.3}
-      - {x: 0.6, y: 0.7}
+    - - {x: -0.007165879, y: 0.93256885}
+      - {x: -0.3205304, y: 0.9185596}
+      - {x: -0.7599428, y: 0.5185596}
+      - {x: 0.71336454, y: 0.53647435}
+      - {x: 0.27395213, y: 0.91497654}
   m_UseDelaunayMesh: 0
 --- !u!114 &5843271378530169317
 MonoBehaviour:
@@ -254,7 +254,7 @@ SpriteRenderer:
   m_SortingLayerID: 1191628647
   m_SortingLayer: 7
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 84214355b7667eb4faf6923778067f8e, type: 3}
+  m_Sprite: {fileID: 1183044033, guid: 28fdd78be7b37594b820b05c4cf08bca, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -275,6 +275,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7917134190929899227}
   - component: {fileID: 3059882962530982248}
+  - component: {fileID: 3540400163626524134}
   m_Layer: 0
   m_Name: Jellyfish
   m_TagString: Untagged
@@ -326,6 +327,27 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!95 &3540400163626524134
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6695985165672416596}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e2b7f03f276caf24c9cce3d055945bf8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7327371718737040876
 GameObject:
   m_ObjectHideFlags: 0
@@ -391,7 +413,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.08068091, y: -0.37765616}
+  m_Offset: {x: -0.005309731, y: -0.5042754}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -402,7 +424,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.621416, y: 0.7047415}
+  m_Size: {x: 0.9406566, y: 1.2661129}
   m_EdgeRadius: 0
 --- !u!114 &8058497726552061985
 MonoBehaviour:
@@ -416,6 +438,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e39374c44e13f444ab7e630c5f71eee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
+  options: {fileID: 11400000, guid: f5eee3582d6e5f7479ad6c0128364369, type: 2}
+  usesOptionsValues: 1
+  damage:
+    EasyValue: 1
+    MediumValue: 1
+    HardValue: 1
+  testDamage: 1
   knockback: 0
   knockbackOrigin: {fileID: 0}

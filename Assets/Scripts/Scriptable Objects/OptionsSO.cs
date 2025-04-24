@@ -7,11 +7,18 @@ using UnityEngine.UI;
 [CreateAssetMenu(fileName = "New Options SO", menuName = "Options")]
 public class OptionsSO : ScriptableObject
 {
-    [SerializeField] private AudioMixer audioMixer;
+    [Header("Settings")]
     [SerializeField] private bool controllerRumble;
+    [SerializeField] private bool speedRunMode;
+    [SerializeField] private Difficulty difficulty;
 
-    public AudioMixer MainAudioMixer => audioMixer;
+    [Header("Audio")]
+    [SerializeField] private AudioMixer audioMixer;
+
     public bool ControllerRumble => controllerRumble;
+    public bool SpeedrunMode => speedRunMode;
+    public Difficulty Difficulty => difficulty;
+    public AudioMixer MainAudioMixer => audioMixer;
 
     private const string MIXER_MASTER = "MasterVolume";
     private const string MIXER_MUSIC = "MusicVolume";
@@ -23,6 +30,30 @@ public class OptionsSO : ScriptableObject
         controllerRumble = !controllerRumble;
     }
 
+    public void SetSpeedRunMode()
+    {
+        speedRunMode = !speedRunMode;
+    }
+
+    public void SetSpeedRunMode(bool value)
+    {
+        speedRunMode = value;
+    }
+
+    public void SetEasyDifficulty()
+    {
+        difficulty = Difficulty.Easy;
+    }
+
+    public void SetMediumDifficulty()
+    {
+        difficulty = Difficulty.Medium;
+    }
+
+    public void SetHardDifficulty()
+    {
+        difficulty = Difficulty.Hard;
+    }
 
 
     public void SetMasterVolume(Slider slider)
@@ -44,4 +75,11 @@ public class OptionsSO : ScriptableObject
     {
         audioMixer.SetFloat(MIXER_AMBIENCE, slider.value);
     }
+}
+
+public enum Difficulty
+{
+    Easy,
+    Medium,
+    Hard
 }

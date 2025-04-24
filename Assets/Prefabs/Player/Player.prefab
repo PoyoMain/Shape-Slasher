@@ -276,7 +276,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &782208810798574963
 Transform:
   m_ObjectHideFlags: 0
@@ -418,12 +418,12 @@ MonoBehaviour:
   jumpSFXPlayer: {fileID: 8116855035941202347}
   damageSFXPlayer: {fileID: 4657243296264815216}
   deathSFXPlayer: {fileID: 108248878136766280}
-  playerDamagedEventSO: {fileID: 11400000, guid: 50515061176e30247924a5ec4e884961, type: 2}
   playerHealedEventSO: {fileID: 11400000, guid: 9ee676bf7c900814784fa2484517c9da, type: 2}
-  playerDeathEventSO: {fileID: 11400000, guid: 85132c2903af7184b824f1c99dc19a83, type: 2}
   playerHealthLossEventSO: {fileID: 11400000, guid: f9060ebb00f2eb3448c65b5630f15d48, type: 2}
   playerHealthGainedEventSO: {fileID: 11400000, guid: b8e434bfeb2b83044a63061dd294bc9e, type: 2}
   playerHealthUpdatedEventSO: {fileID: 11400000, guid: e9ecf39e1b1439f4c8f04b6140a28529, type: 2}
+  playerDamagedEventSO: {fileID: 11400000, guid: 50515061176e30247924a5ec4e884961, type: 2}
+  playerDeathEventSO: {fileID: 11400000, guid: 85132c2903af7184b824f1c99dc19a83, type: 2}
   playerCurrencyUpdateEventSO: {fileID: 11400000, guid: aebc4cab0b196724490ae502687f5374, type: 2}
   playerEnergyUpdateEventSO: {fileID: 11400000, guid: e8b888aaf0ee14e42af4623fa15e6392, type: 2}
 --- !u!114 &2831384106462213000

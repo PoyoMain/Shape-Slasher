@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
@@ -49,9 +50,14 @@ public class PauseMenu : MonoBehaviour
         if (isPaused)
         {
             EventSystem.current.SetSelectedGameObject(firstSelectButton.gameObject);
+            InputSystem.PauseHaptics();
             gamePausedEventSO.RaiseEvent();
         }
-        else gameUnpausedEventSO.RaiseEvent();
+        else
+        {
+            InputSystem.ResumeHaptics();
+            gameUnpausedEventSO.RaiseEvent();
+        }
     }
 
     public void Pause()

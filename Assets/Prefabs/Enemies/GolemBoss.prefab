@@ -992,7 +992,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e39374c44e13f444ab7e630c5f71eee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
+  options: {fileID: 11400000, guid: f5eee3582d6e5f7479ad6c0128364369, type: 2}
+  usesOptionsValues: 1
+  damage:
+    EasyValue: 1
+    MediumValue: 2
+    HardValue: 2
+  testDamage: 2
   knockback: 20
   knockbackOrigin: {fileID: 5127299893526744295}
 --- !u!1 &3636784066596537313
@@ -1085,7 +1091,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e39374c44e13f444ab7e630c5f71eee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
+  options: {fileID: 11400000, guid: f5eee3582d6e5f7479ad6c0128364369, type: 2}
+  usesOptionsValues: 1
+  damage:
+    EasyValue: 1
+    MediumValue: 2
+    HardValue: 2
+  testDamage: 2
   knockback: 20
   knockbackOrigin: {fileID: 5127299893526744295}
 --- !u!1 &3720028712996912907
@@ -1420,7 +1432,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee4ded4dd3228194ca9cf4268dad1aeb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 60
+  options: {fileID: 11400000, guid: f5eee3582d6e5f7479ad6c0128364369, type: 2}
+  useOptionsValues: 1
+  startHealth:
+    EasyValue: 30
+    MediumValue: 60
+    HardValue: 90
+  testStartHealth: 60
   invincibilityTime: 0.01
   energyAmountOnHit: 1
   jumpHeight: 6
@@ -1670,7 +1688,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e39374c44e13f444ab7e630c5f71eee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
+  options: {fileID: 11400000, guid: f5eee3582d6e5f7479ad6c0128364369, type: 2}
+  usesOptionsValues: 1
+  damage:
+    EasyValue: 1
+    MediumValue: 2
+    HardValue: 2
+  testDamage: 2
   knockback: 20
   knockbackOrigin: {fileID: 5127299893526744295}
 --- !u!1 &6765922278976851150
@@ -1816,7 +1840,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e39374c44e13f444ab7e630c5f71eee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 2
+  options: {fileID: 11400000, guid: f5eee3582d6e5f7479ad6c0128364369, type: 2}
+  usesOptionsValues: 1
+  damage:
+    EasyValue: 1
+    MediumValue: 2
+    HardValue: 2
+  testDamage: 2
   knockback: 20
   knockbackOrigin: {fileID: 5127299893526744295}
 --- !u!1 &7707089326107202847

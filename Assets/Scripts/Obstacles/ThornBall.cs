@@ -14,6 +14,14 @@ public class ThornBall : MonoBehaviour
 
     private bool CheckForWall()
     {
-        return Physics2D.Raycast(coll.bounds.center, Vector2.left, coll.radius + 0.03f, wallLayer);
+        return Physics2D.Raycast(coll.bounds.center, Vector2.left, coll.radius + 0.03f, wallLayer) || Physics2D.Raycast(coll.bounds.center, Vector2.right, coll.radius + 0.03f, wallLayer);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.TryGetComponent(out DamageComponent damageComponent))
+        {
+            Destroy(gameObject);
+        }
     }
 }

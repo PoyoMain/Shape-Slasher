@@ -80,7 +80,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e39374c44e13f444ab7e630c5f71eee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
+  options: {fileID: 11400000, guid: f5eee3582d6e5f7479ad6c0128364369, type: 2}
+  usesOptionsValues: 1
+  damage:
+    EasyValue: 1
+    MediumValue: 1
+    HardValue: 2
+  testDamage: 1
   knockback: 0
   knockbackOrigin: {fileID: 0}
 --- !u!1 &1425477167360103089
@@ -336,7 +342,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e636d3a7141eb44c9a5917a6654cf97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 3
+  options: {fileID: 11400000, guid: f5eee3582d6e5f7479ad6c0128364369, type: 2}
+  useOptionsValues: 1
+  startHealth:
+    EasyValue: 2
+    MediumValue: 3
+    HardValue: 5
+  testStartHealth: 3
   invincibilityTime: 0.01
   energyAmountOnHit: 1
   playerDetectDistance: 10
@@ -469,7 +481,7 @@ MonoBehaviour:
     m_DissipationMode: 2
     m_DissipationDistance: 100
     m_PropagationSpeed: 343
-  m_DefaultVelocity: {x: 0, y: -1, z: 0}
+  m_DefaultVelocity: {x: 0.1, y: 0.1, z: 0}
 --- !u!114 &5380775163053243481
 MonoBehaviour:
   m_ObjectHideFlags: 0

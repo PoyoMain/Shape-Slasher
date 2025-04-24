@@ -4,16 +4,24 @@ using UnityEngine;
 
 public class DamageComponent : MonoBehaviour
 {
-    [SerializeField] private int damage;
+    [Header("Options")]
+    [SerializeField] private OptionsSO options;
+    [SerializeField] private bool usesOptionsValues;
+
+    [Header("Stats")]
+    [SerializeField] private DifficultyInt damage;
+    [SerializeField] private int testDamage;
     [SerializeField] private int knockback;
     [SerializeField] private Transform knockbackOrigin;
 
-    public int Damage => damage;
+    public int Damage => Mathf.CeilToInt(multiplier * (usesOptionsValues ? damage.ReturnValue(options.Difficulty) : testDamage));
     public int Knockback => knockback;
     public Transform KnockbackOrigin => knockbackOrigin != null ? knockbackOrigin : transform;
 
-    public void IncreaseDamageByMultiplier(float multiplier)
+    private float multiplier = 1;
+
+    public void IncreaseDamageByMultiplier(float mult)
     {
-        damage = Mathf.CeilToInt(damage * multiplier);
+        multiplier = mult;
     }
 }

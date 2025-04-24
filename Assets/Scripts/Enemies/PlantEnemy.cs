@@ -6,8 +6,13 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(CinemachineImpulseSource), typeof(EnemyDeathEvent))]
 public class PlantEnemy : MonoBehaviour, IHasEnergy
 {
+    [Header("Options")]
+    [SerializeField] private OptionsSO options;
+    [SerializeField] private bool useOptionsValues;
+
     [Header("Health")]
-    [SerializeField] private int health;
+    [SerializeField] private DifficultyInt startHealth;
+    [SerializeField] private int testStartHealth;
     [SerializeField] private float invincibilityTime;
 
     [Header("Energy")]
@@ -40,8 +45,11 @@ public class PlantEnemy : MonoBehaviour, IHasEnergy
     [Header("Broadcast Events")]
     [SerializeField] private VoidEventSO enemyDeathEventSO;
 
-    private State state = State.Idle;
+    // Properties
+    private int StartingHealth => useOptionsValues ? startHealth.ReturnValue(options.Difficulty) : testStartHealth;
 
+    private int health;
+    private State state = State.Idle;
     private Animator anim;
     private DamageFlash damageFlash;
     private CinemachineImpulseSource damageImpulseSource;
@@ -53,6 +61,11 @@ public class PlantEnemy : MonoBehaviour, IHasEnergy
         TryGetComponent(out damageFlash);
         TryGetComponent(out damageImpulseSource);
         TryGetComponent(out deathEvent);
+    }
+
+    private void Start()
+    {
+        health = StartingHealth;
     }
 
     private void ChangeState(State newState)
