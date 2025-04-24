@@ -15,6 +15,8 @@ public class PlayerHitbox : MonoBehaviour
 
     private Player player;
 
+    public Axis HitboxAxis => axis;
+
     private void Awake()
     {
         player = GetComponentInParent<Player>();
@@ -63,5 +65,5 @@ public class PlayerHitbox : MonoBehaviour
         if (energy != null) player.GainedEnergy(energy.EnergyAmountOnHit);
     }
 
-    private enum Axis { Horizontal, Up, Down }
+    public enum Axis { Horizontal, Up, Down }
 }

@@ -32,6 +32,8 @@ public class Golem : MonoBehaviour, IHasEnergy
     [SerializeField] private float attackDistance;
     [SerializeField] private float playerFrontDistance;
     [SerializeField] private float playerBehindDistance;
+    [SerializeField] private float playerAboveDistance;
+    [SerializeField] private float playerAboveTime;
     [SerializeField] private float attackMoveSpeed;
     [SerializeField] private float attackCooldownTime;
     [SerializeField, Range(0f, 1f)] private float counterAttackChance;
@@ -96,6 +98,9 @@ public class Golem : MonoBehaviour, IHasEnergy
     {
         if (invincibleTimer > 0) invincibleTimer -= Time.deltaTime;
 
+        if (IsPlayerAbove()) playerAboveTimer -= Time.fixedDeltaTime;
+        else playerAboveTimer = playerAboveTime;
+
         if (state == State.Patroling)
         {
             PatrolState();
@@ -147,6 +152,7 @@ public class Golem : MonoBehaviour, IHasEnergy
     private void PatrolState()
     {
         if (CheckForPlayer()) return;
+        if (IsPlayerAbove()) return;
         if (startPatrollingTimer > 0)
         {
             startPatrollingTimer -= Time.fixedDeltaTime;
@@ -177,6 +183,7 @@ public class Golem : MonoBehaviour, IHasEnergy
     #region Attacking
 
     private float attackCooldownTimer;
+    private float playerAboveTimer;
     private bool AttackOnCooldown => attackCooldownTimer > 0;
 
     private void AttackState()
@@ -186,6 +193,13 @@ public class Golem : MonoBehaviour, IHasEnergy
             attackCooldownTimer -= Time.fixedDeltaTime;
             return;
         }
+
+        if (playerAboveTimer <= 0)
+        {
+            ExecuteSpikeAttack();
+            return;
+        }
+
         if (!CheckForPlayer()) return;
 
         if (IsPlayerInAttackDistance()) ExecuteAttack();
@@ -196,6 +210,14 @@ public class Golem : MonoBehaviour, IHasEnergy
     {
         StopMoving();
         anim.SetTrigger("Attack");
+        attackCooldownTimer = attackCooldownTime;
+    }
+
+    private void ExecuteSpikeAttack()
+    {
+        StopMoving();
+        anim.SetTrigger("Spike");
+        playerAboveTimer = playerAboveTime;
         attackCooldownTimer = attackCooldownTime;
     }
 
@@ -248,45 +270,73 @@ public class Golem : MonoBehaviour, IHasEnergy
         if (playerHitBehind) TurnAround();
     }
 
+    private bool IsPlayerAbove()
+    {
+        bool returnValue = Physics2D.CapsuleCast(bodyCollider.bounds.center, bodyCollider.size, bodyCollider.direction, 0, Vector2.up, playerAboveDistance, playerLayer);
+        if (returnValue) ChangeState(State.Attacking);
+        return returnValue;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.TryGetComponent(out DamageComponent damageComponent))
         {
             if (IsInvincible) return;
 
+            Vector2 directionToHitbox = Vector2.zero;
+            if (collision.TryGetComponent(out PlayerHitbox playerHitbox))
+            {
+                if (playerHitbox.HitboxAxis == PlayerHitbox.Axis.Down) directionToHitbox = Vector2.up;
+                else if (playerHitbox.HitboxAxis == PlayerHitbox.Axis.Up) directionToHitbox = Vector2.down;
+                else if (playerHitbox.HitboxAxis == PlayerHitbox.Axis.Horizontal)
+                {
+                    directionToHitbox = (collision.transform.position - transform.position).normalized;
+                    if (directionToHitbox.x > 0.7f) directionToHitbox = Vector2.right;
+                    else if (directionToHitbox.x < -0.7f) directionToHitbox = Vector2.left;
+                }
+            }
+            else
+            {
+                directionToHitbox = (collision.transform.position - transform.position).normalized;
+
+                if (directionToHitbox.x > 0.7f) directionToHitbox = Vector2.right;
+                else if (directionToHitbox.x < -0.7f) directionToHitbox = Vector2.left;
+                else if (directionToHitbox.y > 0.7f) directionToHitbox = Vector2.up;
+                else if (directionToHitbox.y < 0.7f) directionToHitbox = Vector2.down;
+            }
+            //print((collision.transform.position - transform.position).normalized);
+
+            
+
             if (Defending)
             {
                 if (collision.TryGetComponent(out PlayerEnergyBlast _))
                 {
                     StopDefense();
-                    ChangeState(State.Attacking); 
+                    ChangeState(State.Attacking);
                     return;
                 }
 
-                Vector2 directionToHitbox = (collision.transform.position - transform.position).normalized;
-                //print((collision.transform.position - transform.position).normalized);
-
-                Vector2 cardinalDirectionToHitbox = Vector2.zero;
-                if (directionToHitbox.x > 0.7f) cardinalDirectionToHitbox = Vector2.right;
-                else if (directionToHitbox.x < -0.7f) cardinalDirectionToHitbox = Vector2.left;
-                else if (directionToHitbox.y > 0.7f) cardinalDirectionToHitbox = Vector2.up;
-                else if (directionToHitbox.y < 0.7f) cardinalDirectionToHitbox = Vector2.down;
-
-                if ((FacingRight && cardinalDirectionToHitbox == Vector2.right) || (!FacingRight && cardinalDirectionToHitbox == Vector2.left))
+                if ((FacingRight && directionToHitbox == Vector2.right) || (!FacingRight && directionToHitbox == Vector2.left))
                 {
                     StopDefense();
                     ExecuteAttack();
                     ChangeState(State.Attacking);
                     return;
                 }
-                else if ((FacingRight && cardinalDirectionToHitbox == Vector2.left) || (!FacingRight && cardinalDirectionToHitbox == Vector2.right))
+                else if ((FacingRight && directionToHitbox == Vector2.left) || (!FacingRight && directionToHitbox == Vector2.right) || directionToHitbox == Vector2.up)
                 {
                     StopDefense();
+                    TakeDamage(damageComponent.Damage);
                     ChangeState(State.Attacking);
                 }
             }
+            else TakeDamage(damageComponent.Damage);
 
-            TakeDamage(damageComponent.Damage);
+            if (directionToHitbox != Vector2.up)
+            {
+                timesAttacked++;
+            }
 
             Vector2 forceDirection;
             if (collision.transform.root.position.x > transform.position.x) forceDirection = Vector2.left;
@@ -327,7 +377,6 @@ public class Golem : MonoBehaviour, IHasEnergy
     private void TakeDamage(int damage)
     {
         health -= damage;
-        timesAttacked++;
 
         damageFlash.CallDamageFlash();
         damageImpulseSource.GenerateImpulse();
@@ -372,16 +421,17 @@ public class Golem : MonoBehaviour, IHasEnergy
         Vector2 velocity = rigid.velocity;
         velocity.x = force.x;
         rigid.velocity = velocity;
-        cachedStateBeforeKnockback = state;
+        if (state != State.Knockback) cachedStateBeforeKnockback = state;
         state = State.Knockback;
         Invoke(nameof(EndKnockback), knockbackTime);
     }
 
     private void EndKnockback()
     {
-        if (timesAttacked % 2 == 0)
+        if (timesAttacked % 3 == 0)
         {
             ChangeState(State.Defending);
+            timesAttacked = 0;
         }
         else state = cachedStateBeforeKnockback;
     }
