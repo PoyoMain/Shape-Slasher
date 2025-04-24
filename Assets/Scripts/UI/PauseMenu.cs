@@ -39,13 +39,12 @@ public class PauseMenu : MonoBehaviour
         gameQuitEventSO.OnEventRaised -= ResetPauseMenu;
     }
 
-    private void Pause(UnityEngine.InputSystem.InputAction.CallbackContext _)
+    private void Pause(InputAction.CallbackContext _)
     {
         isPaused = !isPaused;
-
         Time.timeScale = isPaused ? 0 : 1;
-        pauseMenuPanel.SetActive(isPaused);
 
+        pauseMenuPanel.SetActive(isPaused);
 
         if (isPaused)
         {
@@ -55,6 +54,7 @@ public class PauseMenu : MonoBehaviour
         }
         else
         {
+            EventSystem.current.SetSelectedGameObject(null);
             InputSystem.ResumeHaptics();
             gameUnpausedEventSO.RaiseEvent();
         }
@@ -63,17 +63,22 @@ public class PauseMenu : MonoBehaviour
     public void Pause()
     {
         isPaused = !isPaused;
-
         Time.timeScale = isPaused ? 0 : 1;
-        pauseMenuPanel.SetActive(isPaused);
 
+        pauseMenuPanel.SetActive(isPaused);
 
         if (isPaused)
         {
             EventSystem.current.SetSelectedGameObject(firstSelectButton.gameObject);
+            InputSystem.PauseHaptics();
             gamePausedEventSO.RaiseEvent();
         }
-        else gameUnpausedEventSO.RaiseEvent();
+        else
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            InputSystem.ResumeHaptics();
+            gameUnpausedEventSO.RaiseEvent();
+        }
     }
 
     private void ResetPauseMenu()
