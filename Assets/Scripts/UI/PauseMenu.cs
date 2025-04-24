@@ -20,27 +20,42 @@ public class PauseMenu : MonoBehaviour
 
     [Header("Listen Events")]
     [SerializeField] private VoidEventSO gameQuitEventSO;
+    [SerializeField] private VoidEventSO activatePauseAbilitySO;
 
     // Properties
     private PlayerControls.GameplayControlsActions Controls => inputReader.Controls;
 
     // Private Variables
     private bool isPaused;
+    private bool hasAbilityToPause;
 
     private void OnEnable()
     {
         Controls.Pause.performed += Pause;
         gameQuitEventSO.OnEventRaised += ResetPauseMenu;
+
+        if (activatePauseAbilitySO != null) activatePauseAbilitySO.OnEventRaised += ActivateAbilityToPause;
+        else hasAbilityToPause = true;
     }
 
     private void OnDisable()
     {
         Controls.Pause.performed -= Pause;
         gameQuitEventSO.OnEventRaised -= ResetPauseMenu;
+
+        if (activatePauseAbilitySO != null) activatePauseAbilitySO.OnEventRaised -= ActivateAbilityToPause;
+        else hasAbilityToPause = false;
+    }
+
+    private void ActivateAbilityToPause()
+    {
+        hasAbilityToPause = true;
     }
 
     private void Pause(InputAction.CallbackContext _)
     {
+        if (!hasAbilityToPause) return;
+
         isPaused = !isPaused;
         Time.timeScale = isPaused ? 0 : 1;
 
@@ -62,6 +77,8 @@ public class PauseMenu : MonoBehaviour
 
     public void Pause()
     {
+        if (!hasAbilityToPause) return;
+
         isPaused = !isPaused;
         Time.timeScale = isPaused ? 0 : 1;
 
