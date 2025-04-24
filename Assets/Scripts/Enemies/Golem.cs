@@ -37,6 +37,7 @@ public class Golem : MonoBehaviour, IHasEnergy
     [SerializeField] private float attackMoveSpeed;
     [SerializeField] private float attackCooldownTime;
     [SerializeField, Range(0f, 1f)] private float counterAttackChance;
+    [SerializeField] private float timeToLosePlayer;
 
     [Header("Defending")]
     [SerializeField] private float defendTime;
@@ -101,6 +102,8 @@ public class Golem : MonoBehaviour, IHasEnergy
         if (IsPlayerAbove()) playerAboveTimer -= Time.fixedDeltaTime;
         else playerAboveTimer = playerAboveTime;
 
+        if (stunned) return;
+
         if (state == State.Patroling)
         {
             PatrolState();
@@ -130,7 +133,6 @@ public class Golem : MonoBehaviour, IHasEnergy
                 startPatrollingTimer = startPatrolTime;
                 break;
             case State.Attacking:
-                StopMoving();
                 break;
             case State.Turning:
                 StopMoving();
@@ -146,13 +148,18 @@ public class Golem : MonoBehaviour, IHasEnergy
     #region Patrolling
 
     private float startPatrollingTimer;
-
+    private bool stunned;
     private int MoveDirection => FacingRight ? 1 : -1;
 
     private void PatrolState()
     {
-        if (CheckForPlayer()) return;
-        if (IsPlayerAbove()) return;
+        if (CheckForPlayer() || IsPlayerAbove()) 
+        { 
+            anim.SetTrigger("Notice");
+            StopMoving(1);
+            return; 
+        }
+
         if (startPatrollingTimer > 0)
         {
             startPatrollingTimer -= Time.fixedDeltaTime;
@@ -170,12 +177,21 @@ public class Golem : MonoBehaviour, IHasEnergy
         anim.SetBool("Moving", true);
     }
 
-    private void StopMoving()
+    private void StopMoving(int stopTime = 0)
     {
         Vector2 velocity = rigid.velocity;
         velocity.x = 0;
         rigid.velocity = velocity;
         anim.SetBool("Moving", false);
+        stunned = true;
+
+        if (stopTime > 0) Invoke(nameof(ResumeMoving), stopTime);
+        else stunned = false;
+    }
+
+    private void ResumeMoving()
+    {
+        stunned = false;
     }
 
     #endregion
@@ -184,6 +200,7 @@ public class Golem : MonoBehaviour, IHasEnergy
 
     private float attackCooldownTimer;
     private float playerAboveTimer;
+    private float losePlayerTimer;
     private bool AttackOnCooldown => attackCooldownTimer > 0;
 
     private void AttackState()
@@ -252,9 +269,20 @@ public class Golem : MonoBehaviour, IHasEnergy
         bool playerHit = Physics2D.CapsuleCast(bodyCollider.bounds.center, bodyCollider.size, bodyCollider.direction, 0, MoveDirection * Vector2.right, playerFrontDistance, playerLayer);
         bool playerHitBehind = Physics2D.CapsuleCast(bodyCollider.bounds.center, bodyCollider.size, bodyCollider.direction, 0, -MoveDirection * Vector2.right, playerBehindDistance, playerLayer);
 
+        if (!playerHit && !playerHitBehind && losePlayerTimer > 0 && state != State.Patroling && state != State.Defending)
+        {
+            losePlayerTimer -= Time.fixedDeltaTime;
+
+            if (losePlayerTimer <= 0)
+            {
+                ChangeState(State.Patroling);
+            }
+        }
+        else losePlayerTimer = timeToLosePlayer;
+
         if (playerHit && state != State.Attacking) ChangeState(State.Attacking);
         else if (playerHitBehind && state != State.Turning) TurnAround();
-        else if (!playerHit && state != State.Patroling) ChangeState(State.Patroling); 
+        //else if (!playerHit && state != State.Patroling) ChangeState(State.Patroling); 
 
         return playerHit;
     }
@@ -363,6 +391,8 @@ public class Golem : MonoBehaviour, IHasEnergy
 
     private void TurnAround()
     {
+        if (state == State.Defending) return; 
+
         Vector3 euler = transform.localEulerAngles;
         if (euler.y == ROTATION_FACINGLEFT) euler.y = ROTATION_FACINGRIGHT;
         else euler.y = ROTATION_FACINGLEFT;
