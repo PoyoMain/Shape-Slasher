@@ -102,21 +102,25 @@ public class Player : MonoBehaviour
         if (!attackDown)
         {
             attackDown = Controls.Attack.WasPressedThisFrame();
+            attackInputTimer = stats.inputBufferTime;
         }
 
         if (!specialAttackDown)
         {
             specialAttackDown = Controls.SpecialAttack.WasPressedThisFrame();
+            specialAttackInputTimer = stats.inputBufferTime;
         }
 
         if (!dashDown && hasDashAbility)
         {
             dashDown = Controls.Dash.WasPressedThisFrame();
+            dashInputTimer = stats.inputBufferTime;
         }
 
         if (!interactDown)
         {
             interactDown = Controls.Interact.WasPressedThisFrame();
+            interactInputTimer = stats.inputBufferTime;
         }
 
         if (stats.SnapInput)
@@ -143,10 +147,43 @@ public class Player : MonoBehaviour
         previousVertDirectionValue = moveInput.y;
     }
 
+    private float attackInputTimer;
+    private float specialAttackInputTimer;
+    private float dashInputTimer;
+    private float interactInputTimer;
+    private void HandleInputTimers()
+    {
+        if (attackInputTimer > 0)
+        {
+            attackInputTimer -= Time.deltaTime;
+            if (attackInputTimer <= 0) attackDown = false;
+        }
+
+        if (specialAttackInputTimer > 0)
+        {
+            specialAttackInputTimer -= Time.deltaTime;
+            if (specialAttackInputTimer <= 0) specialAttackDown = false;
+        }
+
+        if (dashInputTimer > 0)
+        {
+            dashInputTimer -= Time.deltaTime;
+            if (dashInputTimer <= 0) dashDown = false;
+        }
+
+        if (interactInputTimer > 0)
+        {
+            interactInputTimer -= Time.deltaTime;
+            if (interactInputTimer <= 0) interactDown = false;
+        }
+    }
+
     #endregion
 
     private void FixedUpdate()
     {
+        HandleInputTimers();
+
         HandleInvincibility();
         CheckCollisions();
 
@@ -300,6 +337,7 @@ public class Player : MonoBehaviour
 
         ExecuteInteract();
         interactDown = false;
+        interactInputTimer = 0;
     }
 
     private void ExecuteInteract()
@@ -356,6 +394,7 @@ public class Player : MonoBehaviour
         if (dashDown && !IsDashing) ExecuteDash();
 
         dashDown = false;
+        dashInputTimer = 0;
     }
 
     private void ExecuteDash()
@@ -393,6 +432,7 @@ public class Player : MonoBehaviour
         if (specialAttackDown && !IsSpecialAttacking && !SpecialAttackOnCooldown) ExecuteSpecialAttack();
 
         specialAttackDown = false;
+        specialAttackInputTimer = 0;
     }
 
     private void ExecuteSpecialAttack()
@@ -421,6 +461,7 @@ public class Player : MonoBehaviour
         if (attackDown && !IsAttacking) ExecuteAttack();
 
         attackDown = false;
+        attackInputTimer = 0;
     }
 
     private void ExecuteAttack()
@@ -769,6 +810,7 @@ public struct Stats
     public bool SnapInput;
     public float VerticalDeadZoneThreshold;
     public float HorizontalDeadZoneThreshold;
+    public float inputBufferTime;
 
     [Header("Movement")]
     public float MaxGroundSpeed;
