@@ -1,9 +1,6 @@
-using Cinemachine;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Room
@@ -252,6 +249,16 @@ public class Room
         }
 
         return true;
+    }
+
+    public bool IsNeighborsWithType(RoomType type)
+    {
+        foreach (Room r in Neighbors)
+        {
+            if (r.Data.RoomType == type) return true;
+        }
+
+        return false;
     }
 }
 
