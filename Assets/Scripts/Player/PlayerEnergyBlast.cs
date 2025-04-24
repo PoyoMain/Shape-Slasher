@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerEnergyBlast : MonoBehaviour
 {
     [SerializeField] private float speed;
+    [SerializeField] private float timeToDestroy;
 
     private float Direction => transform.localRotation.y == -1 ? -1 : 1;
     private Rigidbody2D rb;
@@ -19,7 +20,7 @@ public class PlayerEnergyBlast : MonoBehaviour
     {
         rb.velocity = new(speed * Direction, 0);
 
-        Invoke(nameof(DestroyThis), 3);
+        Invoke(nameof(DestroyThis), timeToDestroy);
     }
 
     private void DestroyThis()

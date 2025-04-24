@@ -28,6 +28,9 @@ public class Player : MonoBehaviour
     [SerializeField] private SFXPlayer damageSFXPlayer;
     [SerializeField] private SFXPlayer deathSFXPlayer;
 
+    [Header("Particles")]
+    [SerializeField] private GameObject onDeathParticles;
+
     [Header("Broadcast Events")]
     [SerializeField] private VoidEventSO playerHealedEventSO;
     [SerializeField] private IntEventSO playerHealthLossEventSO;
@@ -744,6 +747,7 @@ public class Player : MonoBehaviour
             deathSFXPlayer.PlayClipAtPoint();
             playerDeathEventSO.RaiseEvent();
             Time.timeScale = 1;
+            if (onDeathParticles != null) Instantiate(onDeathParticles, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
         else

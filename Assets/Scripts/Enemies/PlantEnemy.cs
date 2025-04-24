@@ -42,6 +42,9 @@ public class PlantEnemy : MonoBehaviour, IHasEnergy
     [SerializeField] private int currencyDroppedOnDeath;
     [SerializeField] private float currencyShootForce;
 
+    [Header("Particles")]
+    [SerializeField] private GameObject onDeathparticleEffectPrefab;
+
     [Header("Broadcast Events")]
     [SerializeField] private VoidEventSO enemyDeathEventSO;
 
@@ -205,6 +208,8 @@ public class PlantEnemy : MonoBehaviour, IHasEnergy
             Rigidbody2D currency = Instantiate(currencyPrefab, transform.position, Quaternion.identity);
             currency.AddForce(currencyShootDirection * currencyShootForce);
         }
+
+        if (onDeathparticleEffectPrefab != null) Instantiate(onDeathparticleEffectPrefab, transform.position, Quaternion.identity);
 
         Destroy(gameObject);
     }
