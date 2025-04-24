@@ -91,6 +91,8 @@ public class Player : MonoBehaviour
         GetInput();
     }
 
+    #region Input
+
     private void GetInput()
     {
         jumpDown = Controls.Jump.WasPressedThisFrame();
@@ -140,6 +142,8 @@ public class Player : MonoBehaviour
 
         previousVertDirectionValue = moveInput.y;
     }
+
+    #endregion
 
     private void FixedUpdate()
     {
