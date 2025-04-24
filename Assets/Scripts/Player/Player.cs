@@ -241,12 +241,15 @@ public class Player : MonoBehaviour
         bool ceilingHit = Physics2D.BoxCast(bodyCollider.bounds.center, bodyCollider.size, 0, Vector2.up, stats.GrounderDistance, stats.CeilingLayers);
 
         // Hit a Ceiling
-        if (ceilingHit) velocity.y = Mathf.Min(0, velocity.y);
+        if (ceilingHit)
+        {
+            velocity.y = Mathf.Min(0, velocity.y);
+        }
 
         // Landed on a bounce pad
         if (bounceHit && velocity.y <= 0 && bounceHit.collider.TryGetComponent(out BouncePad bouncePad))
         {
-            KnockbackOnlyVertical(Vector2.up * bouncePad.BounceAmount);
+            KnockbackOnlyVertical(Vector2.up * bouncePad.BounceAmount, bounce: true);
         }
 
         // Landed on Ground
@@ -302,7 +305,7 @@ public class Player : MonoBehaviour
         }
         else if (collider.TryGetComponent(out UpwardForceApplier upForceApplier))
         {
-            if (velocity.y > 0) KnockbackOnlyVertical(Vector2.up * upForceApplier.ForceStrength);
+            if (velocity.y > 0) KnockbackOnlyVertical(Vector2.up * upForceApplier.ForceStrength, bounce: false);
         }
         else if (collider.TryGetComponent(out Pickup pickup))
         {
@@ -638,11 +641,15 @@ public class Player : MonoBehaviour
         
     }
 
-    private void KnockbackOnlyVertical(Vector2 force)
+    private void KnockbackOnlyVertical(Vector2 force, bool bounce)
     {
         velocity = new(velocity.x, force.y);
-        endedJumpEarly = true;
-        jumpTimer = 0;
+
+        if (bounce)
+        {
+            endedJumpEarly = true;
+            jumpTimer = 0;
+        }
     }
 
     private void StopVerticalMovement()
