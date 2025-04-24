@@ -131,6 +131,7 @@ public class Golem : MonoBehaviour, IHasEnergy
             case State.Patroling:
                 StopMoving();
                 startPatrollingTimer = startPatrolTime;
+                anim.SetBool("Defending", false);
                 break;
             case State.Attacking:
                 break;
