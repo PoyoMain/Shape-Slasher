@@ -641,6 +641,8 @@ public class Player : MonoBehaviour
     private void KnockbackOnlyVertical(Vector2 force)
     {
         velocity = new(velocity.x, force.y);
+        endedJumpEarly = true;
+        jumpTimer = 0;
     }
 
     private void StopVerticalMovement()
