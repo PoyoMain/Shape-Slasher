@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -11,16 +12,33 @@ public class BuyableItem : MonoBehaviour
     [SerializeField] private bool useOptionsValues;
 
     [Space(10)]
-    [SerializeField] private BuyableSO buyable;
+    [SerializeField] private DifficultyInt cost;
+    [SerializeField] private int testCost;
+    [SerializeField] private Buyable type;
     [SerializeField] private bool onlyBuyOnce;
 
     [Header("Components")]
-    [SerializeField] private TextMeshPro itemNameBox;
-    [SerializeField] private TextMeshPro itemDescriptionBox;
+    [SerializeField] private GameObject itemDescriptionBox;
     [SerializeField] private TextMeshProUGUI priceText;
 
-    public int Cost => buyable.GetCost(useDifficulty: useOptionsValues, difficulty: options.Difficulty);
-    public Buyable Type => buyable.Type;
+    public int Cost 
+    {
+        get
+        {
+            if (useOptionsValues)
+            {
+                return options.Difficulty switch
+                {
+                    Difficulty.Easy => cost.EasyValue,
+                    Difficulty.Medium => cost.MediumValue,
+                    Difficulty.Hard => cost.HardValue,
+                    _ => throw new NotImplementedException(),
+                };
+            }
+            else return testCost;
+        }
+    }
+    public Buyable Type => type;
 
     private Animator anim;
 
@@ -31,9 +49,7 @@ public class BuyableItem : MonoBehaviour
 
     private void OnEnable()
     {
-        itemDescriptionBox.gameObject.SetActive(false);
-        itemNameBox.text = buyable.name;
-        itemDescriptionBox.text = buyable.Description;
+        itemDescriptionBox.SetActive(false);
         priceText.text = Cost.ToString();
     }
 
