@@ -19,7 +19,7 @@ public class PlayerEnergyBlast : MonoBehaviour
     {
         rb.velocity = new(speed * Direction, 0);
 
-        Invoke(nameof(DestroyThis), 5);
+        Invoke(nameof(DestroyThis), 3);
     }
 
     private void DestroyThis()
