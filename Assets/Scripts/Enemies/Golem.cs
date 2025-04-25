@@ -53,6 +53,7 @@ public class Golem : MonoBehaviour, IHasEnergy
 
     [Header("Audio")]
     [SerializeField] private SFXPlayer damageSFXPlayer;
+    [SerializeField] private SFXPlayer punchSFXPlayer;
 
     [Header("Currency")]
     [SerializeField] private Rigidbody2D currencyPrefab;
@@ -244,6 +245,11 @@ public class Golem : MonoBehaviour, IHasEnergy
         bool counter = Random.Range(0f, 1f) <= counterAttackChance;
 
         if (counter && CheckForPlayer()) ExecuteAttack();
+    }
+
+    private void PlayPunchSFX()
+    {
+        punchSFXPlayer.Play();
     }
 
     #endregion
