@@ -54,6 +54,7 @@ public class Golem : MonoBehaviour, IHasEnergy
     [Header("Audio")]
     [SerializeField] private SFXPlayer damageSFXPlayer;
     [SerializeField] private SFXPlayer punchSFXPlayer;
+    [SerializeField] private SFXPlayer wallSFXPlayer;
 
     [Header("Currency")]
     [SerializeField] private Rigidbody2D currencyPrefab;
@@ -508,6 +509,11 @@ public class Golem : MonoBehaviour, IHasEnergy
     {
         defendTimer = 0;
         anim.SetBool("Defending", Defending);
+    }
+
+    private void PlayWallSFX()
+    {
+        wallSFXPlayer.Play();
     }
 
     #endregion
