@@ -23,6 +23,11 @@ public class PlayerHitbox : MonoBehaviour
         if (player == null) Debug.LogError("Player Hitbox script doesnt have an associated Player script in parent");
     }
 
+    private void OnEnable()
+    {
+        hitSFXPlayer.Play();
+    }
+
     private void LateUpdate()
     {
         if (surfaceHitTimer > 0) surfaceHitTimer -= Time.deltaTime;
@@ -46,7 +51,6 @@ public class PlayerHitbox : MonoBehaviour
             Instantiate(hitEffect, collision.contacts[^1].point, rot);
         }
 
-        hitSFXPlayer.Play();
         surfaceHitTimer = COOLDOWN_TIME;
     }
 

@@ -27,6 +27,7 @@ public class Player : MonoBehaviour
     [SerializeField] private SFXPlayer jumpSFXPlayer;
     [SerializeField] private SFXPlayer damageSFXPlayer;
     [SerializeField] private SFXPlayer deathSFXPlayer;
+    [SerializeField] private SFXPlayer footstepsSFXPlayer;
 
     [Header("Particles")]
     [SerializeField] private GameObject onDeathParticles;
@@ -602,6 +603,11 @@ public class Player : MonoBehaviour
                 transform.localEulerAngles = newRot;
             }
         }
+    }
+
+    private void PlayFootstepSFX()
+    {
+        footstepsSFXPlayer.Play();
     }
 
     #endregion
