@@ -58,7 +58,8 @@ public class MapGenerator : MonoBehaviour
     private IEnumerator MapCoroutine()
     {
         DespawnMap();
-        List<RoomSO> roomsToPickFrom = possibleRooms.Where(x => (x.RoomType == RoomType.Standard || x.RoomType == RoomType.Challenge) && x.Prefabs.Length > 0).ToList();
+        List<RoomSO> roomsToPickFrom = possibleRooms.Where(x => x.RoomType == RoomType.Standard && x.Prefabs.Length > 0).ToList();
+        Shuffle(roomsToPickFrom);
 
         bool mapGenerated = false;
         while (!mapGenerated)
@@ -272,6 +273,7 @@ public class MapGenerator : MonoBehaviour
     private bool SpawnAllRooms(List<Room> spawnedRooms)
     {
         List<string> instantiatedRooms = new();
+        List<GameObject> roomsToSpawnIn = new();
 
         for (int i = 0; i < spawnedRooms.Count; i++)
         {
@@ -282,9 +284,14 @@ public class MapGenerator : MonoBehaviour
 
             if (prefabs.Count == 0) return false;
 
-            GameObject roomToSpawn = prefabs[UnityEngine.Random.Range(0, prefabs.Count)];
-            Instantiate(roomToSpawn, spawnedRooms[i].RoomNumber * spawnedRooms[i].Data.GetRoomBounds(roomToSpawn), Quaternion.identity, transform);
-            instantiatedRooms.Add(roomToSpawn.name);
+            GameObject room = prefabs[Random.Range(0, prefabs.Count)];
+            roomsToSpawnIn.Add(room);
+            instantiatedRooms.Add(room.name);
+        }
+
+        for (int i = 0; i < roomsToSpawnIn.Count; i++)
+        {
+            Instantiate(roomsToSpawnIn[i], spawnedRooms[i].RoomNumber * spawnedRooms[i].Data.GetRoomBounds(roomsToSpawnIn[i]), Quaternion.identity, transform);
         }
 
         return true;
@@ -434,6 +441,16 @@ public class MapGenerator : MonoBehaviour
 
         path.RemoveAt(path.Count - 1);
         return path;
+    }
+
+    public static void Shuffle<T>(List<T> ts)
+    {
+        int count = ts.Count;
+        for (int i = 0; i < count - 1; ++i)
+        {
+            int r = Random.Range(i, count);
+            (ts[r], ts[i]) = (ts[i], ts[r]);
+        }
     }
 
     #endregion
