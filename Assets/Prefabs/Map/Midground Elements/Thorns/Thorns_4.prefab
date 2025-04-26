@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8382066375227712149}
   - component: {fileID: 8744735167940197752}
   - component: {fileID: 6334491338516170541}
+  - component: {fileID: -3867192902873646043}
   m_Layer: 0
   m_Name: Thorns_4
   m_TagString: Untagged
@@ -148,5 +149,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e39374c44e13f444ab7e630c5f71eee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
+  options: {fileID: 0}
+  usesOptionsValues: 0
+  damage:
+    EasyValue: 0
+    MediumValue: 0
+    HardValue: 0
+  testDamage: 0
   knockback: 0
+  knockbackOrigin: {fileID: 0}
+--- !u!50 &-3867192902873646043
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2149346725686779151}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 7
