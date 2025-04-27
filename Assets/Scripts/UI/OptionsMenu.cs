@@ -36,6 +36,12 @@ public class OptionsMenu : MonoBehaviour
     private const float VOLUME_MAX = 20;
     private const float VOLUME_MIN = -80f;
 
+    private void Awake()
+    {
+        SpeedrunTimer existingTimer = FindAnyObjectByType<SpeedrunTimer>();
+        if (existingTimer != null) existingTimer.DestoyThis();
+    }
+
     private void Start()
     {
         RefreshAllElements();
@@ -62,6 +68,8 @@ public class OptionsMenu : MonoBehaviour
         checkbox_Speedrun.isOn = false;
         optionsSO.SetSpeedRunMode(false);
 
+        optionsSO.SetMediumDifficulty();
+            
         switch (optionsSO.Difficulty)
         {
             case Difficulty.Easy:

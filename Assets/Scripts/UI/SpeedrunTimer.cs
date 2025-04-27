@@ -23,7 +23,7 @@ public class SpeedrunTimer : MonoBehaviour
         if (timerTextBox == null) { Debug.LogError("Timer textbox not set in speedrun timer script"); return; }
 
         if (options.SpeedrunMode) timerTextBox.gameObject.SetActive(true);
-        else timerTextBox.gameObject.SetActive(false);
+        else DestoyThis();
     }
 
     private void OnEnable()
@@ -69,6 +69,7 @@ public class SpeedrunTimer : MonoBehaviour
             active = true;
             DontDestroyOnLoad(gameObject);
         }
+        else DestoyThis();
     }
 
     private void StopTimer()
