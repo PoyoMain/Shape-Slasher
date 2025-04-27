@@ -198,7 +198,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6239588643541357684, guid: 1ccabfa37e45e74489cb35ab53ef3325, type: 3}
       propertyPath: m_Name
-      value: ChallengeRoom_Base Variant
+      value: Room_Challenge_Base
       objectReference: {fileID: 0}
     - target: {fileID: 6619889674317754743, guid: 1ccabfa37e45e74489cb35ab53ef3325, type: 3}
       propertyPath: m_LocalPosition.x
@@ -294,6 +294,7 @@ MonoBehaviour:
   - {fileID: 3584993296391191242}
   - {fileID: 3679575091572621509}
   enemies: []
+  isBossRoom: 0
 --- !u!4 &6866311977168316424 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6821554382950071731, guid: 1ccabfa37e45e74489cb35ab53ef3325, type: 3}

@@ -605,10 +605,12 @@ public class Player : MonoBehaviour
         }
     }
 
+#pragma warning disable
     private void PlayFootstepSFX()
     {
         footstepsSFXPlayer.Play();
     }
+#pragma warning enable
 
     #endregion
 
